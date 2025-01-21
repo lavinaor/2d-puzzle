@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    //כדי לבדוק אם זה אפשרי למילוי
+    public bool isUsabal;
+
+    public GameObject candy;
+
+    public Node(bool _isUsabal, GameObject _candy)
     {
-        
+        this.isUsabal = _isUsabal;
+        this.candy = _candy;
     }
 }
