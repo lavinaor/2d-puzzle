@@ -153,7 +153,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 6
   height: 8
-  spacingDevidor: 2
   spacingX: 0
   spacingY: 0
   candyPrefabs:
@@ -163,6 +162,7 @@ MonoBehaviour:
   - {fileID: 1621148272614792836, guid: d7a6a2bdf1c2aa2439f3df274d4e4b2e, type: 3}
   - {fileID: 4949719459050833674, guid: 2e3a45b55c8050f45983fa93f42682be, type: 3}
   candyBoardGO: {fileID: 230393528}
+  boardScaleFactor: 1
 --- !u!4 &230393530
 Transform:
   m_ObjectHideFlags: 0
