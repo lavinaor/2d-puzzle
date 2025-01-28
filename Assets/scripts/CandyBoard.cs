@@ -282,6 +282,23 @@ public class CandyBoard : MonoBehaviour
     }
 }
 
+
+// בוחר ממתק
+
+//מחליף את הממתק
+
+//מחליף בפועל
+
+//בודק אם יש מחוברים
+
+//נפטר מהתאמות
+
+
+
+
+
+
+
 // כיתה של התווצאה 
 public class MatchResults
 {
