@@ -23,6 +23,17 @@ public class CandyBoard : MonoBehaviour
     // ליצור פבליק לבורד
     public static CandyBoard instance;
 
+    //רשימת ממתקים להריסה
+    public List<GameObject> candyToDestroy = new();
+
+    // שיקוי שנבחר אחרון להוזזה
+    [SerializeField]
+    private candy selectedCandy;
+
+    //האם אני מוזיז כרגע
+    [SerializeField]
+    private bool isProcessingMove;
+
     //אובייקט שמאכלס את כל הלוח בתוכו
     GameObject boardParent;
 
@@ -104,6 +115,18 @@ public class CandyBoard : MonoBehaviour
         {
             Debug.Log("ther are no maches");
             ScaleBoardToFitScreen();
+        }
+    }
+
+    private void DestroyCandy()
+    {
+        if (candyToDestroy != null)
+        {
+            foreach (GameObject candy in candyToDestroy)
+            {
+                Destroy(candy);
+            }
+            candyToDestroy.Clear();
         }
     }
 
@@ -281,6 +304,7 @@ public class CandyBoard : MonoBehaviour
         }
     }
 }
+
 
 
 // בוחר ממתק
