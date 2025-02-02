@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CandyBoard : MonoBehaviour
@@ -50,6 +52,34 @@ public class CandyBoard : MonoBehaviour
         initializeBoard();
     }
 
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            //שולח בדיקה לאיפה שהשחקן לחץ ושומר במה פגע
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+            //בודק אם פגע במשהו ואם הוא ממתק
+            if (hit.collider != null && hit.collider.gameObject.GetComponent<candy>())
+            {
+                //אם הוא עדין במהלך אחר אז בטל
+                if(isProcessingMove)
+                {
+                    return;
+                }
+
+                //שומר את הממתק שנבחר
+                candy candy = hit.collider.gameObject.GetComponent<candy>();
+                
+                //רושם על ממתק שנבחר
+                Debug.Log("לחצתי על ממתק :" + candy.gameObject);
+
+                SelectCandy(candy);
+            }
+        }
+    }
+
     void ScaleBoardToFitScreen()
     {
         // גודל לוח בפיקסלים
@@ -91,7 +121,7 @@ public class CandyBoard : MonoBehaviour
                 Vector2 pos = new Vector2(x - spacingX, y - spacingY);
 
                 //נותן מספר רנדומלי של איזה צבע ממתק
-                int randomIndex = Random.Range(0, candyPrefabs.Length);
+                int randomIndex = UnityEngine.Random.Range(0, candyPrefabs.Length);
 
                 //מיצר ממתק מהסוג הרנדומלי במיקום הנוככי ומגדיר אותו בקוד שלו
                 GameObject candy =  Instantiate(candyPrefabs[randomIndex], pos, Quaternion.identity);
@@ -115,18 +145,6 @@ public class CandyBoard : MonoBehaviour
         {
             Debug.Log("ther are no maches");
             ScaleBoardToFitScreen();
-        }
-    }
-
-    private void DestroyCandy()
-    {
-        if (candyToDestroy != null)
-        {
-            foreach (GameObject candy in candyToDestroy)
-            {
-                Destroy(candy);
-            }
-            candyToDestroy.Clear();
         }
     }
 
@@ -303,22 +321,125 @@ public class CandyBoard : MonoBehaviour
             }
         }
     }
+
+    // בוחר ממתק
+
+    public void SelectCandy(candy _candy)
+    {
+        // אם אין לי ממתק בבחירה אז תבחר חדש
+        if (selectedCandy == null)
+        {
+            Debug.Log(_candy);
+            selectedCandy = _candy;
+        }
+        //אם בחר אותו שיקוי בטל את הבחירה שלו 
+        else if (selectedCandy == _candy)
+        {
+            selectedCandy = null;
+        }
+
+        //אם לא אותו דבר אז מחליף
+        else if (selectedCandy != _candy)
+        {
+            SwapCandy(selectedCandy, _candy);
+            selectedCandy = null;
+        }
+    }
+
+    //מחליף את הממתק
+    private void SwapCandy(candy _candy1, candy _candy2)
+    {
+        //אם זה לא אחד ליד השני
+        if (!IsAdjacent(_candy1, _candy2))
+        {
+            return;
+        }
+
+        // התחל החלפה
+        DoSwap(_candy1, _candy2);
+
+        //מעדכן שהתחיל מהלך ולא אפשרי לבצע כרגע עוד אחד
+        isProcessingMove = true;
+
+        //מתחיל כורוטינה למציאת התאמות
+        StartCoroutine(ProcessMatches(_candy1, _candy2));
+    }
+
+    //מחליף בפועל
+    private void DoSwap(candy _candy1, candy _candy2)
+    {
+
+        //שומר את הראשון
+        GameObject temp = candyBoard[_candy1.xIndex, _candy1.yIndex].candy;
+
+        // מחליף ראשון בשני
+        candyBoard[_candy1.xIndex, _candy1.yIndex].candy = candyBoard[_candy2.xIndex, _candy2.yIndex].candy;
+
+        //מחליף שני בשמירה של ראשון
+        candyBoard[_candy2.xIndex, _candy2.yIndex].candy = temp;
+
+        //מעדכן מיקומים
+        //שומר מיקום זמנית
+        int tempXIndex =_candy1.xIndex;
+        int tempYIndex = _candy1.yIndex;
+
+        //מחליף ראשון בשני
+        _candy1.xIndex = _candy2.xIndex;
+        _candy1.yIndex = _candy2.yIndex;
+
+        //מחליף שני בקופי של הראשון
+        _candy2.xIndex = tempXIndex;
+        _candy2.yIndex = tempYIndex;
+
+        //מוזיז את הראשון בעזרת קוד שנמצא בממתק
+        _candy1.MoveToTarget(candyBoard[_candy2.xIndex, _candy2.yIndex].candy.transform.position);
+
+        //מוזיז את השני בעזרת קוד שנמצא בממתק
+        _candy2.MoveToTarget(candyBoard[_candy1.xIndex, _candy1.yIndex].candy.transform.position);
+    }
+
+    private IEnumerator ProcessMatches(candy _candy1, candy _candy2)
+    {
+        //מחכה שההחלפה תסתיים אם אני רוצה להוסיף זמנים שונים צריך לפתור פה את זה 
+        yield return new WaitForSeconds(0.2f);
+        
+        //בודק אם יש התאמה
+        bool hasMatch = CheckBoard();
+
+        //אם אין התאמה אז הם יחזרו לאחור
+        if (!hasMatch)
+        {
+            DoSwap(_candy1, _candy2);
+        }
+
+        //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
+        isProcessingMove = false;
+    }
+
+    //בודק אם הם אחד ליד השני
+    private bool IsAdjacent(candy _candy1, candy _candy2)
+    {
+        return Mathf.Abs(_candy1.xIndex - _candy2.xIndex) + Mathf.Abs(_candy1.yIndex - _candy2.yIndex) == 1;
+    }
+
+    //נפטר מהתאמות
+
+
+
+
+    // קוד ישן שמור לממקרה שאני אצטרך בעתיד
+    /*    private void DestroyCandy()
+        {
+            if (candyToDestroy != null)
+            {
+                foreach (GameObject candy in candyToDestroy)
+                {
+                    Destroy(candy);
+                }
+                candyToDestroy.Clear();
+            }
+        }*/
 }
-
-
-
-// בוחר ממתק
-
-//מחליף את הממתק
-
-//מחליף בפועל
-
-//בודק אם יש מחוברים
-
-//נפטר מהתאמות
-
-
-
 
 
 
