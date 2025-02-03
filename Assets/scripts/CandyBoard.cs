@@ -178,11 +178,12 @@ public class CandyBoard : MonoBehaviour
                         if (matchCandy.connectedCandy.Count >= 3)
                         {
                             //מקום להכניס שילובים מרובים
+                            MatchResults superMatchedPotions = SuperMach(matchCandy);
 
                             //מוסיף את הממתקים הרציפים לרשימה למחיקה
-                            candyToRemove.AddRange(matchCandy.connectedCandy);
+                            candyToRemove.AddRange(superMatchedPotions.connectedCandy);
 
-                            foreach (candy can in matchCandy.connectedCandy)
+                            foreach (candy can in superMatchedPotions.connectedCandy)
                             {
                                 can.isMatched = true;
                             }
@@ -195,6 +196,90 @@ public class CandyBoard : MonoBehaviour
         }
         
         return hasMatched;
+    }
+
+    private MatchResults SuperMach(MatchResults matchCandy)
+    {
+        // בודק אם יש לרוחב או לרוחב גדול
+        if (matchCandy.direction == MatchDirection.Horizontal || matchCandy.direction == MatchDirection.LongHorizontal)
+        {
+            //עובר על כל השיקויים של ההתאמה 
+            foreach (candy candy in matchCandy.connectedCandy)
+            {
+                //פותח רשימת תוצאות חדשה
+                List<candy> extraConnectedCandy = new();
+
+                //בודק למעלה ולמטה
+                CheckDirection(candy, new Vector2Int(0,1), extraConnectedCandy);
+                CheckDirection(candy, new Vector2Int(0,-1), extraConnectedCandy);
+
+                //בודק אם יש יותר מ2 ביחד 
+                if (extraConnectedCandy.Count >= 2)
+                {
+                    //מוציא אישור שיש יותר מ2 משמע יש התאמה סופר גדולה
+                    Debug.Log("super Horizontal match");
+                    
+                    //מוסיף את ההתאמה לתוצאות
+                    extraConnectedCandy.AddRange(matchCandy.connectedCandy);
+
+                    //מחזיר תוצאות חדשות עם ההטעמה הגדולה
+                    return new MatchResults
+                    {
+                        connectedCandy = extraConnectedCandy,
+                        direction = MatchDirection.Super
+                    };
+                }
+
+            }
+            //אם אין הטעמות מחזיר את ההתאמה הרגילה שהייתה
+            return new MatchResults
+            {
+                connectedCandy = matchCandy.connectedCandy,
+                direction = matchCandy.direction,
+            };
+        }
+
+        // בודק אם יש לגובה או לגובה גדול
+        else if (matchCandy.direction == MatchDirection.Vertical || matchCandy.direction == MatchDirection.LongVertical)
+        {
+            //עובר על כל השיקויים של ההתאמה 
+            foreach (candy candy in matchCandy.connectedCandy)
+            {
+                //פותח רשימת תוצאות חדשה
+                List<candy> extraConnectedCandy = new();
+
+                //בודק למעלה ולמטה
+                CheckDirection(candy, new Vector2Int(1, 0), extraConnectedCandy);
+                CheckDirection(candy, new Vector2Int(-1, 0), extraConnectedCandy);
+
+                //בודק אם יש יותר מ2 ביחד 
+                if (extraConnectedCandy.Count >= 2)
+                {
+                    //מוציא אישור שיש יותר מ2 משמע יש התאמה סופר גדולה
+                    Debug.Log("super Vertical match");
+
+                    //מוסיף את ההתאמה לתוצאות
+                    extraConnectedCandy.AddRange(matchCandy.connectedCandy);
+
+                    //מחזיר תוצאות חדשות עם ההטעמה הגדולה
+                    return new MatchResults
+                    {
+                        connectedCandy = extraConnectedCandy,
+                        direction = MatchDirection.Super
+                    };
+                }
+
+            }
+            //אם אין הטעמות מחזיר את ההתאמה הרגילה שהייתה
+            return new MatchResults
+            {
+                connectedCandy = matchCandy.connectedCandy,
+                direction = matchCandy.direction,
+            };
+        }
+
+        //אם עבר משהו שהוא לא תוצאה בכלל
+        return null;
     }
 
     //בדיקה אם מחובר
