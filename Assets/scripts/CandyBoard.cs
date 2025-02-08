@@ -42,6 +42,9 @@ public class CandyBoard : MonoBehaviour
     //משתנה לשלוט על קנה המידה של הלוח
     public float boardScaleFactor = 1.0f;
 
+    //קנה מידה אחרי חישוב יכנס לכאן
+    public float boardScale = 1.0f;
+
     private void Awake()
     {
         instance = this;
@@ -98,6 +101,9 @@ public class CandyBoard : MonoBehaviour
         // התאם את קנה המידה לפי המשתנה boardScaleFactor
         scale *= boardScaleFactor;
 
+        //שומר את הגודל
+        boardScale = scale;
+
         // שינוי קנה מידה של הלוח
         boardParent.transform.localScale = new Vector3(scale, scale, 1);
     }
@@ -135,7 +141,7 @@ public class CandyBoard : MonoBehaviour
                 candyBoard[x,y] = new Node(true, candy);
             }
         }
-        if (CheckBoard())
+        if (CheckBoard(false))
         {
             Debug.Log("ther are maches recreate the bord");
             Destroy(boardParent);
@@ -148,7 +154,7 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    public bool CheckBoard()
+    public bool CheckBoard(bool takeAction)
     {
         //הודעה על תחילת הבדיקה
         Debug.Log("checking board");
@@ -159,6 +165,16 @@ public class CandyBoard : MonoBehaviour
         // רשימה של ממתקים שצריך למחוק כי הם התאמה
         List<candy> candyToRemove = new();
 
+        //מגדיר מחדש את הממתקים כלא מותאמים
+        foreach(Node nodeCandy in candyBoard)
+        {
+            //רק אם הם קיימים
+            if (nodeCandy.candy != null)
+            {
+                //מגדיר כלא מותאמים
+                nodeCandy.candy.GetComponent<candy>().isMatched = false;
+            }
+        }
 
         for (int x = 0; x < width; x++)
         {
@@ -178,23 +194,276 @@ public class CandyBoard : MonoBehaviour
                         if (matchCandy.connectedCandy.Count >= 3)
                         {
                             //מקום להכניס שילובים מרובים
+                            MatchResults superMatchedPotions = SuperMach(matchCandy);
 
                             //מוסיף את הממתקים הרציפים לרשימה למחיקה
-                            candyToRemove.AddRange(matchCandy.connectedCandy);
+                            candyToRemove.AddRange(superMatchedPotions.connectedCandy);
 
-                            foreach (candy can in matchCandy.connectedCandy)
+                            foreach (candy can in superMatchedPotions.connectedCandy)
                             {
                                 can.isMatched = true;
                             }
 
+                            //הופך את אם יש התאמות לנכון
                             hasMatched = true;
                         }
                     }
                 }
             }
         }
+
+        //אם נשלח ויש התאמות אז ינקה אותם
+        if (takeAction)
+        {
+            //מגדיר את כל הממתקים להוצא כלא בהתאמה
+            foreach (candy candyToRemove1 in candyToRemove)
+            {
+                candyToRemove1.isMatched = false;
+            }
+
+            //מנקה ומחליף את כל השיקויים הנכונים
+            RemoveAndRefill(candyToRemove);
+
+            //בודק אם נוצרו התאמות חדשות
+            if (CheckBoard(false))
+            {
+                //מנקה התאמות חדשות
+                CheckBoard(true);
+            }
+        }
         
+        //מחזיר אם יש התאמות
         return hasMatched;
+    }
+
+
+    //מחק את הנכונים ותמלא מחדש
+    private void RemoveAndRefill(List<candy> candyToRemove)
+    {
+        //מוחק את הממתקים ומפנה את הלוח
+        foreach (candy candy in candyToRemove)
+        {
+            // שומר את הx ו y
+            int xIndex = candy.xIndex;
+            int yIndex = candy.yIndex;
+
+            //מוחק ממתק
+            Destroy(candy.gameObject);
+
+            //מיצר ריק בנקודה הזאת
+            candyBoard[xIndex,yIndex] = new Node(true, null);
+        }
+
+        //לולאה שעוברת על הלוח
+        for (int x = 0; x< width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (candyBoard[x,y].candy == null)
+                {
+                    //שולח הודעה על ניסיון מילוי
+                    Debug.Log("the location x: " + x + "y:" + y + " is empty, attempting to refil it.");
+
+                    //שולח למילוי הממתקים
+                    RefillCandy(x, y);
+                }
+            }
+        }
+    }
+
+    // ממלא מחדש
+    private void RefillCandy(int x, int y)
+    {
+        //מוסיף לy תזוזה
+        int yOffset = 1;
+
+        //כשהזה שמעל שווה לnull וזה מתחת לגובה המקסימלי 
+        while (y +  yOffset < height && candyBoard[x, y + yOffset].candy == null)
+        {
+            //הגדל את הyoffset
+            Debug.Log("the candy above is null, but its not att the top of the bord so try again");
+
+            yOffset++;
+        }
+
+        //או שזה הלמעלה של הלוח או שמצאתי ממתק
+
+        if (y + yOffset < height && candyBoard[x, y + yOffset].candy != null)
+        {
+            //מצא ממתק להוריד
+            candy candyAbove = candyBoard[x, y + yOffset].candy.GetComponent<candy>();
+
+            // הזז אותו למיקום הנוכחי
+            Vector3 targetCandy = new Vector3((x - spacingX) * boardScale, (y - spacingY) * boardScale, candyAbove.transform.position.z);
+
+            //מדווח על ההוזזה
+            Debug.Log("i've found a candy ant it si in: " + x + "," + (y + yOffset) + " ande moved it to: " + x + "," + y);
+
+            //זוז למיקום
+            candyAbove.MoveToTarget(targetCandy);
+
+            //מעדכן מיקום אצלהם
+            candyAbove.setIndicies(x, y);
+
+            // מעדכן את הלוח
+            candyBoard[x,y] = candyBoard[x, y + yOffset];
+
+            //מייצר את המקום שממנו נלקח השיקוי מחדש
+            candyBoard[x, y + yOffset] = new Node(true, null);
+        }
+
+        //אם מצא את הסוף של הלוח בלי למצו שיקוי
+        if(y + yOffset == height)
+        {
+            //מודיע שהגיע ללמעלה
+            Debug.Log("i got to the top");
+
+            //מזמן חדשים בלמעלה
+            SpawnPotionAtTop(x);
+        }
+    }
+
+    //מזמן חדשים בלמעלה של הלוח
+    private void SpawnPotionAtTop(int x)
+    {
+        //מוצא את המיקום הכי נמוך בלי כלום
+        int index = FindIndexOfLowestNull(x);
+
+        //מחשב את המיקום לפי הגובה
+        int locationToMoveTo = height - index;
+
+        //מדווח על הניסיון
+        Debug.Log("about to spawn a candy,");
+
+        //משיג שיקוי רנדומלי
+        int randomIndex = UnityEngine.Random.Range(0, candyPrefabs.Length);
+        GameObject newCandy = Instantiate(candyPrefabs[randomIndex], new Vector2(x - spacingX, height - spacingY), Quaternion.identity);
+
+        // להציב את הממתק תחת אובייקט האב
+        newCandy.transform.SetParent(boardParent.transform);
+        
+        //מחשב את הקנה מידה ביחס לגודל של ההורה ככה שזה יהיה בקנה מידה נכון
+        newCandy.transform.localScale = new Vector3(
+            newCandy.transform.localScale.x * boardScale,
+            newCandy.transform.localScale.y * boardScale,
+            newCandy.transform.localScale.z);
+
+        // קביעת המיקום המתוקן בתוך ההורה
+        newCandy.transform.localPosition = new Vector3(
+            (x - spacingX) * boardScale,
+            (height - spacingY) * boardScale,
+            0);
+        
+        //דהגדר מיקומים
+                newCandy.GetComponent<candy>().setIndicies(x, index);
+
+        //הגדר אותם לוח
+        candyBoard[x, index] = new Node(true, newCandy);
+
+        //הוזז אותם למקום
+        Vector3 targetPosition = new Vector3(newCandy.transform.localPosition.x, newCandy.transform.localPosition.y - (locationToMoveTo * boardScale), newCandy.transform.position.z);
+        newCandy.GetComponent<candy>().MoveToTarget(targetPosition);
+    }
+
+
+    //מוצא את הכי נמוך 
+    private int FindIndexOfLowestNull(int x)
+    {
+        int lowestNull = 99;
+        for (int y = (height - 1); y>= 0; y--)
+        {
+            if (candyBoard[x, y].candy == null)
+            {
+                lowestNull = y;
+            }
+        }
+        return lowestNull;
+    }
+
+
+
+    private MatchResults SuperMach(MatchResults matchCandy)
+    {
+        // בודק אם יש לרוחב או לרוחב גדול
+        if (matchCandy.direction == MatchDirection.Horizontal || matchCandy.direction == MatchDirection.LongHorizontal)
+        {
+            //עובר על כל השיקויים של ההתאמה 
+            foreach (candy candy in matchCandy.connectedCandy)
+            {
+                //פותח רשימת תוצאות חדשה
+                List<candy> extraConnectedCandy = new();
+
+                //בודק למעלה ולמטה
+                CheckDirection(candy, new Vector2Int(0,1), extraConnectedCandy);
+                CheckDirection(candy, new Vector2Int(0,-1), extraConnectedCandy);
+
+                //בודק אם יש יותר מ2 ביחד 
+                if (extraConnectedCandy.Count >= 2)
+                {
+                    //מוציא אישור שיש יותר מ2 משמע יש התאמה סופר גדולה
+                    Debug.Log("super Horizontal match");
+                    
+                    //מוסיף את ההתאמה לתוצאות
+                    extraConnectedCandy.AddRange(matchCandy.connectedCandy);
+
+                    //מחזיר תוצאות חדשות עם ההטעמה הגדולה
+                    return new MatchResults
+                    {
+                        connectedCandy = extraConnectedCandy,
+                        direction = MatchDirection.Super
+                    };
+                }
+
+            }
+            //אם אין הטעמות מחזיר את ההתאמה הרגילה שהייתה
+            return new MatchResults
+            {
+                connectedCandy = matchCandy.connectedCandy,
+                direction = matchCandy.direction,
+            };
+        }
+
+        // בודק אם יש לגובה או לגובה גדול
+        else if (matchCandy.direction == MatchDirection.Vertical || matchCandy.direction == MatchDirection.LongVertical)
+        {
+            //עובר על כל השיקויים של ההתאמה 
+            foreach (candy candy in matchCandy.connectedCandy)
+            {
+                //פותח רשימת תוצאות חדשה
+                List<candy> extraConnectedCandy = new();
+
+                //בודק למעלה ולמטה
+                CheckDirection(candy, new Vector2Int(1, 0), extraConnectedCandy);
+                CheckDirection(candy, new Vector2Int(-1, 0), extraConnectedCandy);
+
+                //בודק אם יש יותר מ2 ביחד 
+                if (extraConnectedCandy.Count >= 2)
+                {
+                    //מוציא אישור שיש יותר מ2 משמע יש התאמה סופר גדולה
+                    Debug.Log("super Vertical match");
+
+                    //מוסיף את ההתאמה לתוצאות
+                    extraConnectedCandy.AddRange(matchCandy.connectedCandy);
+
+                    //מחזיר תוצאות חדשות עם ההטעמה הגדולה
+                    return new MatchResults
+                    {
+                        connectedCandy = extraConnectedCandy,
+                        direction = MatchDirection.Super
+                    };
+                }
+
+            }
+            //אם אין הטעמות מחזיר את ההתאמה הרגילה שהייתה
+            return new MatchResults
+            {
+                connectedCandy = matchCandy.connectedCandy,
+                direction = matchCandy.direction,
+            };
+        }
+
+        //אם עבר משהו שהוא לא תוצאה בכלל
+        return null;
     }
 
     //בדיקה אם מחובר
@@ -404,7 +673,7 @@ public class CandyBoard : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         
         //בודק אם יש התאמה
-        bool hasMatch = CheckBoard();
+        bool hasMatch = CheckBoard(true);
 
         //אם אין התאמה אז הם יחזרו לאחור
         if (!hasMatch)
