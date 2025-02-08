@@ -162,6 +162,9 @@ MonoBehaviour:
   - {fileID: 1621148272614792836, guid: d7a6a2bdf1c2aa2439f3df274d4e4b2e, type: 3}
   - {fileID: 4949719459050833674, guid: 2e3a45b55c8050f45983fa93f42682be, type: 3}
   candyBoardGO: {fileID: 230393528}
+  candyToDestroy: []
+  selectedCandy: {fileID: 0}
+  isProcessingMove: 0
   boardScaleFactor: 1
 --- !u!4 &230393530
 Transform:
