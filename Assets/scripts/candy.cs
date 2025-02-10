@@ -16,6 +16,9 @@ public class candy : MonoBehaviour
     private Vector2 current;
     private Vector2 targetPause;
 
+    [SerializeField]
+    private float duration = 0.5f;
+
     public bool isMoving;
 
     public candy(int _x, int _y)
@@ -44,8 +47,8 @@ public class candy : MonoBehaviour
         //מסמן שזה זז
         isMoving = true;
 
-        //אפשרות לשינוי הזמן של ההחלפה לפי זמן האנימצייה או משהו אחר
-        float duration = 0.2f;
+/*        //אפשרות לשינוי הזמן של ההחלפה לפי זמן האנימצייה או משהו אחר
+        float duration = 0.2f;*/
 
         //שומר מיקום התחלתי
         Vector2 startPosition = transform.position;
