@@ -300,7 +300,7 @@ MonoBehaviour:
   selectedCandy: {fileID: 0}
   isProcessingMove: 0
   candyToRemove: []
-  boardScaleFactor: 1
+  boardScaleFactor: 0.8
   boardScale: 1
 --- !u!4 &230393530
 Transform:
@@ -1109,7 +1109,7 @@ MonoBehaviour:
   beckgroundPanel: {fileID: 2073002789}
   victoryPanel: {fileID: 1518951173}
   losePanel: {fileID: 1329842605}
-  goal: 100
+  goal: 3000
   moves: 10
   points: 0
   isGameEnded: 0
