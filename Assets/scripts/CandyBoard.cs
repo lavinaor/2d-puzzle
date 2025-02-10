@@ -36,6 +36,10 @@ public class CandyBoard : MonoBehaviour
     [SerializeField]
     private bool isProcessingMove;
 
+    // רשימה של ממתקים שצריך למחוק כי הם התאמה
+    [SerializeField]
+    List<candy> candyToRemove = new();
+
     //אובייקט שמאכלס את כל הלוח בתוכו
     GameObject boardParent;
 
@@ -141,7 +145,7 @@ public class CandyBoard : MonoBehaviour
                 candyBoard[x,y] = new Node(true, candy);
             }
         }
-        if (CheckBoard(false))
+        if (CheckBoard())
         {
             Debug.Log("ther are maches recreate the bord");
             Destroy(boardParent);
@@ -154,7 +158,7 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    public bool CheckBoard(bool takeAction)
+    public bool CheckBoard()
     {
         //הודעה על תחילת הבדיקה
         Debug.Log("checking board");
@@ -162,8 +166,8 @@ public class CandyBoard : MonoBehaviour
         // בול שמוחזר מתחיל כלא נכון ומשתנה במידה של התאמה
         bool hasMatched = false;
 
-        // רשימה של ממתקים שצריך למחוק כי הם התאמה
-        List<candy> candyToRemove = new();
+        //מנקה את הרשימה
+        candyToDestroy.Clear();
 
         //מגדיר מחדש את הממתקים כלא מותאמים
         foreach(Node nodeCandy in candyBoard)
@@ -211,29 +215,32 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
-
-        //אם נשלח ויש התאמות אז ינקה אותם
-        if (takeAction)
-        {
-            //מגדיר את כל הממתקים להוצא כלא בהתאמה
-            foreach (candy candyToRemove1 in candyToRemove)
-            {
-                candyToRemove1.isMatched = false;
-            }
-
-            //מנקה ומחליף את כל השיקויים הנכונים
-            RemoveAndRefill(candyToRemove);
-
-            //בודק אם נוצרו התאמות חדשות
-            if (CheckBoard(false))
-            {
-                //מנקה התאמות חדשות
-                CheckBoard(true);
-            }
-        }
         
         //מחזיר אם יש התאמות
         return hasMatched;
+    }
+
+    public IEnumerator ProsesTurnOnMatchedBoard(bool _subtractMoves)
+    {
+        //מגדיר את כל הממתקים להוצא כלא בהתאמה
+        foreach (candy candyToRemove1 in candyToRemove)
+        {
+            candyToRemove1.isMatched = false;
+        }
+
+        //מנקה ומחליף את כל השיקויים הנכונים
+        RemoveAndRefill(candyToRemove);
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(candyToRemove.Count, _subtractMoves);
+
+        //מחכה קצת כדי שיראה את זה בלוח 
+        yield return new WaitForSeconds(0.4f);
+
+        if (CheckBoard())
+        {
+            StartCoroutine(ProsesTurnOnMatchedBoard(false));
+        }
     }
 
 
@@ -247,11 +254,21 @@ public class CandyBoard : MonoBehaviour
             int xIndex = candy.xIndex;
             int yIndex = candy.yIndex;
 
-            //מוחק ממתק
+            if (candy != null)
+            {
+                Destroy(candy.gameObject);
+                candyBoard[xIndex, yIndex] = new Node(true, null);
+            }
+            else
+            {
+                Debug.LogWarning("המשתנה candy לא קיים, לא ניתן למחוק את האובייקט.");
+            }
+
+/*            //מוחק ממתק
             Destroy(candy.gameObject);
 
             //מיצר ריק בנקודה הזאת
-            candyBoard[xIndex,yIndex] = new Node(true, null);
+            candyBoard[xIndex, yIndex] = new Node(true, null);*/
         }
 
         //לולאה שעוברת על הלוח
@@ -319,12 +336,12 @@ public class CandyBoard : MonoBehaviour
             Debug.Log("i got to the top");
 
             //מזמן חדשים בלמעלה
-            SpawnPotionAtTop(x);
+            SpawnCandyAtTop(x);
         }
     }
 
     //מזמן חדשים בלמעלה של הלוח
-    private void SpawnPotionAtTop(int x)
+    private void SpawnCandyAtTop(int x)
     {
         //מוצא את המיקום הכי נמוך בלי כלום
         int index = FindIndexOfLowestNull(x);
@@ -660,11 +677,23 @@ public class CandyBoard : MonoBehaviour
         _candy2.xIndex = tempXIndex;
         _candy2.yIndex = tempYIndex;
 
-        //מוזיז את הראשון בעזרת קוד שנמצא בממתק
-        _candy1.MoveToTarget(candyBoard[_candy2.xIndex, _candy2.yIndex].candy.transform.position);
+        // מחשב את המיקומים עם קנה מידה
+        Vector3 pos1 = new Vector3(
+            (_candy1.xIndex - spacingX) * boardScale,
+            (_candy1.yIndex - spacingY) * boardScale,
+            _candy1.transform.position.z
+        );
 
-        //מוזיז את השני בעזרת קוד שנמצא בממתק
-        _candy2.MoveToTarget(candyBoard[_candy1.xIndex, _candy1.yIndex].candy.transform.position);
+        // מחשב את המיקומים עם קנה מידה
+        Vector3 pos2 = new Vector3(
+            (_candy2.xIndex - spacingX) * boardScale,
+            (_candy2.yIndex - spacingY) * boardScale,
+            _candy2.transform.position.z
+        );
+
+        // מזיז את הראשון והשני למיקומים החדשים עם התחשבות בקנה מידה
+        _candy1.MoveToTarget(pos1);
+        _candy2.MoveToTarget(pos2);
     }
 
     private IEnumerator ProcessMatches(candy _candy1, candy _candy2)
@@ -673,10 +702,14 @@ public class CandyBoard : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         
         //בודק אם יש התאמה
-        bool hasMatch = CheckBoard(true);
+        if (CheckBoard())
+        {
+            //מתחיל קורוטינה שתטפל בתוצאות
+            StartCoroutine(ProsesTurnOnMatchedBoard(true));
+        }
 
         //אם אין התאמה אז הם יחזרו לאחור
-        if (!hasMatch)
+        else
         {
             DoSwap(_candy1, _candy2);
         }
