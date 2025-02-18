@@ -54,6 +54,8 @@ public class CandyBoard : MonoBehaviour
         instance = this;
     }
 
+
+
     void Start()
     {
         initializeBoard();
