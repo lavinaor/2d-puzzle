@@ -119,4 +119,14 @@ public class UIManager : MonoBehaviour
         //מחזיר את הזמן לזוז
         Time.timeScale = 1f; // Resume the game
     }
+
+    // מעביר לסצנה אחרת
+    public void GoToNewScene(int sceneNum)
+    {
+        //טוען את הסצנה החדשה
+        SceneManager.LoadScene(sceneNum);
+
+        //מחזיר את הזמן לזוז
+        Time.timeScale = 1f; // Resume the game
+    }
 }
