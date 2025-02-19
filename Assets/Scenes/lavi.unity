@@ -300,6 +300,7 @@ MonoBehaviour:
   selectedCandy: {fileID: 0}
   isProcessingMove: 0
   candyToRemove: []
+  delayBetweenMatches: 0.4
   boardScaleFactor: 0.8
   boardScale: 1
 --- !u!4 &230393530
@@ -1136,7 +1137,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
-  - {fileID: 230393530}
+  - {fileID: 1954102077}
   - {fileID: 2143700444}
   - {fileID: 1838195027}
-  - {fileID: 1954102077}
+  - {fileID: 230393530}

@@ -40,6 +40,9 @@ public class CandyBoard : MonoBehaviour
     [SerializeField]
     List<candy> candyToRemove = new();
 
+    [SerializeField]
+    private float delayBetweenMatches = 0.4f;
+
     //אובייקט שמאכלס את כל הלוח בתוכו
     GameObject boardParent;
 
@@ -149,9 +152,12 @@ public class CandyBoard : MonoBehaviour
         }
         if (CheckBoard())
         {
-            Debug.Log("ther are maches recreate the bord");
-            Destroy(boardParent);
-            initializeBoard();
+            Debug.Log("ther are maches proses the bord");
+
+            ScaleBoardToFitScreen();
+
+            //מתחיל קורוטינה שתטפל בתוצאות
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, 0f));
         }
         else
         {
@@ -222,7 +228,7 @@ public class CandyBoard : MonoBehaviour
         return hasMatched;
     }
 
-    public IEnumerator ProsesTurnOnMatchedBoard(bool _subtractMoves)
+    public IEnumerator ProsesTurnOnMatchedBoard(bool _subtractMoves, float deley)
     {
         //מגדיר את כל הממתקים להוצא כלא בהתאמה
         foreach (candy candyToRemove1 in candyToRemove)
@@ -237,11 +243,11 @@ public class CandyBoard : MonoBehaviour
         GameManager.Instance.ProcessTurn(candyToRemove.Count, _subtractMoves);
 
         //מחכה קצת כדי שיראה את זה בלוח 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(deley);
 
         if (CheckBoard())
         {
-            StartCoroutine(ProsesTurnOnMatchedBoard(false));
+            StartCoroutine(ProsesTurnOnMatchedBoard(false, deley));
         }
     }
 
@@ -707,7 +713,7 @@ public class CandyBoard : MonoBehaviour
         if (CheckBoard())
         {
             //מתחיל קורוטינה שתטפל בתוצאות
-            StartCoroutine(ProsesTurnOnMatchedBoard(true));
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         }
 
         //אם אין התאמה אז הם יחזרו לאחור
