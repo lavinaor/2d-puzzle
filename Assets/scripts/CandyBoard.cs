@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class CandyBoard : MonoBehaviour
 {
+    // קוד לבדיקת אופציה של  הכנת מפות עם טילמפ
+    public bool hasTilmap = false;
+    public Tilemap tilemap; // ה-Tilemap המקורי
+
+    private GameObject[,] tileGrid; // מערך דו-ממדי של GameObjects
+    private GameObject parentGrid; // ההורה של כל האריחים
+
+
+
+
 
     //מגדיר את גודל הלוח
     public int width = 6;
@@ -61,7 +72,10 @@ public class CandyBoard : MonoBehaviour
 
     void Start()
     {
-        initializeBoard();
+        if (hasTilmap)
+            ConvertTilemapToGameObjects();
+        else
+            initializeBoard();
     }
 
     private void Update()
@@ -117,6 +131,71 @@ public class CandyBoard : MonoBehaviour
         boardParent.transform.localScale = new Vector3(scale, scale, 1);
     }
 
+    /// <summary>
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// </summary>
+    void ConvertTilemapToGameObjects()
+    {
+        BoundsInt bounds = tilemap.cellBounds;
+        width = bounds.xMax;
+        height = bounds.yMax;
+
+        spacingX = (float)(width - 1) / 2;
+        spacingY = (float)(height - 1) / 2;
+
+        candyBoard = new Node[width, height];
+        // יצירת אובייקט אב ללוח
+        boardParent = new GameObject("BoardParent");
+
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
+                if (tile != null)
+                {
+                    Debug.Log(tile.name);
+                    int prefabIndex = GetPrefabIndex(tile);
+                    if (prefabIndex != -1)
+                    {
+                        //מחשב מיקום
+                        Vector2 pos = new Vector2(x - spacingX, y - spacingY);
+
+                        Vector3 worldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y, 0));
+                        GameObject newTile = Instantiate(candyPrefabs[prefabIndex], pos, Quaternion.identity);
+                        newTile.transform.parent = boardParent.transform; // מציב תחת ההורה
+
+
+                        //מגדיר אותו 
+                        newTile.GetComponent<candy>().setIndicies(x - bounds.xMin, y - bounds.yMin);
+
+                        // מוסיף אותו למערך
+                        candyBoard[x, y] = new Node(true, newTile);
+                    }
+                }
+            }
+        }
+
+        Destroy(tilemap.gameObject); // מוחק את האובייקט של ה-Tilemap אבל שומר את האריחים
+
+        ScaleBoardToFitScreen();
+    }
+
+    int GetPrefabIndex(TileBase tile)
+    {
+        for (int i = 0; i < candyPrefabs.Length; i++)
+        {
+            if (candyPrefabs[i].name == tile.name) // הנחה: שם הפריפב זהה לשם האריח
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// </summary>
 
     void initializeBoard()
     {
