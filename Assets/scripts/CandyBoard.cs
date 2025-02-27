@@ -11,12 +11,8 @@ public class CandyBoard : MonoBehaviour
     public bool hasTilmap = false;
     public Tilemap tilemap; // ה-Tilemap המקורי
 
-    private GameObject[,] tileGrid; // מערך דו-ממדי של GameObjects
-    private GameObject parentGrid; // ההורה של כל האריחים
-
-
-
-
+    //מצלמה של הסצנה
+    public Camera cam;
 
     //מגדיר את גודל הלוח
     public int width = 6;
@@ -73,7 +69,7 @@ public class CandyBoard : MonoBehaviour
     void Start()
     {
         if (hasTilmap)
-            ConvertTilemapToGameObjects();
+            ConvertTilemapToGameBoard();
         else
             initializeBoard();
     }
@@ -108,34 +104,32 @@ public class CandyBoard : MonoBehaviour
 
     void ScaleBoardToFitScreen()
     {
-        // גודל לוח בפיקסלים
+        // גודל הלוח בפיקסלים
         float boardWidth = width;
         float boardHeight = height;
 
-        // יחס למסך
-        float screenWidth = Camera.main.orthographicSize * 2 * Screen.width / Screen.height;
-        float screenHeight = Camera.main.orthographicSize * 2;
+        // יחס מסך
+        float aspectRatio = (float)Screen.width / Screen.height;
 
         // חישוב קנה המידה המתאים
-        float scaleX = screenWidth / boardWidth;
-        float scaleY = screenHeight / boardHeight;
-        float scale = Mathf.Min(scaleX, scaleY);
+        float scaleX = boardWidth / (2 * aspectRatio);
+        float scaleY = boardHeight / 2;
+        float newOrthoSize = Mathf.Max(scaleX, scaleY);
 
-        // התאם את קנה המידה לפי המשתנה boardScaleFactor
-        scale *= boardScaleFactor;
+        // התאם את הגודל לפי boardScaleFactor (אם צריך שוליים נוספים)
+        newOrthoSize *= boardScaleFactor;
 
-        //שומר את הגודל
-        boardScale = scale;
+        // הגדר את גודל המצלמה החדש
+        Camera.main.orthographicSize = newOrthoSize;
 
-        // שינוי קנה מידה של הלוח
-        boardParent.transform.localScale = new Vector3(scale, scale, 1);
     }
 
     /// <summary>
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////
     /// </summary>
-    void ConvertTilemapToGameObjects()
+    void ConvertTilemapToGameBoard()
     {
+        tilemap.CompressBounds();
         BoundsInt bounds = tilemap.cellBounds;
         width = bounds.xMax;
         height = bounds.yMax;
@@ -172,6 +166,11 @@ public class CandyBoard : MonoBehaviour
                         // מוסיף אותו למערך
                         candyBoard[x, y] = new Node(true, newTile);
                     }
+                }
+                else
+                {
+                    // מוסיף אותו למערך
+                    candyBoard[x, y] = new Node(false, null);
                 }
             }
         }
