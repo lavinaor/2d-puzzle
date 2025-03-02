@@ -2676,6 +2676,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80948bbcb41a874b857bcf7a9a48fc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasTilmap: 0
+  tilemap: {fileID: 0}
+  cam: {fileID: 0}
   width: 6
   height: 8
   spacingX: 0
@@ -2691,7 +2694,8 @@ MonoBehaviour:
   selectedCandy: {fileID: 0}
   isProcessingMove: 0
   candyToRemove: []
-  boardScaleFactor: 0.7
+  delayBetweenMatches: 0.4
+  boardScaleFactor: 1.5
   boardScale: 1
 --- !u!4 &997588443
 Transform:
