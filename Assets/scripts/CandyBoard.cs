@@ -25,6 +25,9 @@ public class CandyBoard : MonoBehaviour
     //לקבל את הפריפבים של הממתקים
     public GameObject[] candyPrefabs;
 
+    //לקבל את הפריפבים של הממתקים
+    public GameObject[] specialCandyPrefabs;
+
     //לקבל את הלוח ואת האובייקט
     private Node[,] candyBoard;
     public GameObject candyBoardGO;
@@ -163,14 +166,32 @@ public class CandyBoard : MonoBehaviour
                 if (tile != null)
                 {
                     Debug.Log(tile.name);
+
+                    bool isSpecial = false;
                     int prefabIndex = GetPrefabIndex(tile);
+                    if (prefabIndex == -1)
+                    {
+                        isSpecial = true;
+                        prefabIndex = GetSpecialPrefabIndex(tile);
+                    }
+
                     if (prefabIndex != -1)
                     {
                         //מחשב מיקום
                         Vector2 pos = new Vector2(x - spacingX, y - spacingY);
 
                         Vector3 worldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y, 0));
-                        GameObject newTile = Instantiate(candyPrefabs[prefabIndex], pos, Quaternion.identity);
+                        GameObject prefab;
+                        if (!isSpecial)
+                        {
+                            prefab = candyPrefabs[prefabIndex]; 
+                        }
+                        else
+                        {
+                            prefab = specialCandyPrefabs[prefabIndex];
+                        }
+
+                        GameObject newTile = Instantiate(prefab, pos, Quaternion.identity);
                         newTile.transform.parent = boardParent.transform; // מציב תחת ההורה
 
 
@@ -200,6 +221,17 @@ public class CandyBoard : MonoBehaviour
         for (int i = 0; i < candyPrefabs.Length; i++)
         {
             if (candyPrefabs[i].name == tile.name) // הנחה: שם הפריפב זהה לשם האריח
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    int GetSpecialPrefabIndex(TileBase tile)
+    {
+        for (int i = 0; i < specialCandyPrefabs.Length; i++)
+        {
+            if (specialCandyPrefabs[i].name == tile.name) // הנחה: שם הפריפב זהה לשם האריח
             {
                 return i;
             }
@@ -300,6 +332,8 @@ public class CandyBoard : MonoBehaviour
                         {
                             //שילובים מרובים
                             MatchResults superMatchedCandys = SuperMach(matchCandy);
+
+                            Debug.Log(superMatchedCandys.direction + ";;;;;;;" + matchCandy.direction);
 
                             //מוסיף את הממתקים הרציפים לרשימה למחיקה
                             candyToRemove.AddRange(superMatchedCandys.connectedCandy);
@@ -826,6 +860,7 @@ public class CandyBoard : MonoBehaviour
 
     private bool checkeIfCandyIsSpeshel(candy _candy1, candy _candy2)
     {
+        bool IsSpeshel = false;
         if (_candy1.isSpecial)
         {
             switch (_candy1.candyType)
@@ -865,7 +900,7 @@ public class CandyBoard : MonoBehaviour
                     }
                     break;
                 case candyType.bomb:
-                    int explosionRadius = 1; // רדיוס 3 לכל כיוון יוצר אזור 6x6
+                    int explosionRadius = 1; //  רדיוס 1 לכל כיוון יוצר אזור 3x3
 
                     for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
                     {
@@ -891,9 +926,76 @@ public class CandyBoard : MonoBehaviour
                     // פעולה במקרה שאין התאמה
                     break;
             }
-            return true;
+            IsSpeshel = true;
         }
-        return false;
+        if (_candy2.isSpecial)
+        {
+            switch (_candy2.candyType)
+            {
+                case candyType.vertical:
+                    // פעולה לממתק אנכי
+                    for (int y = 0; y < height; y++)
+                    {
+                        if (candyBoard[_candy2.xIndex, y].isUsabal)
+                            candyToRemove.Add(candyBoard[_candy2.xIndex, y].candy.GetComponent<candy>());
+                    }
+                    break;
+                case candyType.horizontal:
+                    for (int x = 0; x < width; x++)
+                    {
+                        if (candyBoard[x, _candy2.yIndex].isUsabal)
+                            candyToRemove.Add(candyBoard[x, _candy2.yIndex].candy.GetComponent<candy>());
+                    }
+                    break;
+                case candyType.super:
+                    // פעולה לממתק סופר
+                    // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
+                    for (int x = 0; x < width; x++)
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            if (candyBoard[x, y].isUsabal)
+                            {
+                                candy currentCandy = candyBoard[x, y]?.candy?.GetComponent<candy>();
+
+                                if (currentCandy != null && currentCandy.candyType == _candy1.candyType)
+                                {
+                                    candyToRemove.Add(currentCandy);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case candyType.bomb:
+                    int explosionRadius = 1; // רדיוס 1 לכל כיוון יוצר אזור 3x3
+
+                    for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
+                    {
+                        for (int dy = -explosionRadius; dy <= explosionRadius; dy++)
+                        {
+                            int newX = _candy2.xIndex + dx;
+                            int newY = _candy2.yIndex + dy;
+
+                            // בדיקה שהאינדקסים תקפים בתוך גבולות הלוח
+                            if (newX >= 0 && newX < width && newY >= 0 && newY < height)
+                            {
+                                candy currentCandy = candyBoard[newX, newY]?.candy?.GetComponent<candy>();
+
+                                if (currentCandy != null)
+                                {
+                                    candyToRemove.Add(currentCandy);
+                                }
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    // פעולה במקרה שאין התאמה
+                    break;
+            }
+            IsSpeshel = true;
+        }
+        return IsSpeshel;
     }
 
     //בודק אם הם אחד ליד השני

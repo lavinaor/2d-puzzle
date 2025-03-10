@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5065697917125098192}
   - component: {fileID: 1506817485556558434}
   m_Layer: 0
-  m_Name: sqer red
+  m_Name: bome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,8 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 331ba62312d7ecf4c8518a5e4a2d4ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  candyType: 5
-  isSpecial: 0
+  candyType: 8
+  isSpecial: 1
   xIndex: 0
   yIndex: 0
   isMatched: 0
@@ -224,7 +224,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 852821808, guid: 4b4b1401c4de6c941b6362a1d8b22bd0, type: 3}
+  m_Sprite: {fileID: 1816974325, guid: dad4d29341fc04444ae04543299dd11f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
