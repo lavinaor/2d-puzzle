@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1903647747564668358}
   - component: {fileID: 3047639700178809660}
   - component: {fileID: 5065697917125098192}
-  - component: {fileID: 1506817485556558434}
+  - component: {fileID: 3726571675459081530}
   m_Layer: 0
-  m_Name: sqer red
+  m_Name: dimonds_33
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1506817485556558434
+--- !u!114 &3726571675459081530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 331ba62312d7ecf4c8518a5e4a2d4ed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  candyType: 7
+  candyType: 8
   isSpecial: 1
   xIndex: 0
   yIndex: 0
@@ -224,7 +224,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 852821808, guid: 4b4b1401c4de6c941b6362a1d8b22bd0, type: 3}
+  m_Sprite: {fileID: -141189986, guid: 4b4b1401c4de6c941b6362a1d8b22bd0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

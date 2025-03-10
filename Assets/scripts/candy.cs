@@ -8,6 +8,7 @@ public class candy : MonoBehaviour
 {
 
     public candyType candyType;
+    public bool isSpecial = false;
 
     public int xIndex;
     public int yIndex;
@@ -87,5 +88,10 @@ public enum candyType
     Blue,
     Green,
     Purple,
-    White
+    White,
+    redSqwer,
+    horizontal,
+    vertical,
+    bomb,
+    super
 }
