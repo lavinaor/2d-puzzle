@@ -36,6 +36,27 @@ public class SoundFXManager : MonoBehaviour
         Destroy(audioSource.gameObject, clipLength);
     }
 
+    public void PlaySoundFXClipNoSpawn(AudioClip audioClip)
+    {
+        //spawn in gameOBject
+        AudioSource audioSource = Instantiate(soundFXObject, this.transform.position, Quaternion.identity);
+
+        //assign the deathAudioClip
+        audioSource.clip = audioClip;
+
+        //assign volume
+        audioSource.volume = 1;
+
+        //play sound
+        audioSource.Play();
+
+        //get length of sound FX clip
+        float clipLength = audioSource.clip.length;
+
+        //destroy the clip after it is done playing
+        Destroy(audioSource.gameObject, clipLength);
+    }
+
     public void PlayRandomSoundFXClip(AudioClip[] audioClip, Transform spawnTransform, float volume)
     {
         //spawn in gameOBject
