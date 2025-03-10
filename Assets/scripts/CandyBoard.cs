@@ -56,6 +56,9 @@ public class CandyBoard : MonoBehaviour
     //משתנה לשלוט על קנה המידה של הלוח
     public float boardScaleFactor = 1.0f;
 
+    // אבא של כל התאורה
+    public GameObject lightParent;
+
     //קנה מידה אחרי חישוב יכנס לכאן
     public float boardScale = 1.0f;
 
@@ -104,6 +107,10 @@ public class CandyBoard : MonoBehaviour
 
     void ScaleBoardToFitScreen()
     {
+
+        // שמור את הערכים הראשוניים של המצלמה והתאורה
+        float initialOrthoSize = Camera.main.orthographicSize;
+
         // גודל הלוח בפיקסלים
         float boardWidth = width;
         float boardHeight = height;
@@ -122,6 +129,15 @@ public class CandyBoard : MonoBehaviour
         // הגדר את גודל המצלמה החדש
         Camera.main.orthographicSize = newOrthoSize;
 
+        // חישוב יחס השינוי במצלמה
+        float scaleFactor = newOrthoSize / initialOrthoSize;
+
+        //מוודא שיש אובייקט כזה
+        if (lightParent != null)
+        {
+            // התאם את קנה המידה של האובייקט שמכיל את התאורה
+            lightParent.transform.localScale *= scaleFactor;
+        }
     }
 
     /// <summary>
