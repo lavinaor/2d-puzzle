@@ -1178,7 +1178,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &375583912
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1383,6 +1383,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80948bbcb41a874b857bcf7a9a48fc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hasTilmap: 0
+  tilemap: {fileID: 0}
+  cam: {fileID: 0}
   width: 6
   height: 6
   spacingX: 0
@@ -1398,6 +1401,7 @@ MonoBehaviour:
   selectedCandy: {fileID: 0}
   isProcessingMove: 0
   candyToRemove: []
+  delayBetweenMatches: 0.4
   boardScaleFactor: 0.7
   boardScale: 1
 --- !u!4 &552705577
@@ -2504,6 +2508,10 @@ PrefabInstance:
     - target: {fileID: 3183541519501447519, guid: 2ff60d09ed960f0498614ea1e33ac90b, type: 3}
       propertyPath: m_Name
       value: bord wood tem+dimons and cahs Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 3183541519501447519, guid: 2ff60d09ed960f0498614ea1e33ac90b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3372765678360965238, guid: 2ff60d09ed960f0498614ea1e33ac90b, type: 3}
       propertyPath: m_Name
@@ -5266,7 +5274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!61 &1708936823
 BoxCollider2D:
   m_ObjectHideFlags: 0
