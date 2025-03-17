@@ -287,7 +287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasTilmap: 1
   tilemap: {fileID: 1743655792}
-  cam: {fileID: 0}
+  cam: {fileID: 519420031}
   width: 6
   height: 8
   spacingX: 0
@@ -312,6 +312,8 @@ MonoBehaviour:
   boardScaleFactor: 1.5
   lightParent: {fileID: 0}
   boardScale: 1
+  VFXVerticalPrefab: {fileID: 2465174129270366692, guid: ccec8ec025fa440449c7cafbd8bc2954, type: 3}
+  VFXHorizontalPrefab: {fileID: 2465174129270366692, guid: addb7bf41e8911e48befe3c8fdaf48b1, type: 3}
 --- !u!4 &230393530
 Transform:
   m_ObjectHideFlags: 0

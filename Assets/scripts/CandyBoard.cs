@@ -7,6 +7,8 @@ using UnityEngine.Tilemaps;
 using System.Linq;
 using System;
 using UnityEngine.VFX;
+using System.Reflection;
+using UnityEngine.UIElements;
 
 public class CandyBoard : MonoBehaviour
 {
@@ -69,6 +71,16 @@ public class CandyBoard : MonoBehaviour
 
     //קנה מידה אחרי חישוב יכנס לכאן
     public float boardScale = 1.0f;
+
+    //אפקט לאורך
+    [SerializeField]
+    private GameObject VFXVerticalPrefab;
+    private VisualEffect VFXVertical;
+
+    //אפקט לרוחב
+    [SerializeField]
+    private GameObject VFXHorizontalPrefab;
+    private VisualEffect VFXHorizontal;
 
     private void Awake()
     {
@@ -927,13 +939,13 @@ public class CandyBoard : MonoBehaviour
         //בודק אם יש התאמה
         if (CheckBoard())
         {
-            checkeIfCandyIsSpeshel(_candy1, _candy2);
+            if(!checkeIfCandyIsSpeshel(_candy1, _candy2));
             //מתחיל קורוטינה שתטפל בתוצאות
             StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         }
         else if(checkeIfCandyIsSpeshel(_candy1, _candy2))
         {
-            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+            //StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         }
         //אם אין התאמה אז הם יחזרו לאחור
         else
@@ -955,62 +967,16 @@ public class CandyBoard : MonoBehaviour
             switch (_candy1.candyType)
             {
                 case candyType.vertical:
-                    // פעולה לממתק אנכי
-                    for (int y = 0; y < height; y++)
-                    {
-                        if (candyBoard[_candy1.xIndex, y].isUsabal)
-                            candyToRemove.Add(candyBoard[_candy1.xIndex, y].candy.GetComponent<candy>());
-                    }
+                    StartCoroutine(PreformVertical(_candy1));
                     break;
                 case candyType.horizontal:
-                    for (int x = 0; x < width; x++)
-                    {
-                        if (candyBoard[x, _candy1.yIndex].isUsabal)
-                            candyToRemove.Add(candyBoard[x, _candy1.yIndex].candy.GetComponent<candy>());
-                    }
+                    StartCoroutine(PreformHorizontal(_candy1));
                     break;
                 case candyType.super:
-                    // פעולה לממתק סופר
-                    // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
-                    for (int x = 0; x < width; x++)
-                    {
-                        for (int y = 0; y < height; y++)
-                        {
-                            if (candyBoard[x, y].isUsabal)
-                            {
-                                candy currentCandy = candyBoard[x, y]?.candy?.GetComponent<candy>();
-
-                                if (currentCandy != null && currentCandy.candyType == _candy2.candyType)
-                                {
-                                    candyToRemove.Add(currentCandy);
-                                }
-                            }
-                        }
-                    }
-                    candyToRemove.Add(_candy1);
+                    StartCoroutine(PreformSuper(_candy1, _candy2));
                     break;
                 case candyType.bomb:
-                    int explosionRadius = 1; //  רדיוס 1 לכל כיוון יוצר אזור 3x3
-
-                    for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
-                    {
-                        for (int dy = -explosionRadius; dy <= explosionRadius; dy++)
-                        {
-                            int newX = _candy1.xIndex + dx;
-                            int newY = _candy1.yIndex + dy;
-
-                            // בדיקה שהאינדקסים תקפים בתוך גבולות הלוח
-                            if (newX >= 0 && newX < width && newY >= 0 && newY < height)
-                            {
-                                candy currentCandy = candyBoard[newX, newY]?.candy?.GetComponent<candy>();
-
-                                if (currentCandy != null)
-                                {
-                                    candyToRemove.Add(currentCandy);
-                                }
-                            }
-                        }
-                    }
+                    StartCoroutine(PreformBomb(_candy1));
                     break;
                 default:
                     // פעולה במקרה שאין התאמה
@@ -1023,62 +989,16 @@ public class CandyBoard : MonoBehaviour
             switch (_candy2.candyType)
             {
                 case candyType.vertical:
-                    // פעולה לממתק אנכי
-                    for (int y = 0; y < height; y++)
-                    {
-                        if (candyBoard[_candy2.xIndex, y].isUsabal)
-                            candyToRemove.Add(candyBoard[_candy2.xIndex, y].candy.GetComponent<candy>());
-                    }
+                    StartCoroutine(PreformVertical(_candy2));
                     break;
                 case candyType.horizontal:
-                    for (int x = 0; x < width; x++)
-                    {
-                        if (candyBoard[x, _candy2.yIndex].isUsabal)
-                            candyToRemove.Add(candyBoard[x, _candy2.yIndex].candy.GetComponent<candy>());
-                    }
+                    StartCoroutine(PreformHorizontal(_candy2));
                     break;
                 case candyType.super:
-                    // פעולה לממתק סופר
-                    // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
-                    for (int x = 0; x < width; x++)
-                    {
-                        for (int y = 0; y < height; y++)
-                        {
-                            if (candyBoard[x, y].isUsabal)
-                            {
-                                candy currentCandy = candyBoard[x, y]?.candy?.GetComponent<candy>();
-
-                                if (currentCandy != null && currentCandy.candyType == _candy1.candyType)
-                                {
-                                    candyToRemove.Add(currentCandy);
-                                }
-                            }
-                        }
-                    }
-                    candyToRemove.Add(_candy2);
+                    StartCoroutine(PreformSuper(_candy2, _candy1));
                     break;
                 case candyType.bomb:
-                    int explosionRadius = 1; // רדיוס 1 לכל כיוון יוצר אזור 3x3
-
-                    for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
-                    {
-                        for (int dy = -explosionRadius; dy <= explosionRadius; dy++)
-                        {
-                            int newX = _candy2.xIndex + dx;
-                            int newY = _candy2.yIndex + dy;
-
-                            // בדיקה שהאינדקסים תקפים בתוך גבולות הלוח
-                            if (newX >= 0 && newX < width && newY >= 0 && newY < height)
-                            {
-                                candy currentCandy = candyBoard[newX, newY]?.candy?.GetComponent<candy>();
-
-                                if (currentCandy != null)
-                                {
-                                    candyToRemove.Add(currentCandy);
-                                }
-                            }
-                        }
-                    }
+                    StartCoroutine(PreformBomb(_candy2));
                     break;
                 default:
                     // פעולה במקרה שאין התאמה
@@ -1088,6 +1008,179 @@ public class CandyBoard : MonoBehaviour
         }
         return IsSpeshel;
     }
+
+    IEnumerator PreformVertical(candy candy)
+    {
+        //רשימה של ממתקים לניקוד
+        List<candy> _candyList = new();
+
+        // יצירת אפקט ויזואלי
+        Vector3 pos = new Vector3((candy.xIndex - spacingX) * boardScale, 0, (candy.yIndex - spacingY) * boardScale);
+        GameObject effect = Instantiate(VFXVerticalPrefab, pos, Quaternion.identity);
+        VFXVertical = effect.GetComponent<VisualEffect>();
+        VFXVertical.Play();
+
+        int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // המרחק המרבי לכל כיוון
+        float delayBetweenRemovals = 0.1f; // זמן המתנה בין כל מחיקה (ניתן לשנות)
+
+        for (int y = 0; y <= maxDistance; y++)
+        {
+            bool removedAny = false;
+
+            // בדיקה ומחיקה כלפי מעלה
+            int upperY = candy.yIndex + y;
+            if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[candy.xIndex, upperY].candy.gameObject);
+                candyBoard[candy.xIndex, upperY] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // בדיקה ומחיקה כלפי מטה
+            int lowerY = candy.yIndex - y;
+            if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[candy.xIndex, lowerY].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[candy.xIndex, lowerY].candy.gameObject);
+                candyBoard[candy.xIndex, lowerY] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
+            if (removedAny)
+            {
+                yield return new WaitForSeconds(delayBetweenRemovals);
+            }
+        }
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(_candyList.Count, false);
+
+        // מחכים שהאפקט יסתיים ואז מוחקים אותו
+        yield return new WaitForSeconds(0.1f);
+        Destroy(effect);
+
+        // מחכים שניות לפני שממשיכים לבדוק התאמות חדשות
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+    }
+
+    IEnumerator PreformHorizontal(candy candy)
+    {
+        //רשימה של ממתקים לניקוד
+        List<candy> _candyList = new();
+
+        // יצירת אפקט ויזואלי
+        Vector3 pos = new Vector3((candy.xIndex - spacingX) * boardScale, 0, (candy.yIndex - spacingY) * boardScale);
+        GameObject effect = Instantiate(VFXHorizontalPrefab, pos, Quaternion.identity);
+        VFXHorizontal = effect.GetComponent<VisualEffect>();
+        VFXHorizontal.Play();
+
+        int maxDistance = Mathf.Max(candy.xIndex, width - candy.xIndex); // המרחק המרבי לכל כיוון בציר ה-X
+        float delayBetweenRemovals = 0.1f; // זמן המתנה בין כל מחיקה (ניתן לשנות)
+
+        for (int x = 0; x <= maxDistance; x++)
+        {
+            bool removedAny = false;
+
+            // בדיקה ומחיקה כלפי ימין
+            int rightX = candy.xIndex + x;
+            if (rightX < width && candyBoard[rightX, candy.yIndex].isUsabal && candyBoard[rightX, candy.yIndex].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[rightX, candy.yIndex].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[rightX, candy.yIndex].candy.gameObject);
+                candyBoard[rightX, candy.yIndex] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // בדיקה ומחיקה כלפי שמאל
+            int leftX = candy.xIndex - x;
+            if (leftX >= 0 && candyBoard[leftX, candy.yIndex].isUsabal && candyBoard[leftX, candy.yIndex].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[leftX, candy.yIndex].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[leftX, candy.yIndex].candy.gameObject);
+                candyBoard[leftX, candy.yIndex] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
+            if (removedAny)
+            {
+                yield return new WaitForSeconds(delayBetweenRemovals);
+            }
+        }
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(_candyList.Count, false);
+
+        // מחכים שהאפקט יסתיים ואז מוחקים אותו
+        yield return new WaitForSeconds(0.1f); // זמן מותאם לפי משך האנימציה
+        Destroy(effect);
+
+        // מחכים 3 שניות לפני שממשיכים לבדוק התאמות חדשות
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+    }
+
+    IEnumerator PreformSuper(candy candy1, candy candy2)
+    {
+        // פעולה לממתק סופר
+        // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (candyBoard[x, y].isUsabal)
+                {
+                    candy currentCandy = candyBoard[x, y]?.candy?.GetComponent<candy>();
+
+                    if (currentCandy != null && currentCandy.candyType == candy2.candyType)
+                    {
+                        candyToRemove.Add(currentCandy);
+                    }
+                }
+            }
+        }
+        candyToRemove.Add(candy1);
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        yield break;
+    }
+    IEnumerator PreformBomb(candy candy)
+    {
+        int explosionRadius = 1; //  רדיוס 1 לכל כיוון יוצר אזור 3x3
+
+        for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
+        {
+            for (int dy = -explosionRadius; dy <= explosionRadius; dy++)
+            {
+                int newX = candy.xIndex + dx;
+                int newY = candy.yIndex + dy;
+
+                // בדיקה שהאינדקסים תקפים בתוך גבולות הלוח
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height)
+                {
+                    candy currentCandy = candyBoard[newX, newY]?.candy?.GetComponent<candy>();
+
+                    if (currentCandy != null)
+                    {
+                        candyToRemove.Add(currentCandy);
+                    }
+                }
+            }
+        }
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        yield break;
+    }
+
 
     //בודק אם הם אחד ליד השני
     private bool IsAdjacent(candy _candy1, candy _candy2)
