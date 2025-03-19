@@ -405,7 +405,7 @@ public class CandyBoard : MonoBehaviour
 
     //מחק את הנכונים ותמלא מחדש
     private void RemoveAndRefill(List<candy> candyToRemove)
-    {
+    {    
         //מוחק את הממתקים ומפנה את הלוח
         foreach (candy candy in candyToRemove)
         {
@@ -422,12 +422,7 @@ public class CandyBoard : MonoBehaviour
             {
                 Debug.LogWarning("המשתנה candy לא קיים, לא ניתן למחוק את האובייקט.");
             }
-
-/*            //מוחק ממתק
-            Destroy(candy.gameObject);
-
-            //מיצר ריק בנקודה הזאת
-            candyBoard[xIndex, yIndex] = new Node(true, null);*/
+            Debug.Log("1111111111");
         }
 
        //שם מיוחדים אם יש
@@ -1016,11 +1011,9 @@ public class CandyBoard : MonoBehaviour
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
 
-        // יצירת אפקט ויזואלי
-        Vector3 pos = new Vector3((candy.xIndex - spacingX) * boardScale, 0, (candy.yIndex - spacingY) * boardScale);
-        GameObject effect = Instantiate(VFXVerticalPrefab, pos, Quaternion.identity);
-        VFXVertical = effect.GetComponent<VisualEffect>();
-        VFXVertical.Play();
+        //מחכה ואז עושה אפקט
+        yield return new WaitForSeconds(0.3f);
+        GameObject toDestroy = candy.OnDestroyVFX();
 
         int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // המרחק המרבי לכל כיוון
         float delayBetweenRemovals = 0.1f; // זמן המתנה בין כל מחיקה (ניתן לשנות)
@@ -1065,7 +1058,7 @@ public class CandyBoard : MonoBehaviour
 
         // מחכים שהאפקט יסתיים ואז מוחקים אותו
         yield return new WaitForSeconds(0.1f);
-        Destroy(effect);
+        Destroy(toDestroy);
 
         // מחכים שניות לפני שממשיכים לבדוק התאמות חדשות
         yield return new WaitForSeconds(0.1f);
@@ -1077,12 +1070,9 @@ public class CandyBoard : MonoBehaviour
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
 
-        // יצירת אפקט ויזואלי
-        Vector3 pos = new Vector3((candy.xIndex - spacingX) * boardScale, 0, (candy.yIndex - spacingY) * boardScale);
-        Debug.Log(pos + "dgsdgdfg");
-        GameObject effect = Instantiate(VFXHorizontalPrefab, pos, Quaternion.identity);
-        VFXHorizontal = effect.GetComponent<VisualEffect>();
-        VFXHorizontal.Play();
+        //מחכה ואז עושה אפקט
+        yield return new WaitForSeconds(0.3f);
+        GameObject toDestroy = candy.OnDestroyVFX();
 
         int maxDistance = Mathf.Max(candy.xIndex, width - candy.xIndex); // המרחק המרבי לכל כיוון בציר ה-X
         float delayBetweenRemovals = 0.1f; // זמן המתנה בין כל מחיקה (ניתן לשנות)
@@ -1127,7 +1117,7 @@ public class CandyBoard : MonoBehaviour
 
         // מחכים שהאפקט יסתיים ואז מוחקים אותו
         yield return new WaitForSeconds(0.1f); // זמן מותאם לפי משך האנימציה
-        Destroy(effect);
+        Destroy(toDestroy);
 
         // מחכים 3 שניות לפני שממשיכים לבדוק התאמות חדשות
         yield return new WaitForSeconds(0.1f);

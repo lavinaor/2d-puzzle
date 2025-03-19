@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class candy : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class candy : MonoBehaviour
     public bool isMatched;
     private Vector2 current;
     private Vector2 targetPause;
+
+    //אפקט לרוחב
+    public GameObject VFXOnDestroyPrefab;
 
     [SerializeField]
     private float duration = 0.5f;
@@ -79,6 +83,19 @@ public class candy : MonoBehaviour
         //מסמן שסיים תזוזה
         isMoving = false;
         Debug.Log($"Swapping candy {this.name} at {transform.position} with candy at {target}");
+    }
+
+    public GameObject OnDestroyVFX()
+    {
+        if (VFXOnDestroyPrefab != null)
+        {
+            // יצירת אפקט ויזואלי
+            GameObject effect = Instantiate(VFXOnDestroyPrefab, this.transform.position, Quaternion.identity);
+            VisualEffect VFXOnDestroy = effect.GetComponent<VisualEffect>();
+            VFXOnDestroy.Play();
+            return effect;
+        }
+        return null;
     }
 }
 
