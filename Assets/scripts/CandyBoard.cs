@@ -391,7 +391,7 @@ public class CandyBoard : MonoBehaviour
         RemoveAndRefill(candyToRemove);
 
         //משנה ניקוד וכמות מהלכים
-        GameManager.Instance.ProcessTurn(candyToRemove.Count, _subtractMoves);
+        GameManager.Instance.ProcessTurn(candyToRemove, _subtractMoves);
 
         //מחכה קצת כדי שיראה את זה בלוח 
         yield return new WaitForSeconds(deley);
@@ -939,9 +939,11 @@ public class CandyBoard : MonoBehaviour
         //בודק אם יש התאמה
         if (CheckBoard())
         {
-            if(!checkeIfCandyIsSpeshel(_candy1, _candy2));
-            //מתחיל קורוטינה שתטפל בתוצאות
-            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+            if(!checkeIfCandyIsSpeshel(_candy1, _candy2))
+            {
+                //מתחיל קורוטינה שתטפל בתוצאות
+                StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+            }
         }
         else if(checkeIfCandyIsSpeshel(_candy1, _candy2))
         {
@@ -1059,7 +1061,7 @@ public class CandyBoard : MonoBehaviour
         }
 
         //משנה ניקוד וכמות מהלכים
-        GameManager.Instance.ProcessTurn(_candyList.Count, false);
+        GameManager.Instance.ProcessTurn(_candyList, false);
 
         // מחכים שהאפקט יסתיים ואז מוחקים אותו
         yield return new WaitForSeconds(0.1f);
@@ -1077,6 +1079,7 @@ public class CandyBoard : MonoBehaviour
 
         // יצירת אפקט ויזואלי
         Vector3 pos = new Vector3((candy.xIndex - spacingX) * boardScale, 0, (candy.yIndex - spacingY) * boardScale);
+        Debug.Log(pos + "dgsdgdfg");
         GameObject effect = Instantiate(VFXHorizontalPrefab, pos, Quaternion.identity);
         VFXHorizontal = effect.GetComponent<VisualEffect>();
         VFXHorizontal.Play();
@@ -1120,7 +1123,7 @@ public class CandyBoard : MonoBehaviour
         }
 
         //משנה ניקוד וכמות מהלכים
-        GameManager.Instance.ProcessTurn(_candyList.Count, false);
+        GameManager.Instance.ProcessTurn(_candyList, false);
 
         // מחכים שהאפקט יסתיים ואז מוחקים אותו
         yield return new WaitForSeconds(0.1f); // זמן מותאם לפי משך האנימציה
