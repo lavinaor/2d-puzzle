@@ -1649,8 +1649,8 @@ MonoBehaviour:
   - {fileID: 4326738792950024832, guid: d5d8b6432c0b6724cbbc36f27df2c1d5, type: 3}
   - {fileID: 1973102433002678684, guid: ec13292776b91574fb54d5fccb3d6801, type: 3}
   - {fileID: 3969313555334975056, guid: dab19f8dd6d8053499c32844cb5554ce, type: 3}
+  specialCandyPrefabs: []
   candyBoardGO: {fileID: 246790904}
-  candyToDestroy: []
   selectedCandy: {fileID: 0}
   isProcessingMove: 0
   candyToRemove: []
@@ -1658,6 +1658,8 @@ MonoBehaviour:
   boardScaleFactor: 1.6
   lightParent: {fileID: 1701405404}
   boardScale: 1
+  VFXVerticalPrefab: {fileID: 0}
+  VFXHorizontalPrefab: {fileID: 0}
 --- !u!4 &246790906
 Transform:
   m_ObjectHideFlags: 0

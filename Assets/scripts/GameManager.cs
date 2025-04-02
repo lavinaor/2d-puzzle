@@ -1,20 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     //הופך אותו לסטטי
     public static GameManager Instance;
-
-    //הרקע ללוח
-    public GameObject beckgroundPanel;
-    //מסך ניצחון
-    public GameObject victoryPanel;
-    //מסך הפסד
-    public GameObject losePanel;
 
     //הכמות שצריך כדי לנצח את השלב
     public int goal;
@@ -26,20 +21,43 @@ public class GameManager : MonoBehaviour
     //שומר האם המשחק נגמר
     public bool isGameEnded;
 
+    // רשימה של מטרות לכל סוג ממתק
+    [SerializeField]
+    private List<Goal> goals = new List<Goal>();
+
+    //הרקע ללוח
+    public GameObject beckgroundPanel;
+    //מסך ניצחון
+    public GameObject victoryPanel;
+    //מסך הפסד
+    public GameObject losePanel;
+
     //השומר את הכיתובים על המסך
     public TMP_Text pointText;
     public TMP_Text movesText;
     public TMP_Text goalText;
+
+    // נוסיף משתנה לשמירת ה-Slider
+    public Slider scoreSlider;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    public void Initilize(int _moves, int _goal)
+    private void Start()
     {
-        moves = _moves;
-        goal = _goal;
+        if (goals.Count != 0)
+        {
+            goal = 0;
+            foreach (Goal g in goals)
+            {
+                goal += g.goalPerType;
+            }
+        }
+        // עדכון ה-Slider שיתחיל מ-0 עם הגבלת ה-Max
+        scoreSlider.maxValue = goal;
+        scoreSlider.value = 0;
     }
 
     // Update is called once per frame
@@ -50,9 +68,41 @@ public class GameManager : MonoBehaviour
         goalText.text = "goals: " + goal.ToString();
     }
 
-    public void ProcessTurn(int _pointToGain, bool _subtracMoves)
+    public void ProcessTurn(List<candy> candiesToProcess, bool _subtracMoves)
     {
-        points += _pointToGain;
+
+        if (goals.Count != 0)
+        {
+            // עבור כל ממתק ברשימה
+            foreach (candy c in candiesToProcess)
+            {
+                // מצא את המטרה המתאימה לסוג הממתק
+                Goal goalData = goals.Find(g => g.type == c.candyType);
+
+                // אם מצאנו מטרה עבור הסוג של הממתק
+                if (goalData != null && goalData.goalPerType > 0)
+                {
+                    // הפחת את המטרה המוגדרת לכל סוג ממתק
+                    goalData.goalPerType--;
+
+                    points++;
+                    // עדכן את ה-Slider (אם יש צורך)
+                    scoreSlider.value = (float)points / goal;
+                }
+            }
+        }
+        else
+        {
+            points += candiesToProcess.Count;
+        }
+
+
+        // מחשב את הערך של הסליידר בטווח 0-1
+        if (goal > 0)
+        {
+            scoreSlider.value = (float)points/* / goal*/;
+        }
+
         if (_subtracMoves)
         {
             moves--;
@@ -86,4 +136,12 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    [Serializable]
+    class Goal
+    {
+        public candyType type;
+        public int goalPerType;
+    }
+
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1903647747564668358}
   - component: {fileID: 3047639700178809660}
   - component: {fileID: 5065697917125098192}
+  - component: {fileID: 1506817485556558434}
   m_Layer: 0
   m_Name: sqer red
   m_TagString: Untagged
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.09803922}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -131,6 +132,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1506817485556558434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3776453340303175394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331ba62312d7ecf4c8518a5e4a2d4ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  candyType: 5
+  isSpecial: 0
+  xIndex: 0
+  yIndex: 0
+  isMatched: 0
+  VFXOnDestroyPrefab: {fileID: 1354443656969227799, guid: 021bbf96a19906642a0e41fb58b29fc4, type: 3}
+  duration: 0.6
+  isMoving: 0
 --- !u!1 &7545270867608727833
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +162,6 @@ GameObject:
   m_Component:
   - component: {fileID: 310127594593082052}
   - component: {fileID: 3410547440721194265}
-  - component: {fileID: 6304206346397036011}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -216,21 +236,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6304206346397036011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7545270867608727833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 331ba62312d7ecf4c8518a5e4a2d4ed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  candyType: 5
-  xIndex: 0
-  yIndex: 0
-  isMatched: 0
-  duration: 0.6
-  isMoving: 0

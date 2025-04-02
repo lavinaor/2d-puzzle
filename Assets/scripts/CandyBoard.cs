@@ -4,6 +4,11 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
+using System;
+using UnityEngine.VFX;
+using System.Reflection;
+using UnityEngine.UIElements;
 
 public class CandyBoard : MonoBehaviour
 {
@@ -25,6 +30,9 @@ public class CandyBoard : MonoBehaviour
     //לקבל את הפריפבים של הממתקים
     public GameObject[] candyPrefabs;
 
+    //לקבל את הפריפבים של הממתקים
+    public GameObject[] specialCandyPrefabs;
+
     //לקבל את הלוח ואת האובייקט
     private Node[,] candyBoard;
     public GameObject candyBoardGO;
@@ -32,8 +40,6 @@ public class CandyBoard : MonoBehaviour
     // ליצור פבליק לבורד
     public static CandyBoard instance;
 
-    //רשימת ממתקים להריסה
-    public List<GameObject> candyToDestroy = new();
 
     // שיקוי שנבחר אחרון להוזזה
     [SerializeField]
@@ -46,6 +52,10 @@ public class CandyBoard : MonoBehaviour
     // רשימה של ממתקים שצריך למחוק כי הם התאמה
     [SerializeField]
     List<candy> candyToRemove = new();
+
+    // רשימה של תוצאות שצריך למחוק כי הם התאמה
+    [SerializeField]
+    List<MatchResults> lastMatchResults = new();
 
     [SerializeField]
     private float delayBetweenMatches = 0.4f;
@@ -61,6 +71,16 @@ public class CandyBoard : MonoBehaviour
 
     //קנה מידה אחרי חישוב יכנס לכאן
     public float boardScale = 1.0f;
+
+    //אפקט לאורך
+    [SerializeField]
+    private GameObject VFXVerticalPrefab;
+    private VisualEffect VFXVertical;
+
+    //אפקט לרוחב
+    [SerializeField]
+    private GameObject VFXHorizontalPrefab;
+    private VisualEffect VFXHorizontal;
 
     private void Awake()
     {
@@ -140,9 +160,6 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// </summary>
     void ConvertTilemapToGameBoard()
     {
         tilemap.CompressBounds();
@@ -165,14 +182,32 @@ public class CandyBoard : MonoBehaviour
                 if (tile != null)
                 {
                     Debug.Log(tile.name);
+
+                    bool isSpecial = false;
                     int prefabIndex = GetPrefabIndex(tile);
+                    if (prefabIndex == -1)
+                    {
+                        isSpecial = true;
+                        prefabIndex = GetSpecialPrefabIndex(tile);
+                    }
+
                     if (prefabIndex != -1)
                     {
                         //מחשב מיקום
                         Vector2 pos = new Vector2(x - spacingX, y - spacingY);
 
                         Vector3 worldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y, 0));
-                        GameObject newTile = Instantiate(candyPrefabs[prefabIndex], pos, Quaternion.identity);
+                        GameObject prefab;
+                        if (!isSpecial)
+                        {
+                            prefab = candyPrefabs[prefabIndex]; 
+                        }
+                        else
+                        {
+                            prefab = specialCandyPrefabs[prefabIndex];
+                        }
+
+                        GameObject newTile = Instantiate(prefab, pos, Quaternion.identity);
                         newTile.transform.parent = boardParent.transform; // מציב תחת ההורה
 
 
@@ -187,6 +222,7 @@ public class CandyBoard : MonoBehaviour
                 {
                     // מוסיף אותו למערך
                     candyBoard[x, y] = new Node(false, null);
+                    Debug.Log(" is null");
                 }
             }
         }
@@ -207,10 +243,17 @@ public class CandyBoard : MonoBehaviour
         }
         return -1;
     }
-
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// </summary>
+    int GetSpecialPrefabIndex(TileBase tile)
+    {
+        for (int i = 0; i < specialCandyPrefabs.Length; i++)
+        {
+            if (specialCandyPrefabs[i].name == tile.name) // הנחה: שם הפריפב זהה לשם האריח
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     void initializeBoard()
     {
@@ -268,11 +311,12 @@ public class CandyBoard : MonoBehaviour
         // בול שמוחזר מתחיל כלא נכון ומשתנה במידה של התאמה
         bool hasMatched = false;
 
-        //מנקה את הרשימה
-        candyToDestroy.Clear();
+        //מנקה את הרשימות
+        candyToRemove.Clear();
+        lastMatchResults.Clear();
 
         //מגדיר מחדש את הממתקים כלא מותאמים
-        foreach(Node nodeCandy in candyBoard)
+        foreach (Node nodeCandy in candyBoard)
         {
             //רק אם הם קיימים
             if (nodeCandy.candy != null)
@@ -299,13 +343,19 @@ public class CandyBoard : MonoBehaviour
 
                         if (matchCandy.connectedCandy.Count >= 3)
                         {
-                            //מקום להכניס שילובים מרובים
-                            MatchResults superMatchedPotions = SuperMach(matchCandy);
+                            //שילובים מרובים
+                            MatchResults superMatchedCandys = SuperMach(matchCandy);
+
+                            //מוסיף את המתאים ביותר
+                            if (matchCandy != superMatchedCandys)
+                                lastMatchResults.Add(superMatchedCandys);
+                            else
+                                lastMatchResults.Add(matchCandy);
 
                             //מוסיף את הממתקים הרציפים לרשימה למחיקה
-                            candyToRemove.AddRange(superMatchedPotions.connectedCandy);
+                            candyToRemove.AddRange(superMatchedCandys.connectedCandy);
 
-                            foreach (candy can in superMatchedPotions.connectedCandy)
+                            foreach (candy can in superMatchedCandys.connectedCandy)
                             {
                                 can.isMatched = true;
                             }
@@ -317,24 +367,39 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
-        
+
         //מחזיר אם יש התאמות
         return hasMatched;
     }
 
     public IEnumerator ProsesTurnOnMatchedBoard(bool _subtractMoves, float deley)
     {
+        //רשימה של האפקטים
+        List<GameObject> efects = new List<GameObject>();
+
         //מגדיר את כל הממתקים להוצא כלא בהתאמה
         foreach (candy candyToRemove1 in candyToRemove)
         {
+            if (candyToRemove1 != null)
+                efects.Add(candyToRemove1.OnDestroyVFX());
             candyToRemove1.isMatched = false;
         }
 
-        //מנקה ומחליף את כל השיקויים הנכונים
-        RemoveAndRefill(candyToRemove);
+        Remove(candyToRemove);
+
+        //מחכה קצת כדי שיראה את זה בלוח 
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (GameObject efect in efects)
+        {
+            Destroy(efect);
+        }
+
+        isSpecial();
+        Refill();
 
         //משנה ניקוד וכמות מהלכים
-        GameManager.Instance.ProcessTurn(candyToRemove.Count, _subtractMoves);
+        GameManager.Instance.ProcessTurn(candyToRemove, _subtractMoves);
 
         //מחכה קצת כדי שיראה את זה בלוח 
         yield return new WaitForSeconds(deley);
@@ -343,11 +408,15 @@ public class CandyBoard : MonoBehaviour
         {
             StartCoroutine(ProsesTurnOnMatchedBoard(false, deley));
         }
+        else
+        {
+            //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
+            isProcessingMove = false;
+            Debug.Log("end");
+        }
     }
 
-
-    //מחק את הנכונים ותמלא מחדש
-    private void RemoveAndRefill(List<candy> candyToRemove)
+    private void Remove(List<candy> candyToRemove)
     {
         //מוחק את הממתקים ומפנה את הלוח
         foreach (candy candy in candyToRemove)
@@ -365,20 +434,59 @@ public class CandyBoard : MonoBehaviour
             {
                 Debug.LogWarning("המשתנה candy לא קיים, לא ניתן למחוק את האובייקט.");
             }
-
-/*            //מוחק ממתק
-            Destroy(candy.gameObject);
-
-            //מיצר ריק בנקודה הזאת
-            candyBoard[xIndex, yIndex] = new Node(true, null);*/
+            Debug.Log("1111111111");
         }
+    }
 
-        //לולאה שעוברת על הלוח
-        for (int x = 0; x< width; x++)
+    private void isSpecial()
+    {
+        // בודק האם יש התאמות מיוחדות
+        var specialMatches = lastMatchResults.Where(r =>
+            r.direction == MatchDirection.LongVertical ||
+            r.direction == MatchDirection.LongHorizontal ||
+            r.direction == MatchDirection.Super).ToList();
+
+        if (specialMatches.Count > 0)
+        {
+            Debug.Log("נמצאו " + specialMatches.Count + " התאמות מיוחדות!");
+
+            foreach (var match in specialMatches)
+            {
+                // בוחר את המקום הטוב ביותר עבור כל התאמה מיוחדת
+                Vector2Int bestCandy = GetBestPositionForSpecialCandy(match);
+
+                Debug.Log("מיקום הממתק המיוחד שנמצא: " + bestCandy.x + "  " + bestCandy.y); // בודק את המיקום
+
+                if (bestCandy != null)
+                {
+                    // בוחר את המקום הטוב ביותר עבור כל התאמה מיוחדת
+                    int prefabIndex = GetSpecialPrefabIndex(match);
+
+                    //מזמן את הממתק המיוחד
+                    Vector3 newPosishen = new Vector3((bestCandy.x - spacingX) * boardScale, (bestCandy.y - spacingY) * boardScale, 0);
+                    GameObject newCandy = Instantiate(specialCandyPrefabs[prefabIndex], newPosishen, Quaternion.identity);
+
+                    // להציב את הממתק תחת אובייקט האב
+                    newCandy.transform.SetParent(boardParent.transform);
+
+                    //דהגדר מיקומים
+                    newCandy.GetComponent<candy>().setIndicies((int)bestCandy.x, (int)bestCandy.y);
+
+                    //הגדר אותם לוח
+                    candyBoard[bestCandy.x, bestCandy.y] = new Node(true, newCandy);
+                }
+            }
+        }
+    }
+
+    private void Refill()
+    {
+        //לולאה שעוברת על הלוח וממלאת אותו
+        for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                if (candyBoard[x,y].candy == null)
+                if (candyBoard[x, y].candy == null && candyBoard[x, y].isUsabal == true)
                 {
                     //שולח הודעה על ניסיון מילוי
                     Debug.Log("the location x: " + x + "y:" + y + " is empty, attempting to refil it.");
@@ -388,6 +496,49 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
+    }
+
+    private Vector2Int GetBestPositionForSpecialCandy(MatchResults matchResults)
+    {
+        if (matchResults.connectedCandy.Count == 0) return Vector2Int.zero; // אם אין מקומות זמינים
+
+        // שלב 1: מצא את האינדקס Y הנמוך ביותר
+        int minY = matchResults.connectedCandy.Min(candy => candy.yIndex);
+
+        // שלב 2: סינון רק לממתקים עם אותו Y הכי נמוך
+        List<candy> filteredCandies = matchResults.connectedCandy
+            .Where(candy => candy.yIndex == minY)
+            .ToList();
+
+        if(selectedCandy == null)
+        {
+            selectedCandy = filteredCandies.FirstOrDefault();
+        }
+
+        // שלב 3: אם יש כמה באותו גובה, בחר את הקרוב ביותר ל-selectedCandy
+        if (filteredCandies.Count > 1 && selectedCandy != null)
+        {
+            filteredCandies = filteredCandies
+                .OrderBy(candy => Vector2Int.Distance(new Vector2Int(candy.xIndex, candy.yIndex), new Vector2Int(selectedCandy.xIndex, selectedCandy.yIndex)))
+                .ToList();
+        }
+
+        // שלב 4: מחזיר את המיקום של הממתק הכי מתאים
+        return new Vector2Int(filteredCandies.First().xIndex, filteredCandies.First().yIndex);
+    }
+
+    private int GetSpecialPrefabIndex(MatchResults matchResults)
+    {
+        switch (matchResults.direction)
+        {
+            case MatchDirection.LongVertical:
+                return 0;
+            case MatchDirection.LongHorizontal:
+                return 1;
+            case MatchDirection.Super:
+                return 2;  
+        }
+        return 3;
     }
 
     // ממלא מחדש
@@ -461,17 +612,6 @@ public class CandyBoard : MonoBehaviour
         // להציב את הממתק תחת אובייקט האב
         newCandy.transform.SetParent(boardParent.transform);
         
-        //מחשב את הקנה מידה ביחס לגודל של ההורה ככה שזה יהיה בקנה מידה נכון
-        newCandy.transform.localScale = new Vector3(
-            newCandy.transform.localScale.x * boardScale,
-            newCandy.transform.localScale.y * boardScale,
-            newCandy.transform.localScale.z);
-
-        // קביעת המיקום המתוקן בתוך ההורה
-        newCandy.transform.localPosition = new Vector3(
-            (x - spacingX) * boardScale,
-            (height - spacingY) * boardScale,
-            0);
         
         //דהגדר מיקומים
                 newCandy.GetComponent<candy>().setIndicies(x, index);
@@ -491,7 +631,7 @@ public class CandyBoard : MonoBehaviour
         int lowestNull = 99;
         for (int y = (height - 1); y>= 0; y--)
         {
-            if (candyBoard[x, y].candy == null)
+            if (candyBoard[x, y].candy == null && candyBoard[x, y].isUsabal)
             {
                 lowestNull = y;
             }
@@ -730,7 +870,8 @@ public class CandyBoard : MonoBehaviour
         else if (selectedCandy != _candy)
         {
             SwapCandy(selectedCandy, _candy);
-            selectedCandy = null;
+
+            //selectedCandy = null;
         }
     }
 
@@ -740,6 +881,7 @@ public class CandyBoard : MonoBehaviour
         //אם זה לא אחד ליד השני
         if (!IsAdjacent(_candy1, _candy2))
         {
+            selectedCandy = null;
             return;
         }
 
@@ -801,51 +943,269 @@ public class CandyBoard : MonoBehaviour
     private IEnumerator ProcessMatches(candy _candy1, candy _candy2)
     {
         //מחכה שההחלפה תסתיים אם אני רוצה להוסיף זמנים שונים צריך לפתור פה את זה 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.4f);
         
         //בודק אם יש התאמה
         if (CheckBoard())
         {
-            //מתחיל קורוטינה שתטפל בתוצאות
-            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+            if(!checkeIfCandyIsSpeshel(_candy1, _candy2))
+            {
+                //מתחיל קורוטינה שתטפל בתוצאות
+                StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+            }
         }
-
+        else if(checkeIfCandyIsSpeshel(_candy1, _candy2))
+        {
+            //StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        }
         //אם אין התאמה אז הם יחזרו לאחור
         else
         {
             DoSwap(_candy1, _candy2);
+            //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
+            isProcessingMove = false;
         }
 
-        //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
-        isProcessingMove = false;
+        selectedCandy = null;
     }
+
+    private bool checkeIfCandyIsSpeshel(candy _candy1, candy _candy2)
+    {
+        bool IsSpeshel = false;
+        if (_candy1.isSpecial)
+        {
+            switch (_candy1.candyType)
+            {
+                case candyType.vertical:
+                    StartCoroutine(PreformVertical(_candy1));
+                    break;
+                case candyType.horizontal:
+                    StartCoroutine(PreformHorizontal(_candy1));
+                    break;
+                case candyType.super:
+                    StartCoroutine(PreformSuper(_candy1, _candy2));
+                    break;
+                case candyType.bomb:
+                    StartCoroutine(PreformBomb(_candy1));
+                    break;
+                default:
+                    // פעולה במקרה שאין התאמה
+                    break;
+            }
+            IsSpeshel = true;
+        }
+        if (_candy2.isSpecial)
+        {
+            switch (_candy2.candyType)
+            {
+                case candyType.vertical:
+                    StartCoroutine(PreformVertical(_candy2));
+                    break;
+                case candyType.horizontal:
+                    StartCoroutine(PreformHorizontal(_candy2));
+                    break;
+                case candyType.super:
+                    StartCoroutine(PreformSuper(_candy2, _candy1));
+                    break;
+                case candyType.bomb:
+                    StartCoroutine(PreformBomb(_candy2));
+                    break;
+                default:
+                    // פעולה במקרה שאין התאמה
+                    break;
+            }
+            IsSpeshel = true;
+        }
+        return IsSpeshel;
+    }
+
+    IEnumerator PreformVertical(candy candy)
+    {
+        //רשימה של ממתקים לניקוד
+        List<candy> _candyList = new();
+
+        //מחכה ואז עושה אפקט
+        yield return new WaitForSeconds(0.3f);
+        GameObject toDestroy = candy.OnDestroyVFX();
+
+        int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // המרחק המרבי לכל כיוון
+
+        for (int y = 0; y <= maxDistance; y++)
+        {
+            bool removedAny = false;
+
+            // בדיקה ומחיקה כלפי מעלה
+            int upperY = candy.yIndex + y;
+            if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[candy.xIndex, upperY].candy.gameObject);
+                candyBoard[candy.xIndex, upperY] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // בדיקה ומחיקה כלפי מטה
+            int lowerY = candy.yIndex - y;
+            if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[candy.xIndex, lowerY].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[candy.xIndex, lowerY].candy.gameObject);
+                candyBoard[candy.xIndex, lowerY] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
+            if (removedAny)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(_candyList, false);
+
+        // מחכים שהאפקט יסתיים ואז מוחקים אותו
+        yield return new WaitForSeconds(0.1f);
+        Destroy(toDestroy);
+
+
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+    }
+
+    IEnumerator PreformHorizontal(candy candy)
+    {
+        //רשימה של ממתקים לניקוד
+        List<candy> _candyList = new();
+
+        //מחכה ואז עושה אפקט
+        yield return new WaitForSeconds(0.3f);
+        GameObject toDestroy = candy.OnDestroyVFX();
+
+        int maxDistance = Mathf.Max(candy.xIndex, width - candy.xIndex); // המרחק המרבי לכל כיוון בציר ה-X
+
+        for (int x = 0; x <= maxDistance; x++)
+        {
+            bool removedAny = false;
+
+            // בדיקה ומחיקה כלפי ימין
+            int rightX = candy.xIndex + x;
+            if (rightX < width && candyBoard[rightX, candy.yIndex].isUsabal && candyBoard[rightX, candy.yIndex].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[rightX, candy.yIndex].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[rightX, candy.yIndex].candy.gameObject);
+                candyBoard[rightX, candy.yIndex] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // בדיקה ומחיקה כלפי שמאל
+            int leftX = candy.xIndex - x;
+            if (leftX >= 0 && candyBoard[leftX, candy.yIndex].isUsabal && candyBoard[leftX, candy.yIndex].candy != null)
+            {
+                //מוסיף את הממתק לרשימה לניקוד
+                _candyList.Add(candyBoard[leftX, candy.yIndex].candy.GetComponent<candy>());
+
+                Destroy(candyBoard[leftX, candy.yIndex].candy.gameObject);
+                candyBoard[leftX, candy.yIndex] = new Node(true, null);
+                removedAny = true;
+            }
+
+            // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
+            if (removedAny)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(_candyList, false);
+
+        // מחכים שהאפקט יסתיים ואז מוחקים אותו
+        yield return new WaitForSeconds(0.1f); // זמן מותאם לפי משך האנימציה
+        Destroy(toDestroy);
+
+
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+    }
+
+    IEnumerator PreformSuper(candy candy1, candy candy2)
+    {
+        GameObject efect = candy1.OnDestroyVFX();
+        // פעולה לממתק סופר
+        // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (candyBoard[x, y].isUsabal)
+                {
+                    candy currentCandy = candyBoard[x, y]?.candy?.GetComponent<candy>();
+
+                    if (currentCandy != null && currentCandy.candyType == candy2.candyType)
+                    {
+                        Destroy(candyBoard[x, y].candy.gameObject);
+                        candyBoard[x, y] = new Node(true, null);
+                        //candyToRemove.Add(currentCandy);
+                    }
+                }
+            }
+        }
+        Destroy(candyBoard[candy1.xIndex, candy1.yIndex].candy.gameObject);
+        candyBoard[candy1.xIndex, candy1.yIndex] = new Node(true, null);
+        //candyToRemove.Add(candy1);
+
+        yield return new WaitForSeconds(0.1f);
+        Destroy(efect);
+
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        yield break;
+    }
+    IEnumerator PreformBomb(candy candy)
+    {
+        GameObject efect = candy.OnDestroyVFX();
+        int explosionRadius = 1; //  רדיוס 1 לכל כיוון יוצר אזור 3x3
+
+        for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
+        {
+            for (int dy = -explosionRadius; dy <= explosionRadius; dy++)
+            {
+                int newX = candy.xIndex + dx;
+                int newY = candy.yIndex + dy;
+
+                // בדיקה שהאינדקסים תקפים בתוך גבולות הלוח
+                if (newX >= 0 && newX < width && newY >= 0 && newY < height)
+                {
+                    candy currentCandy = candyBoard[newX, newY]?.candy?.GetComponent<candy>();
+
+                    if (currentCandy != null)
+                    {
+                        Destroy(candyBoard[newX, newY].candy.gameObject);
+                        candyBoard[newX, newY] = new Node(true, null);
+                        //candyToRemove.Add(currentCandy);
+                    }
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(0.1f);
+        Destroy(efect);
+
+        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        yield break;
+    }
+
 
     //בודק אם הם אחד ליד השני
     private bool IsAdjacent(candy _candy1, candy _candy2)
     {
         return Mathf.Abs(_candy1.xIndex - _candy2.xIndex) + Mathf.Abs(_candy1.yIndex - _candy2.yIndex) == 1;
     }
-
-    //נפטר מהתאמות
-
-
-
-
-    // קוד ישן שמור לממקרה שאני אצטרך בעתיד
-    /*    private void DestroyCandy()
-        {
-            if (candyToDestroy != null)
-            {
-                foreach (GameObject candy in candyToDestroy)
-                {
-                    Destroy(candy);
-                }
-                candyToDestroy.Clear();
-            }
-        }*/
 }
-
-
 
 
 // כיתה של התווצאה 
