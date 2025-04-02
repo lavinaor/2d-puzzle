@@ -160,9 +160,6 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// </summary>
     void ConvertTilemapToGameBoard()
     {
         tilemap.CompressBounds();
@@ -257,10 +254,6 @@ public class CandyBoard : MonoBehaviour
         }
         return -1;
     }
-
-    /// <summary>
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// </summary>
 
     void initializeBoard()
     {
@@ -381,14 +374,29 @@ public class CandyBoard : MonoBehaviour
 
     public IEnumerator ProsesTurnOnMatchedBoard(bool _subtractMoves, float deley)
     {
+        //רשימה של האפקטים
+        List<GameObject> efects = new List<GameObject>();
+
         //מגדיר את כל הממתקים להוצא כלא בהתאמה
         foreach (candy candyToRemove1 in candyToRemove)
         {
+            if (candyToRemove1 != null)
+                efects.Add(candyToRemove1.OnDestroyVFX());
             candyToRemove1.isMatched = false;
         }
 
-        //מנקה ומחליף את כל השיקויים הנכונים
-        RemoveAndRefill(candyToRemove);
+        Remove(candyToRemove);
+
+        //מחכה קצת כדי שיראה את זה בלוח 
+        yield return new WaitForSeconds(0.5f);
+
+        foreach (GameObject efect in efects)
+        {
+            Destroy(efect);
+        }
+
+        isSpecial();
+        Refill();
 
         //משנה ניקוד וכמות מהלכים
         GameManager.Instance.ProcessTurn(candyToRemove, _subtractMoves);
@@ -400,12 +408,16 @@ public class CandyBoard : MonoBehaviour
         {
             StartCoroutine(ProsesTurnOnMatchedBoard(false, deley));
         }
+        else
+        {
+            //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
+            isProcessingMove = false;
+            Debug.Log("end");
+        }
     }
 
-
-    //מחק את הנכונים ותמלא מחדש
-    private void RemoveAndRefill(List<candy> candyToRemove)
-    {    
+    private void Remove(List<candy> candyToRemove)
+    {
         //מוחק את הממתקים ומפנה את הלוח
         foreach (candy candy in candyToRemove)
         {
@@ -424,11 +436,10 @@ public class CandyBoard : MonoBehaviour
             }
             Debug.Log("1111111111");
         }
+    }
 
-       //שם מיוחדים אם יש
-        if (lastMatchResults.Any(r => r.direction == MatchDirection.LongVertical || r.direction == MatchDirection.LongHorizontal || r.direction == MatchDirection.Super))
-            Debug.Log("יש התאמה מיוחדת!");
-
+    private void isSpecial()
+    {
         // בודק האם יש התאמות מיוחדות
         var specialMatches = lastMatchResults.Where(r =>
             r.direction == MatchDirection.LongVertical ||
@@ -466,8 +477,11 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
+    }
 
-        //לולאה שעוברת על הלוח
+    private void Refill()
+    {
+        //לולאה שעוברת על הלוח וממלאת אותו
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -929,7 +943,7 @@ public class CandyBoard : MonoBehaviour
     private IEnumerator ProcessMatches(candy _candy1, candy _candy2)
     {
         //מחכה שההחלפה תסתיים אם אני רוצה להוסיף זמנים שונים צריך לפתור פה את זה 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.4f);
         
         //בודק אם יש התאמה
         if (CheckBoard())
@@ -948,10 +962,9 @@ public class CandyBoard : MonoBehaviour
         else
         {
             DoSwap(_candy1, _candy2);
+            //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
+            isProcessingMove = false;
         }
-
-        //מעדכן שסיים מהלך ואפשר לבצע עוד אחד
-        isProcessingMove = false;
 
         selectedCandy = null;
     }
@@ -1016,7 +1029,6 @@ public class CandyBoard : MonoBehaviour
         GameObject toDestroy = candy.OnDestroyVFX();
 
         int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // המרחק המרבי לכל כיוון
-        float delayBetweenRemovals = 0.1f; // זמן המתנה בין כל מחיקה (ניתן לשנות)
 
         for (int y = 0; y <= maxDistance; y++)
         {
@@ -1049,7 +1061,7 @@ public class CandyBoard : MonoBehaviour
             // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
             if (removedAny)
             {
-                yield return new WaitForSeconds(delayBetweenRemovals);
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
@@ -1060,8 +1072,7 @@ public class CandyBoard : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         Destroy(toDestroy);
 
-        // מחכים שניות לפני שממשיכים לבדוק התאמות חדשות
-        yield return new WaitForSeconds(0.1f);
+
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
     }
 
@@ -1075,7 +1086,6 @@ public class CandyBoard : MonoBehaviour
         GameObject toDestroy = candy.OnDestroyVFX();
 
         int maxDistance = Mathf.Max(candy.xIndex, width - candy.xIndex); // המרחק המרבי לכל כיוון בציר ה-X
-        float delayBetweenRemovals = 0.1f; // זמן המתנה בין כל מחיקה (ניתן לשנות)
 
         for (int x = 0; x <= maxDistance; x++)
         {
@@ -1108,7 +1118,7 @@ public class CandyBoard : MonoBehaviour
             // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
             if (removedAny)
             {
-                yield return new WaitForSeconds(delayBetweenRemovals);
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
@@ -1119,13 +1129,13 @@ public class CandyBoard : MonoBehaviour
         yield return new WaitForSeconds(0.1f); // זמן מותאם לפי משך האנימציה
         Destroy(toDestroy);
 
-        // מחכים 3 שניות לפני שממשיכים לבדוק התאמות חדשות
-        yield return new WaitForSeconds(0.1f);
+
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
     }
 
     IEnumerator PreformSuper(candy candy1, candy candy2)
     {
+        GameObject efect = candy1.OnDestroyVFX();
         // פעולה לממתק סופר
         // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
         for (int x = 0; x < width; x++)
@@ -1138,17 +1148,26 @@ public class CandyBoard : MonoBehaviour
 
                     if (currentCandy != null && currentCandy.candyType == candy2.candyType)
                     {
-                        candyToRemove.Add(currentCandy);
+                        Destroy(candyBoard[x, y].candy.gameObject);
+                        candyBoard[x, y] = new Node(true, null);
+                        //candyToRemove.Add(currentCandy);
                     }
                 }
             }
         }
-        candyToRemove.Add(candy1);
+        Destroy(candyBoard[candy1.xIndex, candy1.yIndex].candy.gameObject);
+        candyBoard[candy1.xIndex, candy1.yIndex] = new Node(true, null);
+        //candyToRemove.Add(candy1);
+
+        yield return new WaitForSeconds(0.1f);
+        Destroy(efect);
+
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         yield break;
     }
     IEnumerator PreformBomb(candy candy)
     {
+        GameObject efect = candy.OnDestroyVFX();
         int explosionRadius = 1; //  רדיוס 1 לכל כיוון יוצר אזור 3x3
 
         for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
@@ -1165,11 +1184,17 @@ public class CandyBoard : MonoBehaviour
 
                     if (currentCandy != null)
                     {
-                        candyToRemove.Add(currentCandy);
+                        Destroy(candyBoard[newX, newY].candy.gameObject);
+                        candyBoard[newX, newY] = new Node(true, null);
+                        //candyToRemove.Add(currentCandy);
                     }
                 }
             }
         }
+
+        yield return new WaitForSeconds(0.1f);
+        Destroy(efect);
+
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         yield break;
     }
@@ -1180,28 +1205,7 @@ public class CandyBoard : MonoBehaviour
     {
         return Mathf.Abs(_candy1.xIndex - _candy2.xIndex) + Mathf.Abs(_candy1.yIndex - _candy2.yIndex) == 1;
     }
-
-    //נפטר מהתאמות
-
-
-
-
-
-    // קוד ישן שמור לממקרה שאני אצטרך בעתיד
-    /*    private void DestroyCandy()
-        {
-            if (candyToDestroy != null)
-            {
-                foreach (GameObject candy in candyToDestroy)
-                {
-                    Destroy(candy);
-                }
-                candyToDestroy.Clear();
-            }
-        }*/
 }
-
-
 
 
 // כיתה של התווצאה 
