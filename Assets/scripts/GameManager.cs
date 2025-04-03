@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviour
     // נוסיף משתנה לשמירת ה-Slider
     public Slider scoreSlider;
 
+    // הוספת רשימה לכוכבים
+    public List<Image> stars;
+
     private void Awake()
     {
         Instance = this;
@@ -96,6 +99,8 @@ public class GameManager : MonoBehaviour
             points += candiesToProcess.Count;
         }
 
+        // קריאה לעדכון הכוכבים
+        UpdateStars();
 
         // מחשב את הערך של הסליידר בטווח 0-1
         if (goal > 0)
@@ -123,6 +128,15 @@ public class GameManager : MonoBehaviour
             losePanel.SetActive(true);
             return;
         }
+    }
+
+    void UpdateStars()
+    {
+        float progress = (float)points / goal;
+
+        if (progress >= 0.5f) stars[0].gameObject.SetActive(true);
+        if (progress >= 0.8f) stars[1].gameObject.SetActive(true);
+        if (progress >= 1.0f) stars[2].gameObject.SetActive(true);
     }
 
     //מחובר לכפתור שמשנה סצנה במקרה של ניצחון
