@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
 
     // הוספת רשימה לכוכבים
     public List<Image> stars;
+    private int starCount = 0;
+
+    [SerializeField]
+    private int levelNum;
 
     private void Awake()
     {
@@ -116,6 +120,11 @@ public class GameManager : MonoBehaviour
         if (points >= goal)
         {
             isGameEnded = true;
+
+            // שמור כוכבים
+            SaveManager.Instance.SaveLevelStars(levelNum, starCount); // שמור לשלב 3, 2 כוכבים
+
+            //הפעל מצב ניצחון
             beckgroundPanel.SetActive(true);
             victoryPanel.SetActive(true);
             return;
@@ -124,6 +133,7 @@ public class GameManager : MonoBehaviour
         if (moves == 0)
         {
             isGameEnded = true;
+            //הפעל מצב הפסד
             beckgroundPanel.SetActive(true);
             losePanel.SetActive(true);
             return;
@@ -134,9 +144,21 @@ public class GameManager : MonoBehaviour
     {
         float progress = (float)points / goal;
 
-        if (progress >= 0.5f) stars[0].gameObject.SetActive(true);
-        if (progress >= 0.8f) stars[1].gameObject.SetActive(true);
-        if (progress >= 1.0f) stars[2].gameObject.SetActive(true);
+        if (progress >= 0.5f)
+        {
+            stars[0].gameObject.SetActive(true);
+            starCount = 1;
+        }
+        if (progress >= 0.8f)
+        {
+            stars[1].gameObject.SetActive(true);
+            starCount = 2;
+        }
+        if (progress >= 1.0f)
+        {
+            stars[2].gameObject.SetActive(true);
+            starCount = 3;
+        }
     }
 
     //מחובר לכפתור שמשנה סצנה במקרה של ניצחון

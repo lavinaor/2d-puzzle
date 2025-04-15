@@ -7,15 +7,27 @@ public class SceneChanger : MonoBehaviour
 {
     [SerializeField]
     private float deley;
-    public void OnChangeSeneDeley(int scene)
+
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip sceneTransitionSound;
+
+    public void OnChangeSeneDeley(string sceneName)
     {
-        StartCoroutine(DeleyAndThenLode(scene));
+        StartCoroutine(DeleyAndThenLode(sceneName));
     }
 
-    IEnumerator DeleyAndThenLode(int scene)
+    IEnumerator DeleyAndThenLode(string sceneName)
     {
+        // השמעת הסאונד בעזרת SoundFXManager
+        if (SoundFXManager.Instance != null)
+        {
+            // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+            SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f);
+        }
+
         yield return new WaitForSeconds(deley);
 
-        SceneManager.LoadScene(scene);
+        SceneManager.LoadScene(sceneName);
     }
 }
