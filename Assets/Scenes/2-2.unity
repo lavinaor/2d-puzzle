@@ -5446,6 +5446,10 @@ PrefabInstance:
       value: see butten
       objectReference: {fileID: 0}
     - target: {fileID: 6600121540399050472, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 734051053}
+    - target: {fileID: 6600121540399050472, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: see-1
       objectReference: {fileID: 0}

@@ -152,12 +152,12 @@ public class GameManager : MonoBehaviour
         if (progress >= 0.8f)
         {
             stars[1].gameObject.SetActive(true);
-            starCount = 1;
+            starCount = 2;
         }
         if (progress >= 1.0f)
         {
             stars[2].gameObject.SetActive(true);
-            starCount = 1;
+            starCount = 3;
         }
     }
 

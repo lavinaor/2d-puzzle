@@ -28,6 +28,7 @@ public class LevelButton : SceneChanger
         // מדליק את הכמות המתאימה
         for (int i = 0; i < starsNum && i < stars.Count; i++)
         {
+            Debug.Log(starsNum);
             stars[i].gameObject.SetActive(true);
         }
     }
