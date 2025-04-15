@@ -21375,6 +21375,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8680365742234853417, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: deley
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21471,6 +21475,22 @@ PrefabInstance:
     - target: {fileID: 2477833741581174180, guid: 827e1d767c04c9e4fbf02faa4c97fc95, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892511520967570398, guid: 827e1d767c04c9e4fbf02faa4c97fc95, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 103.1373
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892511520967570398, guid: 827e1d767c04c9e4fbf02faa4c97fc95, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 102.0917
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892511520967570398, guid: 827e1d767c04c9e4fbf02faa4c97fc95, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 59.961
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892511520967570398, guid: 827e1d767c04c9e4fbf02faa4c97fc95, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -112.178
       objectReference: {fileID: 0}
     - target: {fileID: 7540336240651398366, guid: 827e1d767c04c9e4fbf02faa4c97fc95, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
