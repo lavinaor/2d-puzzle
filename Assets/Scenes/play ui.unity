@@ -4707,7 +4707,7 @@ GameObject:
   - component: {fileID: 1809542997}
   - component: {fileID: 1809542996}
   - component: {fileID: 1809542995}
-  - component: {fileID: 1809542994}
+  - component: {fileID: 1809542998}
   m_Layer: 5
   m_Name: Button-see-map1
   m_TagString: Untagged
@@ -4734,19 +4734,6 @@ RectTransform:
   m_AnchoredPosition: {x: 57, y: 273}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1809542994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809542992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2220b94bd307912459adfb7809e2b0be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deley: 1
 --- !u!114 &1809542995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4791,16 +4778,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1809542994}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
+      - m_Target: {fileID: 1809542998}
+        m_TargetAssemblyTypeName: IlandButton, Assembly-CSharp
         m_MethodName: OnChangeSeneDeley
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 3
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: 2-2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1809542996
@@ -4841,6 +4828,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1809542992}
   m_CullTransparentMesh: 1
+--- !u!114 &1809542998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809542992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5140bc23f3a14b2488eb2f8a49aa2ef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deley: 3
+  sceneTransitionSound: {fileID: 0}
+  lockeLevel: 0
 --- !u!1001 &1826593203
 PrefabInstance:
   m_ObjectHideFlags: 0

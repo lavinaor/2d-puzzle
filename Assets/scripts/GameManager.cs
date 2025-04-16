@@ -121,9 +121,6 @@ public class GameManager : MonoBehaviour
         {
             isGameEnded = true;
 
-            // שמור כוכבים
-            SaveManager.Instance.SaveLevelStars(levelNum, starCount); // שמור לשלב 3, 2 כוכבים
-
             //הפעל מצב ניצחון
             beckgroundPanel.SetActive(true);
             victoryPanel.SetActive(true);
@@ -159,6 +156,9 @@ public class GameManager : MonoBehaviour
             stars[2].gameObject.SetActive(true);
             starCount = 3;
         }
+
+        // שמור כוכבים
+        SaveManager.Instance.SaveLevelStars(levelNum, starCount); // שמור לשלב 3, 2 כוכבים
     }
 
     //מחובר לכפתור שמשנה סצנה במקרה של ניצחון

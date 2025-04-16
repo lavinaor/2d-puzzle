@@ -32,4 +32,19 @@ public class LevelButton : SceneChanger
             stars[i].gameObject.SetActive(true);
         }
     }
+
+    public override void OnChangeSeneDeley(string sceneName)
+    {
+        if(level != 1)
+        {
+            if (0 < SaveManager.Instance.GetStarsForLevel(level - 1))
+            {
+                base.OnChangeSeneDeley(sceneName);
+            }
+        }
+        else
+        {
+            base.OnChangeSeneDeley(sceneName);
+        }
+    }
 }

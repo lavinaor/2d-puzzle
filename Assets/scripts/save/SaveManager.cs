@@ -62,4 +62,21 @@ public class SaveManager : MonoBehaviour
         LevelEntry level = data.levels.Find(l => l.levelIndex == levelIndex);
         return level != null ? level.starsEarned : 0;
     }
+
+    public int GetStarsInTotal()
+    {
+        string json = PlayerPrefs.GetString("SaveData", "{}");
+        if (string.IsNullOrEmpty(json)) return 0;
+
+        GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
+        if (data == null || data.levels == null) return 0;
+
+        int totalStars = 0;
+        foreach (LevelEntry level in data.levels)
+        {
+            totalStars += level.starsEarned;
+        }
+
+        return totalStars;
+    }
 }

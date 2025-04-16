@@ -12,7 +12,7 @@ public class SceneChanger : MonoBehaviour
     [SerializeField]
     private AudioClip sceneTransitionSound;
 
-    public void OnChangeSeneDeley(string sceneName)
+    public virtual void OnChangeSeneDeley(string sceneName)
     {
         StartCoroutine(DeleyAndThenLode(sceneName));
     }
