@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     public List<Image> stars;
     private int starCount = 0;
 
-    [SerializeField]
+    private string areaName;
     private int levelNum;
 
     private void Awake()
@@ -65,6 +65,25 @@ public class GameManager : MonoBehaviour
         // עדכון ה-Slider שיתחיל מ-0 עם הגבלת ה-Max
         scoreSlider.maxValue = goal;
         scoreSlider.value = 0;
+        ParseSceneName();
+    }
+
+    void ParseSceneName()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        // פיצול לפי מקף
+        string[] parts = sceneName.Split('-');
+
+        if (parts.Length == 2)
+        {
+            areaName = parts[0];
+            int.TryParse(parts[1], out levelNum);
+        }
+        else
+        {
+            Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
+        }
     }
 
     // Update is called once per frame
