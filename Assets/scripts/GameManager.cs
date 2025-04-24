@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
             moves--;
         }
 
-        if (points >= goal)
+        if (points >= goal || (moves == 0 && starCount > 0))
         {
             isGameEnded = true;
 
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (moves == 0)
+        if (moves == 0 && starCount <= 0)
         {
             isGameEnded = true;
             //הפעל מצב הפסד
