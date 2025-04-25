@@ -9,6 +9,8 @@ using System;
 using UnityEngine.VFX;
 using System.Reflection;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.VolumeComponent;
+using UnityEngine.EventSystems;
 
 public class CandyBoard : MonoBehaviour
 {
@@ -97,7 +99,7 @@ public class CandyBoard : MonoBehaviour
             initializeBoard();
     }
 
-    private void Update()
+/*    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -117,6 +119,54 @@ public class CandyBoard : MonoBehaviour
                 //שומר את הממתק שנבחר
                 candy candy = hit.collider.gameObject.GetComponent<candy>();
                 
+                //רושם על ממתק שנבחר
+                Debug.Log("לחצתי על ממתק :" + candy.gameObject);
+
+                SelectCandy(candy);
+            }
+        }
+    }*/
+
+    void Update()
+    {
+        Vector2 inputPosition = Vector2.zero;
+        bool inputDetected = false;
+
+        // בדיקה למובייל
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            inputPosition = Input.GetTouch(0).position;
+            inputDetected = true;
+        }
+
+        // בדיקה למחשב
+        if (Input.GetMouseButtonDown(0))
+        {
+            inputPosition = Input.mousePosition;
+            inputDetected = true;
+        }
+
+        if (inputDetected)
+        {
+
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(inputPosition);
+            Vector2 worldPos2D = new Vector2(worldPos.x, worldPos.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(worldPos2D, Vector2.zero);
+
+            if (hit.collider != null && hit.collider.gameObject.GetComponent<candy>())
+            {
+                Debug.Log("פגע באובייקט: " + hit.collider.name);
+
+                //אם הוא עדין במהלך אחר אז בטל
+                if (isProcessingMove)
+                {
+                    return;
+                }
+
+                //שומר את הממתק שנבחר
+                candy candy = hit.collider.gameObject.GetComponent<candy>();
+
                 //רושם על ממתק שנבחר
                 Debug.Log("לחצתי על ממתק :" + candy.gameObject);
 
@@ -226,10 +276,47 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
+        if (CheckBoard())
+        {
+            OnTilmapRandomMaches();
+        }
 
         Destroy(tilemap.gameObject); // מוחק את האובייקט של ה-Tilemap אבל שומר את האריחים
 
         ScaleBoardToFitScreen();
+    }
+
+    void OnTilmapRandomMaches()
+    {
+        foreach (candy candyToRemove in candyToRemove)
+        {
+            // שומר את הx ו y
+            int xIndex = candyToRemove.xIndex;
+            int yIndex = candyToRemove.yIndex;
+
+            if (candyToRemove != null)
+            {
+                Destroy(candyToRemove.gameObject);
+
+                //משיג שיקוי רנדומלי
+                int randomIndex = UnityEngine.Random.Range(0, candyPrefabs.Length);
+                GameObject newCandy = Instantiate(candyPrefabs[randomIndex], new Vector2(xIndex - spacingX, yIndex - spacingY), Quaternion.identity);
+
+                // להציב את הממתק תחת אובייקט האב
+                newCandy.transform.SetParent(boardParent.transform);
+
+
+                //דהגדר מיקומים
+                newCandy.GetComponent<candy>().setIndicies(xIndex, yIndex);
+
+                //הגדר אותם לוח
+                candyBoard[xIndex, yIndex] = new Node(true, newCandy);
+            }
+        }
+        if (CheckBoard())
+        {
+            OnTilmapRandomMaches();
+        }
     }
 
     int GetPrefabIndex(TileBase tile)
@@ -239,6 +326,10 @@ public class CandyBoard : MonoBehaviour
             if (candyPrefabs[i].name == tile.name) // הנחה: שם הפריפב זהה לשם האריח
             {
                 return i;
+            }
+            else if("random" == tile.name)
+            {
+                return UnityEngine.Random.Range(0, candyPrefabs.Length);
             }
         }
         return -1;
@@ -614,7 +705,7 @@ public class CandyBoard : MonoBehaviour
         
         
         //דהגדר מיקומים
-                newCandy.GetComponent<candy>().setIndicies(x, index);
+        newCandy.GetComponent<candy>().setIndicies(x, index);
 
         //הגדר אותם לוח
         candyBoard[x, index] = new Node(true, newCandy);
@@ -1135,6 +1226,9 @@ public class CandyBoard : MonoBehaviour
 
     IEnumerator PreformSuper(candy candy1, candy candy2)
     {
+        //רשימה של ממתקים לניקוד
+        List<candy> _candyList = new();
+
         GameObject efect = candy1.OnDestroyVFX();
         // פעולה לממתק סופר
         // מעבר על כל הלוח כדי למצוא את כל הממתקים עם אותו צבע
@@ -1148,6 +1242,9 @@ public class CandyBoard : MonoBehaviour
 
                     if (currentCandy != null && currentCandy.candyType == candy2.candyType)
                     {
+                        //מוסיף את הממתק לרשימה לניקוד
+                        _candyList.Add(currentCandy);
+
                         Destroy(candyBoard[x, y].candy.gameObject);
                         candyBoard[x, y] = new Node(true, null);
                         //candyToRemove.Add(currentCandy);
@@ -1155,9 +1252,15 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
+        //מוסיף את הממתק לרשימה לניקוד
+        _candyList.Add(candyBoard[candy1.xIndex, candy1.yIndex].candy.GetComponent<candy>());
+
         Destroy(candyBoard[candy1.xIndex, candy1.yIndex].candy.gameObject);
         candyBoard[candy1.xIndex, candy1.yIndex] = new Node(true, null);
         //candyToRemove.Add(candy1);
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(_candyList, false);
 
         yield return new WaitForSeconds(0.1f);
         Destroy(efect);
@@ -1167,6 +1270,9 @@ public class CandyBoard : MonoBehaviour
     }
     IEnumerator PreformBomb(candy candy)
     {
+        //רשימה של ממתקים לניקוד
+        List<candy> _candyList = new();
+
         GameObject efect = candy.OnDestroyVFX();
         int explosionRadius = 1; //  רדיוס 1 לכל כיוון יוצר אזור 3x3
 
@@ -1184,6 +1290,9 @@ public class CandyBoard : MonoBehaviour
 
                     if (currentCandy != null)
                     {
+                        //מוסיף את הממתק לרשימה לניקוד
+                        _candyList.Add(currentCandy);
+
                         Destroy(candyBoard[newX, newY].candy.gameObject);
                         candyBoard[newX, newY] = new Node(true, null);
                         //candyToRemove.Add(currentCandy);
@@ -1191,6 +1300,9 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
+
+        //משנה ניקוד וכמות מהלכים
+        GameManager.Instance.ProcessTurn(_candyList, false);
 
         yield return new WaitForSeconds(0.1f);
         Destroy(efect);

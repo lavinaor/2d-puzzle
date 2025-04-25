@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,13 +26,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Goal> goals = new List<Goal>();
 
-    //הרקע ללוח
-    public GameObject beckgroundPanel;
-    //מסך ניצחון
-    public GameObject victoryPanel;
-    //מסך הפסד
-    public GameObject losePanel;
-
     //השומר את הכיתובים על המסך
     public TMP_Text pointText;
     public TMP_Text movesText;
@@ -43,6 +37,16 @@ public class GameManager : MonoBehaviour
     // הוספת רשימה לכוכבים
     public List<Image> stars;
     private int starCount = 0;
+
+    [Header("End screen")]
+    //הרקע ללוח
+    public GameObject beckgroundPanel;
+    //מסך ניצחון
+    public GameObject victoryPanel;
+    //מסך הפסד
+    public GameObject losePanel;
+
+    public List<Image> starsEndScree;
 
     private string areaName;
     private int levelNum;
@@ -163,16 +167,19 @@ public class GameManager : MonoBehaviour
         if (progress >= 0.5f)
         {
             stars[0].gameObject.SetActive(true);
+            starsEndScree[0].gameObject.SetActive(true);
             starCount = 1;
         }
         if (progress >= 0.8f)
         {
             stars[1].gameObject.SetActive(true);
+            starsEndScree[1].gameObject.SetActive(true);
             starCount = 2;
         }
         if (progress >= 1.0f)
         {
             stars[2].gameObject.SetActive(true);
+            starsEndScree[2].gameObject.SetActive(true);
             starCount = 3;
         }
 

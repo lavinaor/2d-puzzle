@@ -846,14 +846,18 @@ MonoBehaviour:
   points: 0
   isGameEnded: 0
   goals: []
-  beckgroundPanel: {fileID: 0}
-  victoryPanel: {fileID: 0}
-  losePanel: {fileID: 0}
   pointText: {fileID: 0}
   movesText: {fileID: 0}
   goalText: {fileID: 0}
   scoreSlider: {fileID: 0}
   stars:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  beckgroundPanel: {fileID: 0}
+  victoryPanel: {fileID: 0}
+  losePanel: {fileID: 0}
+  starsEndScree:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

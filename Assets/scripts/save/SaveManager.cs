@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [System.Serializable]
 public class LevelEntry
@@ -12,11 +13,17 @@ public class LevelEntry
 public class GameSaveData
 {
     public List<LevelEntry> levels = new List<LevelEntry>();
+
+    public int totalCoins = 0; // אוצרות
+    public int totalGems = 0;  // יהלומים
 }
 
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance;
+
+    public static event Action OnCoinsChanged;
+    public static event Action OnGemsChanged;
 
     private void Awake()
     {
@@ -30,6 +37,8 @@ public class SaveManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    #region מערכת כוכבים
 
     public void SaveLevelStars(int levelIndex, int stars)
     {
@@ -79,4 +88,50 @@ public class SaveManager : MonoBehaviour
 
         return totalStars;
     }
+
+    #endregion
+
+    #region מערכת מטבעות
+
+    private GameSaveData LoadData()
+    {
+        string json = PlayerPrefs.GetString("SaveData", "{}");
+        return JsonUtility.FromJson<GameSaveData>(json) ?? new GameSaveData();
+    }
+
+    private void SaveData(GameSaveData data)
+    {
+        string newJson = JsonUtility.ToJson(data);
+        PlayerPrefs.SetString("SaveData", newJson);
+        PlayerPrefs.Save();
+    }
+
+    public void AddCoins(int amount)
+    {
+        GameSaveData data = LoadData();
+        data.totalCoins += amount;
+        SaveData(data);
+
+        OnCoinsChanged?.Invoke();  // קריאה לאירוע של שינוי מטבעות
+    }
+
+    public void AddGems(int amount)
+    {
+        GameSaveData data = LoadData();
+        data.totalGems += amount;
+        SaveData(data);
+
+        OnGemsChanged?.Invoke();  // קריאה לאירוע של שינוי אבנים
+    }
+
+    public int GetCoins()
+    {
+        return LoadData().totalCoins;
+    }
+
+    public int GetGems()
+    {
+        return LoadData().totalGems;
+    }
+    #endregion
 }
