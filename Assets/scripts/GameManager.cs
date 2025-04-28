@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
     [Serializable]
     class Goal
     {
-        public candyType type;
+        public CandyType type;
         public int goalPerType;
     }
 

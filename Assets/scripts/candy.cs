@@ -8,7 +8,7 @@ using UnityEngine.VFX;
 public class candy : MonoBehaviour
 {
 
-    public candyType candyType;
+    public CandyType candyType;
     public bool isSpecial = false;
 
     public int xIndex;
@@ -99,8 +99,9 @@ public class candy : MonoBehaviour
     }
 }
 
-public enum candyType
+public enum CandyType
 {
+    random,
     Red,
     Blue,
     Green,

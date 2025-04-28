@@ -820,7 +820,7 @@ public class CandyBoard : MonoBehaviour
     MatchResults IsConnected(candy candy)
     {
         List<candy> connectedCandy = new();
-        candyType candyType = candy.candyType;
+        CandyType candyType = candy.candyType;
 
         connectedCandy.Add(candy);
 
@@ -908,7 +908,7 @@ public class CandyBoard : MonoBehaviour
     //בדוק כיוון
     void CheckDirection(candy candy, Vector2Int direction, List<candy> connectedCandy)
     {
-        candyType candyType = candy.candyType;
+        CandyType candyType = candy.candyType;
         int x = candy.xIndex + direction.x;
         int y = candy.yIndex + direction.y;
 
@@ -1067,16 +1067,16 @@ public class CandyBoard : MonoBehaviour
         {
             switch (_candy1.candyType)
             {
-                case candyType.vertical:
+                case CandyType.vertical:
                     StartCoroutine(PreformVertical(_candy1));
                     break;
-                case candyType.horizontal:
+                case CandyType.horizontal:
                     StartCoroutine(PreformHorizontal(_candy1));
                     break;
-                case candyType.super:
+                case CandyType.super:
                     StartCoroutine(PreformSuper(_candy1, _candy2));
                     break;
-                case candyType.bomb:
+                case CandyType.bomb:
                     StartCoroutine(PreformBomb(_candy1));
                     break;
                 default:
@@ -1089,16 +1089,16 @@ public class CandyBoard : MonoBehaviour
         {
             switch (_candy2.candyType)
             {
-                case candyType.vertical:
+                case CandyType.vertical:
                     StartCoroutine(PreformVertical(_candy2));
                     break;
-                case candyType.horizontal:
+                case CandyType.horizontal:
                     StartCoroutine(PreformHorizontal(_candy2));
                     break;
-                case candyType.super:
+                case CandyType.super:
                     StartCoroutine(PreformSuper(_candy2, _candy1));
                     break;
-                case candyType.bomb:
+                case CandyType.bomb:
                     StartCoroutine(PreformBomb(_candy2));
                     break;
                 default:
