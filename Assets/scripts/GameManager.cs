@@ -187,6 +187,11 @@ public class GameManager : MonoBehaviour
         SaveManager.Instance.SaveLevelStars(levelNum, starCount); // שמור לשלב 3, 2 כוכבים
     }
 
+    public List<Goal> GetGoals()
+    {
+        return goals;
+    }
+
     //מחובר לכפתור שמשנה סצנה במקרה של ניצחון
     public void WinGame()
     {
@@ -200,7 +205,7 @@ public class GameManager : MonoBehaviour
     }
 
     [Serializable]
-    class Goal
+    public class Goal
     {
         public CandyType type;
         public int goalPerType;

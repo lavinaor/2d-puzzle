@@ -30,6 +30,8 @@ public class CandySkinManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        UnlockSkin(1);
+        SelectSkin(0);
     }
 
     public CandySkin GetSelectedSkin()
