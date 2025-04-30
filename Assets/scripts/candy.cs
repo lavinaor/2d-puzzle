@@ -7,24 +7,39 @@ using UnityEngine.VFX;
 
 public class candy : MonoBehaviour
 {
-
+    //סוג הממתק
     public CandyType candyType;
+
+    //האם הוא ממתק מיוחד
     public bool isSpecial = false;
 
-    public int xIndex;
-    public int yIndex;
-
-    public bool isMatched;
-    private Vector2 current;
-    private Vector2 targetPause;
-
-    //אפקט לרוחב
+    //אפקט בזמן הריסה
     public GameObject VFXOnDestroyPrefab;
 
+    //אורף אפקט
     [SerializeField]
     private float duration = 0.5f;
 
+    //המיקום שלו בלוח לפי צירים
+    [HideInInspector]
+    public int xIndex;
+    [HideInInspector]
+    public int yIndex;
+
+    //אם הוא תפוס במטרה לעזור לבדיקה 
+    [HideInInspector]
+    public bool isMatched;
+
+    //בזמן תזוזה זה פעיל
+    [HideInInspector]
     public bool isMoving;
+
+    private void Start()
+    {
+        Sprite sprite = CandySkinManager.Instance.GetCandySpriteByType(candyType);
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprite;
+    }
 
     public candy(int _x, int _y)
     {
@@ -101,7 +116,6 @@ public class candy : MonoBehaviour
 
 public enum CandyType
 {
-    random,
     Red,
     Blue,
     Green,
@@ -111,5 +125,6 @@ public enum CandyType
     horizontal,
     vertical,
     bomb,
-    super
+    super,
+    random
 }
