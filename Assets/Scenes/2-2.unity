@@ -18655,6 +18655,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6786436541492525481}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnChangeSeneDeley
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SceneChanger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5750052376390635387, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: play ui
+      objectReference: {fileID: 0}
     - target: {fileID: 7374169133833698285, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -18739,11 +18771,35 @@ PrefabInstance:
       propertyPath: deley
       value: 0.3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8680365742234853417, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+    - {fileID: 5138732917201498522, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5300624432097963119, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6786436541492525481}
   m_SourcePrefab: {fileID: 100100000, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+--- !u!1 &6786436541492525480 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5300624432097963119, guid: 3cc053c13b20a054d8a66b66688dc10d, type: 3}
+  m_PrefabInstance: {fileID: 6786436541492525479}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6786436541492525481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6786436541492525480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2220b94bd307912459adfb7809e2b0be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deley: 3
+  sceneTransitionSound: {fileID: 8300000, guid: 3fbb9d91370ab3346a28e96f5625aabd, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
