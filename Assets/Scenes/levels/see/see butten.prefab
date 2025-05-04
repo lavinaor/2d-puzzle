@@ -520,13 +520,13 @@ MonoBehaviour:
   visualsToGray:
   - {fileID: 1738691137684153751}
   - {fileID: 8266140090125545464}
-  - {fileID: 681981183444999306}
+  - {fileID: 0}
   - {fileID: 3785510500087669326}
   - {fileID: 3498114371721804074}
-  - {fileID: 5425171399739935320}
+  - {fileID: 0}
   - {fileID: 5215545237584297016}
   - {fileID: 422949966064736683}
-  - {fileID: 9088059644168661721}
+  - {fileID: 0}
   - {fileID: 4239289525133749393}
   - {fileID: 3108391710329402940}
 --- !u!1 &6072823970078747876
@@ -793,7 +793,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4517536978286753831, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 908756579543446055, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
       insertIndex: -1
@@ -808,17 +809,6 @@ RectTransform:
 --- !u!114 &3498114371721804074 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4579960467427387739, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
-  m_PrefabInstance: {fileID: 1082136849561800817}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5425171399739935320 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4922031008773462569, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
   m_PrefabInstance: {fileID: 1082136849561800817}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -1016,7 +1006,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4517536978286753831, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 908756579543446055, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
       insertIndex: -1
@@ -1039,17 +1030,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 908756579543446055, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
   m_PrefabInstance: {fileID: 4202376353977872624}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9088059644168661721 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4922031008773462569, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
-  m_PrefabInstance: {fileID: 4202376353977872624}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5564324171038262947
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1239,7 +1219,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4517536978286753831, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 908756579543446055, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
       insertIndex: -1
@@ -1252,17 +1233,6 @@ PrefabInstance:
       addedObject: {fileID: 3948911730899698391}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
---- !u!114 &681981183444999306 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4922031008773462569, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}
-  m_PrefabInstance: {fileID: 5564324171038262947}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4730184859411510404 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 908756579543446055, guid: 4abcf6fc4032060438577f1eb8c1e34c, type: 3}

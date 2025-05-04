@@ -64,11 +64,6 @@ public class LevelButton : SceneChanger
             if (button != null) button.interactable = false;
         }
 
-        isUnlocked = true;
-        if (lockedVisual != null) lockedVisual.SetActive(false);
-        if (unlockedVisual != null) unlockedVisual.SetActive(true);
-        if (button != null) button.interactable = true;
-
         UpdateGrayVisuals();
     }
 

@@ -26,7 +26,7 @@ public class SceneChanger : MonoBehaviour
             SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f);
         }
 
-        yield return new WaitForSeconds(deley);
+        yield return new WaitForSeconds(/*deley*/ 0);
 
         SceneManager.LoadScene(sceneName);
     }
