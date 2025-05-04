@@ -127,7 +127,7 @@ public class CandyBoard : MonoBehaviour
         }
     }*/
 
-    void Update()
+/*    void Update()
     {
         Vector2 inputPosition = Vector2.zero;
         bool inputDetected = false;
@@ -173,6 +173,164 @@ public class CandyBoard : MonoBehaviour
                 SelectCandy(candy);
             }
         }
+    }*/
+
+    private candy draggedCandy = null;
+    private Vector2 dragStartPos;
+    private bool isDragging = false;
+
+    void Update()
+    {
+        Vector2 inputPosition = Vector2.zero;
+
+        // אם הוא עדיין במהלך אחר אז בטל
+        if (isProcessingMove)
+        {
+            return;
+        }
+
+        // בדיקה למובייל
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            inputPosition = touch.position;
+
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    TryStartDrag(inputPosition);
+                    break;
+                case TouchPhase.Moved:
+                    Drag(inputPosition);
+                    break;
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    EndDrag();
+                    break;
+            }
+        }
+
+        // בדיקה למחשב
+        else
+        {
+            inputPosition = Input.mousePosition;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                TryStartDrag(inputPosition);
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                Drag(inputPosition);
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                EndDrag();
+            }
+        }
+    }
+
+    // התחלת גרירה
+    void TryStartDrag(Vector2 screenPos)
+    {
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        Vector2 worldPos2D = new Vector2(worldPos.x, worldPos.y);
+
+        RaycastHit2D hit = Physics2D.Raycast(worldPos2D, Vector2.zero);
+
+        if (hit.collider != null && hit.collider.gameObject.GetComponent<candy>())
+        {
+            candy c = hit.collider.gameObject.GetComponent<candy>();
+            StartDrag(c);
+        }
+    }
+
+    void StartDrag(candy c)
+    {
+        draggedCandy = c;
+        dragStartPos = GetCandyPosition(c);
+
+        // אפקט הגדלה
+        draggedCandy.transform.localScale = Vector3.one * 1.2f;
+
+        // נצנוץ
+        StartCoroutine(CandyTwinkle(draggedCandy));
+    }
+
+    Vector2 GetCandyPosition(candy c)
+    {
+        return c.transform.position;
+    }
+
+    candy GetAdjacentCandy(candy origin, Vector2 direction)
+    {
+        int x = origin.xIndex + (int)direction.x;
+        int y = origin.yIndex + (int)direction.y;
+
+        if (x >= 0 && x < width && y >= 0 && y < height)
+        {
+            return candyBoard[x, y].candy.GetComponent<candy>();
+        }
+
+        return null;
+    }
+
+    IEnumerator CandyTwinkle(candy c)
+    {
+        SpriteRenderer sr = c.GetComponent<SpriteRenderer>();
+        float duration = 0.3f;
+        float elapsed = 0f;
+        Color originalColor = sr.color;
+
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.PingPong(elapsed * 5, 1f);
+            sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(0.7f, 1f, alpha));
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = originalColor;
+    }
+
+
+    void Drag(Vector2 screenPos)
+    {
+        if (draggedCandy == null) return;
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        Vector2 dragVector = (Vector2)worldPos - dragStartPos;
+
+        if (dragVector.magnitude > 0.3f)
+        {
+            Vector2 dir = Vector2.zero;
+
+            if (Mathf.Abs(dragVector.x) > Mathf.Abs(dragVector.y))
+                dir = dragVector.x > 0 ? Vector2.right : Vector2.left;
+            else
+                dir = dragVector.y > 0 ? Vector2.up : Vector2.down;
+
+            candy targetCandy = GetAdjacentCandy(draggedCandy, dir);
+
+            if (targetCandy != null)
+            {
+                SelectCandy(draggedCandy); // כמו לחיצה ראשונה
+                SelectCandy(targetCandy);  // כמו לחיצה שניה
+            }
+
+            EndDrag(); // סיום הגרירה אחרי החלפה
+        }
+    }
+
+    void EndDrag()
+    {
+        if (draggedCandy != null)
+        {
+            // החזרת גודל רגיל
+            draggedCandy.transform.localScale = Vector3.one;
+        }
+
+        draggedCandy = null;
     }
 
     void ScaleBoardToFitScreen()
