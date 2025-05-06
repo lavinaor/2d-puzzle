@@ -34,6 +34,10 @@ public class candy : MonoBehaviour
     [HideInInspector]
     public bool isMoving;
 
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip destroySound;
+
     private void Start()
     {
         Sprite sprite = CandySkinManager.Instance.GetCandySpriteByType(candyType);
@@ -108,6 +112,10 @@ public class candy : MonoBehaviour
             GameObject effect = Instantiate(VFXOnDestroyPrefab, this.transform.position, Quaternion.identity);
             VisualEffect VFXOnDestroy = effect.GetComponent<VisualEffect>();
             VFXOnDestroy.Play();
+
+            //סאונד של הרס ממתק
+            SoundFXManager.Instance.PlaySoundFXClip(destroySound, transform, 1f, false);
+
             return effect;
         }
         return null;

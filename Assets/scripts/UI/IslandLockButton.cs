@@ -26,6 +26,12 @@ public class IslandLockButton : SceneChanger
 
     private bool isEnough = false;
 
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip musicCngeClip;
+    [SerializeField]
+    private float musicClipVolume = 1;
+
     private void Start()
     {
         int starsNum = SaveManager.Instance.GetStarsInTotal();
@@ -62,7 +68,9 @@ public class IslandLockButton : SceneChanger
     {
         if (isEnough)
         {
-                base.OnChangeSeneDeley(sceneName);
+            if (musicmaneger.Instance != null && musicCngeClip != null)
+                musicmaneger.Instance.PlayMusicWithFade(musicCngeClip, musicClipVolume);
+            base.OnChangeSeneDeley(sceneName);
         }
         else
         {

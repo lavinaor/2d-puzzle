@@ -23,10 +23,10 @@ public class SceneChanger : MonoBehaviour
         if (SoundFXManager.Instance != null)
         {
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
-            SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f);
+            SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
         }
 
-        yield return new WaitForSeconds(/*deley*/ 0);
+        yield return new WaitForSeconds(0);
 
         SceneManager.LoadScene(sceneName);
     }

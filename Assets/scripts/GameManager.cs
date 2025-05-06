@@ -51,6 +51,14 @@ public class GameManager : MonoBehaviour
     private string areaName;
     private int levelNum;
 
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip winSound;
+
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip loseSound;
+
     private void Awake()
     {
         Instance = this;
@@ -147,6 +155,9 @@ public class GameManager : MonoBehaviour
             //הפעל מצב ניצחון
             beckgroundPanel.SetActive(true);
             victoryPanel.SetActive(true);
+
+            //סאונד של ניצחון
+            SoundFXManager.Instance.PlaySoundFXClip(winSound, transform, 1f, false);
             return;
         }
 
@@ -156,6 +167,9 @@ public class GameManager : MonoBehaviour
             //הפעל מצב הפסד
             beckgroundPanel.SetActive(true);
             losePanel.SetActive(true);
+
+            //סאונד של הפסד
+            SoundFXManager.Instance.PlaySoundFXClip(loseSound, transform, 1f, false);
             return;
         }
     }
@@ -190,18 +204,6 @@ public class GameManager : MonoBehaviour
     public List<Goal> GetGoals()
     {
         return goals;
-    }
-
-    //מחובר לכפתור שמשנה סצנה במקרה של ניצחון
-    public void WinGame()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    //מחובר לכפתור שמשנה סצנה במקרה של הפסד
-    public void LoseGame()
-    {
-        SceneManager.LoadScene(0);
     }
 
     [Serializable]
