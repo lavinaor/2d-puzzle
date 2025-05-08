@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelButton : SceneChanger
@@ -10,22 +12,28 @@ public class LevelButton : SceneChanger
     [SerializeField]
     private int level; // מספר שלב
 
-    [SerializeField] 
-    private GameObject lockedVisual;  
+    [SerializeField]
+    private TextMeshProUGUI levelText;
 
-    [SerializeField] 
+
+    //[SerializeField] 
     private GameObject unlockedVisual; 
 
+    //נראות כשנעול
     [SerializeField] 
-    private Button button;
-
+    private GameObject lockedVisual;  
     [SerializeField]
     private List<Graphic> visualsToGray;
+
+    //מקבל את הכפתור של עצמו
+    private Button button;
 
     private bool isUnlocked = false;
 
     private void Start()
     {
+        levelText.text = level.ToString();
+        button = GetComponent<Button>();
         int starsNum = SaveManager.Instance.GetStarsForLevel(level);
         Debug.Log("כוכבים לשלב " + level + ": " + starsNum);
         CheckIfUnlocked();
@@ -87,7 +95,8 @@ public class LevelButton : SceneChanger
     {
         if (isUnlocked)
         {
-            base.OnChangeSeneDeley(sceneName);
+            string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
+            base.OnChangeSeneDeley(levelName);
         }
         else
         {
