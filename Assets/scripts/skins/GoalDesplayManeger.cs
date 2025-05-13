@@ -11,11 +11,23 @@ public class GoalDesplayManeger : MonoBehaviour
     void Update()
     {
         var goals = GameManager.Instance.GetGoals();
+        if (goals.Count < 1)
+        {
+            Destroy(this.gameObject);
+        }
+
         int  i = 0;
         foreach (GoalDesplayer goal in goalsOBG)
         {
-            goal.SetLook(goals[i]);
-            i++;
+            if (goals.Count > i)
+            {
+                goal.SetLook(goals[i]);
+                i++;
+            }
+            else
+            {
+                Destroy(goal.gameObject);
+            }
         }
     }
 }

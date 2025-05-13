@@ -924,11 +924,7 @@ public class CandyBoard : MonoBehaviour
 
             }
             //אם אין הטעמות מחזיר את ההתאמה הרגילה שהייתה
-            return new MatchResults
-            {
-                connectedCandy = matchCandy.connectedCandy,
-                direction = matchCandy.direction,
-            };
+            return matchCandy;
         }
 
         // בודק אם יש לגובה או לגובה גדול
@@ -963,15 +959,11 @@ public class CandyBoard : MonoBehaviour
 
             }
             //אם אין הטעמות מחזיר את ההתאמה הרגילה שהייתה
-            return new MatchResults
-            {
-                connectedCandy = matchCandy.connectedCandy,
-                direction = matchCandy.direction,
-            };
+            return matchCandy;
         }
 
         //אם עבר משהו שהוא לא תוצאה בכלל
-        return null;
+        return matchCandy;
     }
 
     //בדיקה אם מחובר
@@ -1004,14 +996,25 @@ public class CandyBoard : MonoBehaviour
         // בודק אם יש יותר מ3 לרוחב
         else if (connectedCandy.Count > 3)
         {
-            // מודיע על התאמה של 3
+            // מודיע על התאמה של יותר מ-3
             Debug.Log("has Horizontal mached more then 3 frome type: " + connectedCandy[0].candyType);
 
-            return new MatchResults
+            if (connectedCandy.Count == 4)
             {
-                connectedCandy = connectedCandy,
-                direction = MatchDirection.LongHorizontal,
-            };
+                return new MatchResults
+                {
+                    connectedCandy = connectedCandy,
+                    direction = MatchDirection.LongHorizontal,
+                };
+            }
+            else if (connectedCandy.Count > 4)
+            {
+                return new MatchResults
+                {
+                    connectedCandy = connectedCandy,
+                    direction = MatchDirection.Super,
+                };
+            }
         }
 
         // אם אין התאמה מנקה את הרשימה
@@ -1045,22 +1048,29 @@ public class CandyBoard : MonoBehaviour
             // מודיע על התאמה של 3
             Debug.Log("has Vertical mached more then 3 frome type: " + connectedCandy[0].candyType);
 
-            return new MatchResults
+            if (connectedCandy.Count == 4)
             {
-                connectedCandy = connectedCandy,
-                direction = MatchDirection.LongVertical,
-            };
+                return new MatchResults
+                {
+                    connectedCandy = connectedCandy,
+                    direction = MatchDirection.LongVertical,
+                };
+            }
+            else if (connectedCandy.Count > 4)
+            {
+                return new MatchResults
+                {
+                    connectedCandy = connectedCandy,
+                    direction = MatchDirection.Super,
+                };
+            }
         }
 
-        //אם עדין אין הטעמה
-        else
+        return new MatchResults
         {
-            return new MatchResults
-            {
-                connectedCandy = connectedCandy,
-                direction = MatchDirection.None,
-            };
-        }
+            connectedCandy = connectedCandy,
+            direction = MatchDirection.None,
+        };
     }
 
     //בדוק כיוון
@@ -1287,12 +1297,38 @@ public class CandyBoard : MonoBehaviour
             int upperY = candy.yIndex + y;
             if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null)
             {
-                //מוסיף את הממתק לרשימה לניקוד
-                _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
+/*                if (candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>() != null && candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>().isSpecial)
+                {
+                    Debug.Log("vkshcgvdc");
+                    candy _candy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
+                    switch (_candy.candyType)
+                    {
+                        case CandyType.vertical:
+                            StartCoroutine(PreformVertical(_candy));
+                            break;
+                        case CandyType.horizontal:
+                            StartCoroutine(PreformHorizontal(_candy));
+                            break;
+                        case CandyType.super:
+                            StartCoroutine(PreformSuper(_candy, candy));
+                            break;
+                        case CandyType.bomb:
+                            StartCoroutine(PreformBomb(_candy));
+                            break;
+                        default:
+                            // פעולה במקרה שאין התאמה
+                            break;
+                    }
+                }
+                else*/
+                {
+                    //מוסיף את הממתק לרשימה לניקוד
+                    _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
 
-                Destroy(candyBoard[candy.xIndex, upperY].candy.gameObject);
-                candyBoard[candy.xIndex, upperY] = new Node(true, null);
-                removedAny = true;
+                    Destroy(candyBoard[candy.xIndex, upperY].candy.gameObject);
+                    candyBoard[candy.xIndex, upperY] = new Node(true, null);
+                    removedAny = true;
+                }
             }
 
             // בדיקה ומחיקה כלפי מטה
