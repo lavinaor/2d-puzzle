@@ -184,7 +184,7 @@ public class CandyBoard : MonoBehaviour
         Vector2 inputPosition = Vector2.zero;
 
         // אם הוא עדיין במהלך אחר אז בטל
-        if (isProcessingMove)
+        if (isProcessingMove || Time.timeScale == 0f)
         {
             return;
         }
@@ -1207,13 +1207,13 @@ public class CandyBoard : MonoBehaviour
         //בודק אם יש התאמה
         if (CheckBoard())
         {
-            if(!checkeIfCandyIsSpeshel(_candy1, _candy2))
+            if(!CheckIfCandyIsSpecial(_candy1, _candy2))
             {
                 //מתחיל קורוטינה שתטפל בתוצאות
                 StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
             }
         }
-        else if(checkeIfCandyIsSpeshel(_candy1, _candy2))
+        else if(CheckIfCandyIsSpecial(_candy1, _candy2))
         {
             //StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         }
@@ -1228,57 +1228,42 @@ public class CandyBoard : MonoBehaviour
         selectedCandy = null;
     }
 
-    private bool checkeIfCandyIsSpeshel(candy _candy1, candy _candy2)
+    private bool CheckIfCandyIsSpecial(candy _candy1, candy _candy2)
     {
-        bool IsSpeshel = false;
+        bool isSpecial = false;
         if (_candy1.isSpecial)
         {
-            switch (_candy1.candyType)
-            {
-                case CandyType.vertical:
-                    StartCoroutine(PreformVertical(_candy1));
-                    break;
-                case CandyType.horizontal:
-                    StartCoroutine(PreformHorizontal(_candy1));
-                    break;
-                case CandyType.super:
-                    StartCoroutine(PreformSuper(_candy1, _candy2));
-                    break;
-                case CandyType.bomb:
-                    StartCoroutine(PreformBomb(_candy1));
-                    break;
-                default:
-                    // פעולה במקרה שאין התאמה
-                    break;
-            }
-            IsSpeshel = true;
+            TriggerSpecialCandy(_candy1, _candy2);
+            isSpecial = true;
         }
         if (_candy2.isSpecial)
         {
-            switch (_candy2.candyType)
-            {
-                case CandyType.vertical:
-                    StartCoroutine(PreformVertical(_candy2));
-                    break;
-                case CandyType.horizontal:
-                    StartCoroutine(PreformHorizontal(_candy2));
-                    break;
-                case CandyType.super:
-                    StartCoroutine(PreformSuper(_candy2, _candy1));
-                    break;
-                case CandyType.bomb:
-                    StartCoroutine(PreformBomb(_candy2));
-                    break;
-                default:
-                    // פעולה במקרה שאין התאמה
-                    break;
-            }
-            IsSpeshel = true;
+            TriggerSpecialCandy(_candy2, _candy1);
+            isSpecial = true;
         }
-        return IsSpeshel;
+        return isSpecial;
     }
 
-    IEnumerator PreformVertical(candy candy)
+    private void TriggerSpecialCandy(candy mainCandy, candy otherCandy)
+    {
+        switch (mainCandy.candyType)
+        {
+            case CandyType.vertical:
+                StartCoroutine(PerformVertical(mainCandy));
+                break;
+            case CandyType.horizontal:
+                StartCoroutine(PerformHorizontal(mainCandy));
+                break;
+            case CandyType.super:
+                StartCoroutine(PerformSuper(mainCandy, otherCandy));
+                break;
+            case CandyType.bomb:
+                StartCoroutine(PerformBomb(mainCandy));
+                break;
+        }
+    }
+
+    IEnumerator PerformVertical(candy candy)
     {
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
@@ -1297,30 +1282,12 @@ public class CandyBoard : MonoBehaviour
             int upperY = candy.yIndex + y;
             if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null)
             {
-/*                if (candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>() != null && candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>().isSpecial)
+                candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
+                if (targetCandy != null && targetCandy.isSpecial && y != 0)
                 {
-                    Debug.Log("vkshcgvdc");
-                    candy _candy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
-                    switch (_candy.candyType)
-                    {
-                        case CandyType.vertical:
-                            StartCoroutine(PreformVertical(_candy));
-                            break;
-                        case CandyType.horizontal:
-                            StartCoroutine(PreformHorizontal(_candy));
-                            break;
-                        case CandyType.super:
-                            StartCoroutine(PreformSuper(_candy, candy));
-                            break;
-                        case CandyType.bomb:
-                            StartCoroutine(PreformBomb(_candy));
-                            break;
-                        default:
-                            // פעולה במקרה שאין התאמה
-                            break;
-                    }
+                    TriggerSpecialCandy(targetCandy, candy); // להפעלת שרשרת
                 }
-                else*/
+                else
                 {
                     //מוסיף את הממתק לרשימה לניקוד
                     _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
@@ -1361,7 +1328,7 @@ public class CandyBoard : MonoBehaviour
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
     }
 
-    IEnumerator PreformHorizontal(candy candy)
+    IEnumerator PerformHorizontal(candy candy)
     {
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
@@ -1418,7 +1385,7 @@ public class CandyBoard : MonoBehaviour
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
     }
 
-    IEnumerator PreformSuper(candy candy1, candy candy2)
+    IEnumerator PerformSuper(candy candy1, candy candy2)
     {
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
@@ -1462,7 +1429,7 @@ public class CandyBoard : MonoBehaviour
         StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         yield break;
     }
-    IEnumerator PreformBomb(candy candy)
+    IEnumerator PerformBomb(candy candy)
     {
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
