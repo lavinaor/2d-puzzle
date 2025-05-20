@@ -14,75 +14,81 @@ using UnityEngine.EventSystems;
 
 public class CandyBoard : MonoBehaviour
 {
-    // χεγ μαγιχϊ ΰετφιδ ωμ  δλπϊ ξτεϊ ςν θιμξτ
+    // Χ§Χ•Χ“ ΧΧ‘Χ“Χ™Χ§Χª ΧΧ•Χ¤Χ¦Χ™Χ” Χ©Χ  Χ”Χ›Χ Χª ΧΧ¤Χ•Χª ΧΆΧ ΧΧ™ΧΧΧ¤
     public bool hasTilmap = false;
-    public Tilemap tilemap; // δ-Tilemap δξχεψι
+    public Tilemap tilemap; // Χ”-Tilemap Χ”ΧΧ§Χ•Χ¨Χ™
 
-    //ξφμξδ ωμ δρφπδ
+    //ΧΧ¦ΧΧΧ” Χ©Χ Χ”Χ΅Χ¦Χ Χ”
     public Camera cam;
 
-    //ξβγιψ ΰϊ βεγμ δμεη
+    //ΧΧ’Χ“Χ™Χ¨ ΧΧª Χ’Χ•Χ“Χ Χ”ΧΧ•Χ—
     public int width = 6;
     public int height = 8;
 
-    // ξβγιψ ψεεηιν μμεη
+    // ΧΧ’Χ“Χ™Χ¨ Χ¨Χ•Χ•Χ—Χ™Χ ΧΧΧ•Χ—
     public float spacingX;
     public float spacingY;
 
-    //μχαμ ΰϊ δτψιταιν ωμ δξξϊχιν
+    //ΧΧ§Χ‘Χ ΧΧª Χ”Χ¤Χ¨Χ™Χ¤Χ‘Χ™Χ Χ©Χ Χ”ΧΧΧªΧ§Χ™Χ
     public GameObject[] candyPrefabs;
 
-    //μχαμ ΰϊ δτψιταιν ωμ δξξϊχιν
+    //ΧΧ§Χ‘Χ ΧΧª Χ”Χ¤Χ¨Χ™Χ¤Χ‘Χ™Χ Χ©Χ Χ”ΧΧΧªΧ§Χ™Χ
     public GameObject[] specialCandyPrefabs;
 
-    //μχαμ ΰϊ δμεη εΰϊ δΰεαιιχθ
+    //ΧΧ§Χ‘Χ ΧΧª Χ”ΧΧ•Χ— Χ•ΧΧª Χ”ΧΧ•Χ‘Χ™Χ™Χ§Χ
     private Node[,] candyBoard;
     public GameObject candyBoardGO;
 
-    // μιφεψ ταμιχ μαεψγ
+    // ΧΧ™Χ¦Χ•Χ¨ Χ¤Χ‘ΧΧ™Χ§ ΧΧ‘Χ•Χ¨Χ“
     public static CandyBoard instance;
 
 
-    // ωιχει ωπαηψ ΰηψεο μδεζζδ
+    // Χ©Χ™Χ§Χ•Χ™ Χ©Χ Χ‘Χ—Χ¨ ΧΧ—Χ¨Χ•Χ ΧΧ”Χ•Χ–Χ–Χ”
     [SerializeField]
     private candy selectedCandy;
 
-    //δΰν ΰπι ξεζιζ λψβς
+    //Χ”ΧΧ ΧΧ Χ™ ΧΧ•Χ–Χ™Χ– Χ›Χ¨Χ’ΧΆ
     [SerializeField]
     private bool isProcessingMove;
 
-    // ψωιξδ ωμ ξξϊχιν ωφψικ μξηεχ λι δν δϊΰξδ
+    // Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ Χ©Χ¦Χ¨Χ™Χ ΧΧΧ—Χ•Χ§ Χ›Χ™ Χ”Χ Χ”ΧªΧΧΧ”
     [SerializeField]
     List<candy> candyToRemove = new();
 
-    // ψωιξδ ωμ ϊεφΰεϊ ωφψικ μξηεχ λι δν δϊΰξδ
+    // Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧªΧ•Χ¦ΧΧ•Χª Χ©Χ¦Χ¨Χ™Χ ΧΧΧ—Χ•Χ§ Χ›Χ™ Χ”Χ Χ”ΧªΧΧΧ”
     [SerializeField]
     List<MatchResults> lastMatchResults = new();
 
     [SerializeField]
     private float delayBetweenMatches = 0.4f;
 
-    //ΰεαιιχθ ωξΰλμρ ΰϊ λμ δμεη αϊελε
+    //ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ©ΧΧΧ›ΧΧ΅ ΧΧª Χ›Χ Χ”ΧΧ•Χ— Χ‘ΧªΧ•Χ›Χ•
     GameObject boardParent;
 
-    //ξωϊπδ μωμεθ ςμ χπδ δξιγδ ωμ δμεη
+    //ΧΧ©ΧªΧ Χ” ΧΧ©ΧΧ•Χ ΧΆΧ Χ§Χ Χ” Χ”ΧΧ™Χ“Χ” Χ©Χ Χ”ΧΧ•Χ—
     public float boardScaleFactor = 1.0f;
 
-    // ΰαΰ ωμ λμ δϊΰεψδ
+    // ΧΧ‘Χ Χ©Χ Χ›Χ Χ”ΧªΧΧ•Χ¨Χ”
     public GameObject lightParent;
 
-    //χπδ ξιγδ ΰηψι ηιωεα ιλπρ μλΰο
+    //Χ§Χ Χ” ΧΧ™Χ“Χ” ΧΧ—Χ¨Χ™ Χ—Χ™Χ©Χ•Χ‘ Χ™Χ›Χ Χ΅ ΧΧ›ΧΧ
     public float boardScale = 1.0f;
 
-    //ΰτχθ μΰεψκ
+    //ΧΧ¤Χ§Χ ΧΧΧ•Χ¨Χ
     [SerializeField]
     private GameObject VFXVerticalPrefab;
     private VisualEffect VFXVertical;
 
-    //ΰτχθ μψεηα
+    //ΧΧ¤Χ§Χ ΧΧ¨Χ•Χ—Χ‘
     [SerializeField]
     private GameObject VFXHorizontalPrefab;
     private VisualEffect VFXHorizontal;
+
+    //Χ΅Χ•Χ¤Χ¨ Χ§Χ•Χ¨Χ•ΧΧ™Χ Χ•Χª Χ¤ΧΆΧ™ΧΧ•Χª
+    private int activeCoroutines = 0;
+
+    //Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ ΧΧ Χ™Χ§Χ•Χ“
+    List<candy> candyForScoring = new ();
 
     private void Awake()
     {
@@ -103,24 +109,24 @@ public class CandyBoard : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //ωεμη αγιχδ μΰιτδ ωδωηχο μηυ εωεξψ αξδ τβς
+            //Χ©Χ•ΧΧ— Χ‘Χ“Χ™Χ§Χ” ΧΧΧ™Χ¤Χ” Χ©Χ”Χ©Χ—Χ§Χ ΧΧ—Χ¥ Χ•Χ©Χ•ΧΧ¨ Χ‘ΧΧ” Χ¤Χ’ΧΆ
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
-            //αεγχ ΰν τβς αξωδε εΰν δεΰ ξξϊχ
+            //Χ‘Χ•Χ“Χ§ ΧΧ Χ¤Χ’ΧΆ Χ‘ΧΧ©Χ”Χ• Χ•ΧΧ Χ”Χ•Χ ΧΧΧªΧ§
             if (hit.collider != null && hit.collider.gameObject.GetComponent<candy>())
             {
-                //ΰν δεΰ ςγιο αξδμκ ΰηψ ΰζ αθμ
+                //ΧΧ Χ”Χ•Χ ΧΆΧ“Χ™Χ Χ‘ΧΧ”ΧΧ ΧΧ—Χ¨ ΧΧ– Χ‘ΧΧ
                 if(isProcessingMove)
                 {
                     return;
                 }
 
-                //ωεξψ ΰϊ δξξϊχ ωπαηψ
+                //Χ©Χ•ΧΧ¨ ΧΧª Χ”ΧΧΧªΧ§ Χ©Χ Χ‘Χ—Χ¨
                 candy candy = hit.collider.gameObject.GetComponent<candy>();
                 
-                //ψεων ςμ ξξϊχ ωπαηψ
-                Debug.Log("μηφϊι ςμ ξξϊχ :" + candy.gameObject);
+                //Χ¨Χ•Χ©Χ ΧΆΧ ΧΧΧªΧ§ Χ©Χ Χ‘Χ—Χ¨
+                Debug.Log("ΧΧ—Χ¦ΧªΧ™ ΧΆΧ ΧΧΧªΧ§ :" + candy.gameObject);
 
                 SelectCandy(candy);
             }
@@ -132,14 +138,14 @@ public class CandyBoard : MonoBehaviour
         Vector2 inputPosition = Vector2.zero;
         bool inputDetected = false;
 
-        // αγιχδ μξεαιιμ
+        // Χ‘Χ“Χ™Χ§Χ” ΧΧΧ•Χ‘Χ™Χ™Χ
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             inputPosition = Input.GetTouch(0).position;
             inputDetected = true;
         }
 
-        // αγιχδ μξηωα
+        // Χ‘Χ“Χ™Χ§Χ” ΧΧΧ—Χ©Χ‘
         if (Input.GetMouseButtonDown(0))
         {
             inputPosition = Input.mousePosition;
@@ -156,19 +162,19 @@ public class CandyBoard : MonoBehaviour
 
             if (hit.collider != null && hit.collider.gameObject.GetComponent<candy>())
             {
-                Debug.Log("τβς αΰεαιιχθ: " + hit.collider.name);
+                Debug.Log("Χ¤Χ’ΧΆ Χ‘ΧΧ•Χ‘Χ™Χ™Χ§Χ: " + hit.collider.name);
 
-                //ΰν δεΰ ςγιο αξδμκ ΰηψ ΰζ αθμ
+                //ΧΧ Χ”Χ•Χ ΧΆΧ“Χ™Χ Χ‘ΧΧ”ΧΧ ΧΧ—Χ¨ ΧΧ– Χ‘ΧΧ
                 if (isProcessingMove)
                 {
                     return;
                 }
 
-                //ωεξψ ΰϊ δξξϊχ ωπαηψ
+                //Χ©Χ•ΧΧ¨ ΧΧª Χ”ΧΧΧªΧ§ Χ©Χ Χ‘Χ—Χ¨
                 candy candy = hit.collider.gameObject.GetComponent<candy>();
 
-                //ψεων ςμ ξξϊχ ωπαηψ
-                Debug.Log("μηφϊι ςμ ξξϊχ :" + candy.gameObject);
+                //Χ¨Χ•Χ©Χ ΧΆΧ ΧΧΧªΧ§ Χ©Χ Χ‘Χ—Χ¨
+                Debug.Log("ΧΧ—Χ¦ΧªΧ™ ΧΆΧ ΧΧΧªΧ§ :" + candy.gameObject);
 
                 SelectCandy(candy);
             }
@@ -183,13 +189,13 @@ public class CandyBoard : MonoBehaviour
     {
         Vector2 inputPosition = Vector2.zero;
 
-        // ΰν δεΰ ςγιιο αξδμκ ΰηψ ΰζ αθμ
+        // ΧΧ Χ”Χ•Χ ΧΆΧ“Χ™Χ™Χ Χ‘ΧΧ”ΧΧ ΧΧ—Χ¨ ΧΧ– Χ‘ΧΧ
         if (isProcessingMove || Time.timeScale == 0f)
         {
             return;
         }
 
-        // αγιχδ μξεαιιμ
+        // Χ‘Χ“Χ™Χ§Χ” ΧΧΧ•Χ‘Χ™Χ™Χ
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -210,7 +216,7 @@ public class CandyBoard : MonoBehaviour
             }
         }
 
-        // αγιχδ μξηωα
+        // Χ‘Χ“Χ™Χ§Χ” ΧΧΧ—Χ©Χ‘
         else
         {
             inputPosition = Input.mousePosition;
@@ -230,7 +236,7 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    // δϊημϊ βψιψδ
+    // Χ”ΧªΧ—ΧΧª Χ’Χ¨Χ™Χ¨Χ”
     void TryStartDrag(Vector2 screenPos)
     {
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
@@ -250,10 +256,10 @@ public class CandyBoard : MonoBehaviour
         draggedCandy = c;
         dragStartPos = GetCandyPosition(c);
 
-        // ΰτχθ δβγμδ
+        // ΧΧ¤Χ§Χ Χ”Χ’Χ“ΧΧ”
         draggedCandy.transform.localScale = Vector3.one * 1.2f;
 
-        // πφπευ
+        // Χ Χ¦Χ Χ•Χ¥
         StartCoroutine(CandyTwinkle(draggedCandy));
     }
 
@@ -314,11 +320,11 @@ public class CandyBoard : MonoBehaviour
 
             if (targetCandy != null)
             {
-                SelectCandy(draggedCandy); // λξε μηιφδ ψΰωεπδ
-                SelectCandy(targetCandy);  // λξε μηιφδ ωπιδ
+                SelectCandy(draggedCandy); // Χ›ΧΧ• ΧΧ—Χ™Χ¦Χ” Χ¨ΧΧ©Χ•Χ Χ”
+                SelectCandy(targetCandy);  // Χ›ΧΧ• ΧΧ—Χ™Χ¦Χ” Χ©Χ Χ™Χ”
             }
 
-            EndDrag(); // ριεν δβψιψδ ΰηψι δημτδ
+            EndDrag(); // Χ΅Χ™Χ•Χ Χ”Χ’Χ¨Χ™Χ¨Χ” ΧΧ—Χ¨Χ™ Χ”Χ—ΧΧ¤Χ”
         }
     }
 
@@ -326,7 +332,7 @@ public class CandyBoard : MonoBehaviour
     {
         if (draggedCandy != null)
         {
-            // δηζψϊ βεγμ ψβιμ
+            // Χ”Χ—Χ–Χ¨Χª Χ’Χ•Χ“Χ Χ¨Χ’Χ™Χ
             draggedCandy.transform.localScale = Vector3.one;
         }
 
@@ -336,34 +342,34 @@ public class CandyBoard : MonoBehaviour
     void ScaleBoardToFitScreen()
     {
 
-        // ωξεψ ΰϊ δςψλιν δψΰωεπιιν ωμ δξφμξδ εδϊΰεψδ
+        // Χ©ΧΧ•Χ¨ ΧΧª Χ”ΧΆΧ¨Χ›Χ™Χ Χ”Χ¨ΧΧ©Χ•Χ Χ™Χ™Χ Χ©Χ Χ”ΧΧ¦ΧΧΧ” Χ•Χ”ΧªΧΧ•Χ¨Χ”
         float initialOrthoSize = Camera.main.orthographicSize;
 
-        // βεγμ δμεη ατιχρμιν
+        // Χ’Χ•Χ“Χ Χ”ΧΧ•Χ— Χ‘Χ¤Χ™Χ§Χ΅ΧΧ™Χ
         float boardWidth = width;
         float boardHeight = height;
 
-        // ιηρ ξρκ
+        // Χ™Χ—Χ΅ ΧΧ΅Χ
         float aspectRatio = (float)Screen.width / Screen.height;
 
-        // ηιωεα χπδ δξιγδ δξϊΰιν
+        // Χ—Χ™Χ©Χ•Χ‘ Χ§Χ Χ” Χ”ΧΧ™Χ“Χ” Χ”ΧΧªΧΧ™Χ
         float scaleX = boardWidth / (2 * aspectRatio);
         float scaleY = boardHeight / 2;
         float newOrthoSize = Mathf.Max(scaleX, scaleY);
 
-        // δϊΰν ΰϊ δβεγμ μτι boardScaleFactor (ΰν φψικ ωεμιιν περτιν)
+        // Χ”ΧªΧΧ ΧΧª Χ”Χ’Χ•Χ“Χ ΧΧ¤Χ™ boardScaleFactor (ΧΧ Χ¦Χ¨Χ™Χ Χ©Χ•ΧΧ™Χ™Χ Χ Χ•Χ΅Χ¤Χ™Χ)
         newOrthoSize *= boardScaleFactor;
 
-        // δβγψ ΰϊ βεγμ δξφμξδ δηγω
+        // Χ”Χ’Χ“Χ¨ ΧΧª Χ’Χ•Χ“Χ Χ”ΧΧ¦ΧΧΧ” Χ”Χ—Χ“Χ©
         Camera.main.orthographicSize = newOrthoSize;
 
-        // ηιωεα ιηρ δωιπει αξφμξδ
+        // Χ—Χ™Χ©Χ•Χ‘ Χ™Χ—Χ΅ Χ”Χ©Χ™Χ Χ•Χ™ Χ‘ΧΧ¦ΧΧΧ”
         float scaleFactor = newOrthoSize / initialOrthoSize;
 
-        //ξεεγΰ ωιω ΰεαιιχθ λζδ
+        //ΧΧ•Χ•Χ“Χ Χ©Χ™Χ© ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ›Χ–Χ”
         if (lightParent != null)
         {
-            // δϊΰν ΰϊ χπδ δξιγδ ωμ δΰεαιιχθ ωξλιμ ΰϊ δϊΰεψδ
+            // Χ”ΧªΧΧ ΧΧª Χ§Χ Χ” Χ”ΧΧ™Χ“Χ” Χ©Χ Χ”ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ©ΧΧ›Χ™Χ ΧΧª Χ”ΧªΧΧ•Χ¨Χ”
             lightParent.transform.localScale *= scaleFactor;
         }
     }
@@ -379,7 +385,7 @@ public class CandyBoard : MonoBehaviour
         spacingY = (float)(height - 1) / 2;
 
         candyBoard = new Node[width, height];
-        // ιφιψϊ ΰεαιιχθ ΰα μμεη
+        // Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ‘Χ™Χ™Χ§Χ ΧΧ‘ ΧΧΧ•Χ—
         boardParent = new GameObject("BoardParent");
 
         for (int x = bounds.xMin; x < bounds.xMax; x++)
@@ -401,7 +407,7 @@ public class CandyBoard : MonoBehaviour
 
                     if (prefabIndex != -1)
                     {
-                        //ξηωα ξιχεν
+                        //ΧΧ—Χ©Χ‘ ΧΧ™Χ§Χ•Χ
                         Vector2 pos = new Vector2(x - spacingX, y - spacingY);
 
                         Vector3 worldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y, 0));
@@ -416,19 +422,19 @@ public class CandyBoard : MonoBehaviour
                         }
 
                         GameObject newTile = Instantiate(prefab, pos, Quaternion.identity);
-                        newTile.transform.parent = boardParent.transform; // ξφια ϊηϊ δδεψδ
+                        newTile.transform.parent = boardParent.transform; // ΧΧ¦Χ™Χ‘ ΧªΧ—Χª Χ”Χ”Χ•Χ¨Χ”
 
 
-                        //ξβγιψ ΰεϊε 
+                        //ΧΧ’Χ“Χ™Χ¨ ΧΧ•ΧªΧ• 
                         newTile.GetComponent<candy>().setIndicies(x - bounds.xMin, y - bounds.yMin);
 
-                        // ξερισ ΰεϊε μξςψκ
+                        // ΧΧ•Χ΅Χ™Χ£ ΧΧ•ΧªΧ• ΧΧΧΆΧ¨Χ
                         candyBoard[x, y] = new Node(true, newTile);
                     }
                 }
                 else
                 {
-                    // ξερισ ΰεϊε μξςψκ
+                    // ΧΧ•Χ΅Χ™Χ£ ΧΧ•ΧªΧ• ΧΧΧΆΧ¨Χ
                     candyBoard[x, y] = new Node(false, null);
                     Debug.Log(" is null");
                 }
@@ -439,7 +445,7 @@ public class CandyBoard : MonoBehaviour
             OnTilmapRandomMaches();
         }
 
-        Destroy(tilemap.gameObject); // ξεηχ ΰϊ δΰεαιιχθ ωμ δ-Tilemap ΰαμ ωεξψ ΰϊ δΰψιηιν
+        Destroy(tilemap.gameObject); // ΧΧ•Χ—Χ§ ΧΧª Χ”ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ©Χ Χ”-Tilemap ΧΧ‘Χ Χ©Χ•ΧΧ¨ ΧΧª Χ”ΧΧ¨Χ™Χ—Χ™Χ
 
         ScaleBoardToFitScreen();
     }
@@ -448,7 +454,7 @@ public class CandyBoard : MonoBehaviour
     {
         foreach (candy candyToRemove in candyToRemove)
         {
-            // ωεξψ ΰϊ δx ε y
+            // Χ©Χ•ΧΧ¨ ΧΧª Χ”x Χ• y
             int xIndex = candyToRemove.xIndex;
             int yIndex = candyToRemove.yIndex;
 
@@ -456,18 +462,18 @@ public class CandyBoard : MonoBehaviour
             {
                 Destroy(candyToRemove.gameObject);
 
-                //ξωιβ ωιχει ψπγεξμι
+                //ΧΧ©Χ™Χ’ Χ©Χ™Χ§Χ•Χ™ Χ¨Χ Χ“Χ•ΧΧΧ™
                 int randomIndex = UnityEngine.Random.Range(0, candyPrefabs.Length);
                 GameObject newCandy = Instantiate(candyPrefabs[randomIndex], new Vector2(xIndex - spacingX, yIndex - spacingY), Quaternion.identity);
 
-                // μδφια ΰϊ δξξϊχ ϊηϊ ΰεαιιχθ δΰα
+                // ΧΧ”Χ¦Χ™Χ‘ ΧΧª Χ”ΧΧΧªΧ§ ΧªΧ—Χª ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ”ΧΧ‘
                 newCandy.transform.SetParent(boardParent.transform);
 
 
-                //γδβγψ ξιχεξιν
+                //Χ“Χ”Χ’Χ“Χ¨ ΧΧ™Χ§Χ•ΧΧ™Χ
                 newCandy.GetComponent<candy>().setIndicies(xIndex, yIndex);
 
-                //δβγψ ΰεϊν μεη
+                //Χ”Χ’Χ“Χ¨ ΧΧ•ΧªΧ ΧΧ•Χ—
                 candyBoard[xIndex, yIndex] = new Node(true, newCandy);
             }
         }
@@ -481,7 +487,7 @@ public class CandyBoard : MonoBehaviour
     {
         for (int i = 0; i < candyPrefabs.Length; i++)
         {
-            if (candyPrefabs[i].name == tile.name) // δπηδ: ων δτψιτα ζδδ μων δΰψιη
+            if (candyPrefabs[i].name == tile.name) // Χ”Χ Χ—Χ”: Χ©Χ Χ”Χ¤Χ¨Χ™Χ¤Χ‘ Χ–Χ”Χ” ΧΧ©Χ Χ”ΧΧ¨Χ™Χ—
             {
                 return i;
             }
@@ -496,7 +502,7 @@ public class CandyBoard : MonoBehaviour
     {
         for (int i = 0; i < specialCandyPrefabs.Length; i++)
         {
-            if (specialCandyPrefabs[i].name == tile.name) // δπηδ: ων δτψιτα ζδδ μων δΰψιη
+            if (specialCandyPrefabs[i].name == tile.name) // Χ”Χ Χ—Χ”: Χ©Χ Χ”Χ¤Χ¨Χ™Χ¤Χ‘ Χ–Χ”Χ” ΧΧ©Χ Χ”ΧΧ¨Χ™Χ—
             {
                 return i;
             }
@@ -508,7 +514,7 @@ public class CandyBoard : MonoBehaviour
     {
         candyBoard = new Node[width, height];
 
-        // ιφιψϊ ΰεαιιχθ ΰα μμεη
+        // Χ™Χ¦Χ™Χ¨Χª ΧΧ•Χ‘Χ™Χ™Χ§Χ ΧΧ‘ ΧΧΧ•Χ—
         boardParent = new GameObject("BoardParent");
 
         spacingX = (float)(width - 1) / 2;
@@ -518,21 +524,21 @@ public class CandyBoard : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                //ξηωα ξιχεν
+                //ΧΧ—Χ©Χ‘ ΧΧ™Χ§Χ•Χ
                 Vector2 pos = new Vector2(x - spacingX, y - spacingY);
 
-                //πεϊο ξρτψ ψπγεξμι ωμ ΰιζδ φας ξξϊχ
+                //Χ Χ•ΧªΧ ΧΧ΅Χ¤Χ¨ Χ¨Χ Χ“Χ•ΧΧΧ™ Χ©Χ ΧΧ™Χ–Χ” Χ¦Χ‘ΧΆ ΧΧΧªΧ§
                 int randomIndex = UnityEngine.Random.Range(0, candyPrefabs.Length);
 
-                //ξιφψ ξξϊχ ξδρεβ δψπγεξμι αξιχεν δπελλι εξβγιψ ΰεϊε αχεγ ωμε
+                //ΧΧ™Χ¦Χ¨ ΧΧΧªΧ§ ΧΧ”Χ΅Χ•Χ’ Χ”Χ¨Χ Χ“Χ•ΧΧΧ™ Χ‘ΧΧ™Χ§Χ•Χ Χ”Χ Χ•Χ›Χ›Χ™ Χ•ΧΧ’Χ“Χ™Χ¨ ΧΧ•ΧªΧ• Χ‘Χ§Χ•Χ“ Χ©ΧΧ•
                 GameObject candy =  Instantiate(candyPrefabs[randomIndex], pos, Quaternion.identity);
 
-                // μδφια ΰϊ δξξϊχ ϊηϊ ΰεαιιχθ δΰα
+                // ΧΧ”Χ¦Χ™Χ‘ ΧΧª Χ”ΧΧΧªΧ§ ΧªΧ—Χª ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ”ΧΧ‘
                 candy.transform.SetParent(boardParent.transform);
 
-                //ξβγιψ ΰεϊε 
+                //ΧΧ’Χ“Χ™Χ¨ ΧΧ•ΧªΧ• 
                 candy.GetComponent<candy>().setIndicies(x, y);
-                // ξερισ ΰεϊε μξςψκ
+                // ΧΧ•Χ΅Χ™Χ£ ΧΧ•ΧªΧ• ΧΧΧΆΧ¨Χ
                 candyBoard[x,y] = new Node(true, candy);
             }
         }
@@ -542,7 +548,7 @@ public class CandyBoard : MonoBehaviour
 
             ScaleBoardToFitScreen();
 
-            //ξϊηιμ χεψεθιπδ ωϊθτμ αϊεφΰεϊ
+            //ΧΧªΧ—Χ™Χ Χ§Χ•Χ¨Χ•ΧΧ™Χ Χ” Χ©ΧªΧΧ¤Χ Χ‘ΧªΧ•Χ¦ΧΧ•Χª
             StartCoroutine(ProsesTurnOnMatchedBoard(true, 0f));
         }
         else
@@ -554,23 +560,23 @@ public class CandyBoard : MonoBehaviour
 
     public bool CheckBoard()
     {
-        //δεγςδ ςμ ϊηιμϊ δαγιχδ
+        //Χ”Χ•Χ“ΧΆΧ” ΧΆΧ ΧªΧ—Χ™ΧΧª Χ”Χ‘Χ“Χ™Χ§Χ”
         Debug.Log("checking board");
 
-        // αεμ ωξεηζψ ξϊηιμ λμΰ πλεο εξωϊπδ αξιγδ ωμ δϊΰξδ
+        // Χ‘Χ•Χ Χ©ΧΧ•Χ—Χ–Χ¨ ΧΧªΧ—Χ™Χ Χ›ΧΧ Χ Χ›Χ•Χ Χ•ΧΧ©ΧªΧ Χ” Χ‘ΧΧ™Χ“Χ” Χ©Χ Χ”ΧªΧΧΧ”
         bool hasMatched = false;
 
-        //ξπχδ ΰϊ δψωιξεϊ
+        //ΧΧ Χ§Χ” ΧΧª Χ”Χ¨Χ©Χ™ΧΧ•Χª
         candyToRemove.Clear();
         lastMatchResults.Clear();
 
-        //ξβγιψ ξηγω ΰϊ δξξϊχιν λμΰ ξεϊΰξιν
+        //ΧΧ’Χ“Χ™Χ¨ ΧΧ—Χ“Χ© ΧΧª Χ”ΧΧΧªΧ§Χ™Χ Χ›ΧΧ ΧΧ•ΧªΧΧΧ™Χ
         foreach (Node nodeCandy in candyBoard)
         {
-            //ψχ ΰν δν χιιξιν
+            //Χ¨Χ§ ΧΧ Χ”Χ Χ§Χ™Χ™ΧΧ™Χ
             if (nodeCandy.candy != null)
             {
-                //ξβγιψ λμΰ ξεϊΰξιν
+                //ΧΧ’Χ“Χ™Χ¨ Χ›ΧΧ ΧΧ•ΧªΧΧΧ™Χ
                 nodeCandy.candy.GetComponent<candy>().isMatched = false;
             }
         }
@@ -579,29 +585,29 @@ public class CandyBoard : MonoBehaviour
         {
             for (int y = 0; y < height; y++) 
             { 
-                //αεγχ ΰν δξιχεν τςιμ
+                //Χ‘Χ•Χ“Χ§ ΧΧ Χ”ΧΧ™Χ§Χ•Χ Χ¤ΧΆΧ™Χ
                 if (candyBoard[x, y].isUsabal)
                 {
-                    //αεγχ ΰϊ ρεβ δξξϊχ
+                    //Χ‘Χ•Χ“Χ§ ΧΧª Χ΅Χ•Χ’ Χ”ΧΧΧªΧ§
                     candy candy = candyBoard[x, y].candy.GetComponent<candy>();
 
-                    //αεγχ ΰν λαψ ξεϊΰν
+                    //Χ‘Χ•Χ“Χ§ ΧΧ Χ›Χ‘Χ¨ ΧΧ•ΧªΧΧ
                     if (!candy.isMatched)
                     {
                         MatchResults matchCandy = IsConnected(candy);
 
                         if (matchCandy.connectedCandy.Count >= 3)
                         {
-                            //ωιμεαιν ξψεαιν
+                            //Χ©Χ™ΧΧ•Χ‘Χ™Χ ΧΧ¨Χ•Χ‘Χ™Χ
                             MatchResults superMatchedCandys = SuperMach(matchCandy);
 
-                            //ξερισ ΰϊ δξϊΰιν αιεϊψ
+                            //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧªΧΧ™Χ Χ‘Χ™Χ•ΧªΧ¨
                             if (matchCandy != superMatchedCandys)
                                 lastMatchResults.Add(superMatchedCandys);
                             else
                                 lastMatchResults.Add(matchCandy);
 
-                            //ξερισ ΰϊ δξξϊχιν δψφιτιν μψωιξδ μξηιχδ
+                            //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§Χ™Χ Χ”Χ¨Χ¦Χ™Χ¤Χ™Χ ΧΧ¨Χ©Χ™ΧΧ” ΧΧΧ—Χ™Χ§Χ”
                             candyToRemove.AddRange(superMatchedCandys.connectedCandy);
 
                             foreach (candy can in superMatchedCandys.connectedCandy)
@@ -609,7 +615,7 @@ public class CandyBoard : MonoBehaviour
                                 can.isMatched = true;
                             }
 
-                            //δετκ ΰϊ ΰν ιω δϊΰξεϊ μπλεο
+                            //Χ”Χ•Χ¤Χ ΧΧª ΧΧ Χ™Χ© Χ”ΧªΧΧΧ•Χª ΧΧ Χ›Χ•Χ
                             hasMatched = true;
                         }
                     }
@@ -617,16 +623,23 @@ public class CandyBoard : MonoBehaviour
             }
         }
 
-        //ξηζιψ ΰν ιω δϊΰξεϊ
+        //ΧΧ—Χ–Χ™Χ¨ ΧΧ Χ™Χ© Χ”ΧªΧΧΧ•Χª
         return hasMatched;
     }
 
     public IEnumerator ProsesTurnOnMatchedBoard(bool _subtractMoves, float deley)
     {
-        //ψωιξδ ωμ δΰτχθιν
+        if (candyForScoring.Count > 0)
+        {
+            //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
+            GameManager.Instance.ProcessTurn(candyForScoring, false);
+            candyForScoring.Clear();
+        }
+
+        //Χ¨Χ©Χ™ΧΧ” Χ©Χ Χ”ΧΧ¤Χ§ΧΧ™Χ
         List<GameObject> efects = new List<GameObject>();
 
-        //ξβγιψ ΰϊ λμ δξξϊχιν μδεφΰ λμΰ αδϊΰξδ
+        //ΧΧ’Χ“Χ™Χ¨ ΧΧª Χ›Χ Χ”ΧΧΧªΧ§Χ™Χ ΧΧ”Χ•Χ¦Χ Χ›ΧΧ Χ‘Χ”ΧªΧΧΧ”
         foreach (candy candyToRemove1 in candyToRemove)
         {
             if (candyToRemove1 != null)
@@ -636,7 +649,7 @@ public class CandyBoard : MonoBehaviour
 
         Remove(candyToRemove);
 
-        //ξηλδ χφϊ λγι ωιψΰδ ΰϊ ζδ αμεη 
+        //ΧΧ—Χ›Χ” Χ§Χ¦Χª Χ›Χ“Χ™ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ–Χ” Χ‘ΧΧ•Χ— 
         yield return new WaitForSeconds(0.5f);
 
         foreach (GameObject efect in efects)
@@ -647,10 +660,10 @@ public class CandyBoard : MonoBehaviour
         isSpecial();
         Refill();
 
-        //ξωπδ πιχεγ ελξεϊ ξδμλιν
+        //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
         GameManager.Instance.ProcessTurn(candyToRemove, _subtractMoves);
 
-        //ξηλδ χφϊ λγι ωιψΰδ ΰϊ ζδ αμεη 
+        //ΧΧ—Χ›Χ” Χ§Χ¦Χª Χ›Χ“Χ™ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ–Χ” Χ‘ΧΧ•Χ— 
         yield return new WaitForSeconds(deley);
 
         if (CheckBoard())
@@ -659,7 +672,7 @@ public class CandyBoard : MonoBehaviour
         }
         else
         {
-            //ξςγλο ωριιν ξδμκ εΰτωψ μαφς ςεγ ΰηγ
+            //ΧΧΆΧ“Χ›Χ Χ©Χ΅Χ™Χ™Χ ΧΧ”ΧΧ Χ•ΧΧ¤Χ©Χ¨ ΧΧ‘Χ¦ΧΆ ΧΆΧ•Χ“ ΧΧ—Χ“
             isProcessingMove = false;
             Debug.Log("end");
         }
@@ -667,10 +680,10 @@ public class CandyBoard : MonoBehaviour
 
     private void Remove(List<candy> candyToRemove)
     {
-        //ξεηχ ΰϊ δξξϊχιν εξτπδ ΰϊ δμεη
+        //ΧΧ•Χ—Χ§ ΧΧª Χ”ΧΧΧªΧ§Χ™Χ Χ•ΧΧ¤Χ Χ” ΧΧª Χ”ΧΧ•Χ—
         foreach (candy candy in candyToRemove)
         {
-            // ωεξψ ΰϊ δx ε y
+            // Χ©Χ•ΧΧ¨ ΧΧª Χ”x Χ• y
             int xIndex = candy.xIndex;
             int yIndex = candy.yIndex;
 
@@ -681,7 +694,7 @@ public class CandyBoard : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("δξωϊπδ candy μΰ χιιν, μΰ πιϊο μξηεχ ΰϊ δΰεαιιχθ.");
+                Debug.LogWarning("Χ”ΧΧ©ΧªΧ Χ” candy ΧΧ Χ§Χ™Χ™Χ, ΧΧ Χ Χ™ΧªΧ ΧΧΧ—Χ•Χ§ ΧΧª Χ”ΧΧ•Χ‘Χ™Χ™Χ§Χ.");
             }
             Debug.Log("1111111111");
         }
@@ -689,7 +702,7 @@ public class CandyBoard : MonoBehaviour
 
     private void isSpecial()
     {
-        // αεγχ δΰν ιω δϊΰξεϊ ξιεηγεϊ
+        // Χ‘Χ•Χ“Χ§ Χ”ΧΧ Χ™Χ© Χ”ΧªΧΧΧ•Χª ΧΧ™Χ•Χ—Χ“Χ•Χª
         var specialMatches = lastMatchResults.Where(r =>
             r.direction == MatchDirection.LongVertical ||
             r.direction == MatchDirection.LongHorizontal ||
@@ -697,31 +710,31 @@ public class CandyBoard : MonoBehaviour
 
         if (specialMatches.Count > 0)
         {
-            Debug.Log("πξφΰε " + specialMatches.Count + " δϊΰξεϊ ξιεηγεϊ!");
+            Debug.Log("Χ ΧΧ¦ΧΧ• " + specialMatches.Count + " Χ”ΧªΧΧΧ•Χª ΧΧ™Χ•Χ—Χ“Χ•Χª!");
 
             foreach (var match in specialMatches)
             {
-                // αεηψ ΰϊ δξχεν δθεα αιεϊψ ςαεψ λμ δϊΰξδ ξιεηγϊ
+                // Χ‘Χ•Χ—Χ¨ ΧΧª Χ”ΧΧ§Χ•Χ Χ”ΧΧ•Χ‘ Χ‘Χ™Χ•ΧªΧ¨ ΧΆΧ‘Χ•Χ¨ Χ›Χ Χ”ΧªΧΧΧ” ΧΧ™Χ•Χ—Χ“Χª
                 Vector2Int bestCandy = GetBestPositionForSpecialCandy(match);
 
-                Debug.Log("ξιχεν δξξϊχ δξιεηγ ωπξφΰ: " + bestCandy.x + "  " + bestCandy.y); // αεγχ ΰϊ δξιχεν
+                Debug.Log("ΧΧ™Χ§Χ•Χ Χ”ΧΧΧªΧ§ Χ”ΧΧ™Χ•Χ—Χ“ Χ©Χ ΧΧ¦Χ: " + bestCandy.x + "  " + bestCandy.y); // Χ‘Χ•Χ“Χ§ ΧΧª Χ”ΧΧ™Χ§Χ•Χ
 
                 if (bestCandy != null)
                 {
-                    // αεηψ ΰϊ δξχεν δθεα αιεϊψ ςαεψ λμ δϊΰξδ ξιεηγϊ
+                    // Χ‘Χ•Χ—Χ¨ ΧΧª Χ”ΧΧ§Χ•Χ Χ”ΧΧ•Χ‘ Χ‘Χ™Χ•ΧªΧ¨ ΧΆΧ‘Χ•Χ¨ Χ›Χ Χ”ΧªΧΧΧ” ΧΧ™Χ•Χ—Χ“Χª
                     int prefabIndex = GetSpecialPrefabIndex(match);
 
-                    //ξζξο ΰϊ δξξϊχ δξιεηγ
+                    //ΧΧ–ΧΧ ΧΧª Χ”ΧΧΧªΧ§ Χ”ΧΧ™Χ•Χ—Χ“
                     Vector3 newPosishen = new Vector3((bestCandy.x - spacingX) * boardScale, (bestCandy.y - spacingY) * boardScale, 0);
                     GameObject newCandy = Instantiate(specialCandyPrefabs[prefabIndex], newPosishen, Quaternion.identity);
 
-                    // μδφια ΰϊ δξξϊχ ϊηϊ ΰεαιιχθ δΰα
+                    // ΧΧ”Χ¦Χ™Χ‘ ΧΧª Χ”ΧΧΧªΧ§ ΧªΧ—Χª ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ”ΧΧ‘
                     newCandy.transform.SetParent(boardParent.transform);
 
-                    //γδβγψ ξιχεξιν
+                    //Χ“Χ”Χ’Χ“Χ¨ ΧΧ™Χ§Χ•ΧΧ™Χ
                     newCandy.GetComponent<candy>().setIndicies((int)bestCandy.x, (int)bestCandy.y);
 
-                    //δβγψ ΰεϊν μεη
+                    //Χ”Χ’Χ“Χ¨ ΧΧ•ΧªΧ ΧΧ•Χ—
                     candyBoard[bestCandy.x, bestCandy.y] = new Node(true, newCandy);
                 }
             }
@@ -730,17 +743,17 @@ public class CandyBoard : MonoBehaviour
 
     private void Refill()
     {
-        //μεμΰδ ωςεαψϊ ςμ δμεη εξξμΰϊ ΰεϊε
+        //ΧΧ•ΧΧΧ” Χ©ΧΆΧ•Χ‘Χ¨Χª ΧΆΧ Χ”ΧΧ•Χ— Χ•ΧΧΧΧΧª ΧΧ•ΧªΧ•
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 if (candyBoard[x, y].candy == null && candyBoard[x, y].isUsabal == true)
                 {
-                    //ωεμη δεγςδ ςμ πιριεο ξιμει
+                    //Χ©Χ•ΧΧ— Χ”Χ•Χ“ΧΆΧ” ΧΆΧ Χ Χ™Χ΅Χ™Χ•Χ ΧΧ™ΧΧ•Χ™
                     Debug.Log("the location x: " + x + "y:" + y + " is empty, attempting to refil it.");
 
-                    //ωεμη μξιμει δξξϊχιν
+                    //Χ©Χ•ΧΧ— ΧΧΧ™ΧΧ•Χ™ Χ”ΧΧΧªΧ§Χ™Χ
                     RefillCandy(x, y);
                 }
             }
@@ -749,12 +762,12 @@ public class CandyBoard : MonoBehaviour
 
     private Vector2Int GetBestPositionForSpecialCandy(MatchResults matchResults)
     {
-        if (matchResults.connectedCandy.Count == 0) return Vector2Int.zero; // ΰν ΰιο ξχεξεϊ ζξιπιν
+        if (matchResults.connectedCandy.Count == 0) return Vector2Int.zero; // ΧΧ ΧΧ™Χ ΧΧ§Χ•ΧΧ•Χª Χ–ΧΧ™Χ Χ™Χ
 
-        // ωμα 1: ξφΰ ΰϊ δΰιπγχρ Y δπξεκ αιεϊψ
+        // Χ©ΧΧ‘ 1: ΧΧ¦Χ ΧΧª Χ”ΧΧ™Χ Χ“Χ§Χ΅ Y Χ”Χ ΧΧ•Χ Χ‘Χ™Χ•ΧªΧ¨
         int minY = matchResults.connectedCandy.Min(candy => candy.yIndex);
 
-        // ωμα 2: ριπεο ψχ μξξϊχιν ςν ΰεϊε Y δλι πξεκ
+        // Χ©ΧΧ‘ 2: Χ΅Χ™Χ Χ•Χ Χ¨Χ§ ΧΧΧΧªΧ§Χ™Χ ΧΆΧ ΧΧ•ΧªΧ• Y Χ”Χ›Χ™ Χ ΧΧ•Χ
         List<candy> filteredCandies = matchResults.connectedCandy
             .Where(candy => candy.yIndex == minY)
             .ToList();
@@ -764,7 +777,7 @@ public class CandyBoard : MonoBehaviour
             selectedCandy = filteredCandies.FirstOrDefault();
         }
 
-        // ωμα 3: ΰν ιω λξδ αΰεϊε βεαδ, αηψ ΰϊ δχψεα αιεϊψ μ-selectedCandy
+        // Χ©ΧΧ‘ 3: ΧΧ Χ™Χ© Χ›ΧΧ” Χ‘ΧΧ•ΧªΧ• Χ’Χ•Χ‘Χ”, Χ‘Χ—Χ¨ ΧΧª Χ”Χ§Χ¨Χ•Χ‘ Χ‘Χ™Χ•ΧªΧ¨ Χ-selectedCandy
         if (filteredCandies.Count > 1 && selectedCandy != null)
         {
             filteredCandies = filteredCandies
@@ -772,7 +785,7 @@ public class CandyBoard : MonoBehaviour
                 .ToList();
         }
 
-        // ωμα 4: ξηζιψ ΰϊ δξιχεν ωμ δξξϊχ δλι ξϊΰιν
+        // Χ©ΧΧ‘ 4: ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ”ΧΧ™Χ§Χ•Χ Χ©Χ Χ”ΧΧΧªΧ§ Χ”Χ›Χ™ ΧΧªΧΧ™Χ
         return new Vector2Int(filteredCandies.First().xIndex, filteredCandies.First().yIndex);
     }
 
@@ -790,91 +803,91 @@ public class CandyBoard : MonoBehaviour
         return 3;
     }
 
-    // ξξμΰ ξηγω
+    // ΧΧΧΧ ΧΧ—Χ“Χ©
     private void RefillCandy(int x, int y)
     {
-        //ξερισ μy ϊζεζδ
+        //ΧΧ•Χ΅Χ™Χ£ Χy ΧªΧ–Χ•Χ–Χ”
         int yOffset = 1;
 
-        //λωδζδ ωξςμ ωεεδ μnull εζδ ξϊηϊ μβεαδ δξχριξμι 
+        //Χ›Χ©Χ”Χ–Χ” Χ©ΧΧΆΧ Χ©Χ•Χ•Χ” Χnull Χ•Χ–Χ” ΧΧªΧ—Χª ΧΧ’Χ•Χ‘Χ” Χ”ΧΧ§Χ΅Χ™ΧΧΧ™ 
         while (y +  yOffset < height && candyBoard[x, y + yOffset].candy == null)
         {
-            //δβγμ ΰϊ δyoffset
+            //Χ”Χ’Χ“Χ ΧΧª Χ”yoffset
             Debug.Log("the candy above is null, but its not att the top of the bord so try again");
 
             yOffset++;
         }
 
-        //ΰε ωζδ δμξςμδ ωμ δμεη ΰε ωξφΰϊι ξξϊχ
+        //ΧΧ• Χ©Χ–Χ” Χ”ΧΧΧΆΧΧ” Χ©Χ Χ”ΧΧ•Χ— ΧΧ• Χ©ΧΧ¦ΧΧªΧ™ ΧΧΧªΧ§
 
         if (y + yOffset < height && candyBoard[x, y + yOffset].candy != null)
         {
-            //ξφΰ ξξϊχ μδεψιγ
+            //ΧΧ¦Χ ΧΧΧªΧ§ ΧΧ”Χ•Χ¨Χ™Χ“
             candy candyAbove = candyBoard[x, y + yOffset].candy.GetComponent<candy>();
 
-            // δζζ ΰεϊε μξιχεν δπεληι
+            // Χ”Χ–Χ– ΧΧ•ΧªΧ• ΧΧΧ™Χ§Χ•Χ Χ”Χ Χ•Χ›Χ—Χ™
             Vector3 targetCandy = new Vector3((x - spacingX) * boardScale, (y - spacingY) * boardScale, candyAbove.transform.position.z);
 
-            //ξγεεη ςμ δδεζζδ
+            //ΧΧ“Χ•Χ•Χ— ΧΆΧ Χ”Χ”Χ•Χ–Χ–Χ”
             Debug.Log("i've found a candy ant it si in: " + x + "," + (y + yOffset) + " ande moved it to: " + x + "," + y);
 
-            //ζεζ μξιχεν
+            //Χ–Χ•Χ– ΧΧΧ™Χ§Χ•Χ
             candyAbove.MoveToTarget(targetCandy);
 
-            //ξςγλο ξιχεν ΰφμδν
+            //ΧΧΆΧ“Χ›Χ ΧΧ™Χ§Χ•Χ ΧΧ¦ΧΧ”Χ
             candyAbove.setIndicies(x, y);
 
-            // ξςγλο ΰϊ δμεη
+            // ΧΧΆΧ“Χ›Χ ΧΧª Χ”ΧΧ•Χ—
             candyBoard[x,y] = candyBoard[x, y + yOffset];
 
-            //ξιιφψ ΰϊ δξχεν ωξξπε πμχη δωιχει ξηγω
+            //ΧΧ™Χ™Χ¦Χ¨ ΧΧª Χ”ΧΧ§Χ•Χ Χ©ΧΧΧ Χ• Χ ΧΧ§Χ— Χ”Χ©Χ™Χ§Χ•Χ™ ΧΧ—Χ“Χ©
             candyBoard[x, y + yOffset] = new Node(true, null);
         }
 
-        //ΰν ξφΰ ΰϊ δρεσ ωμ δμεη αμι μξφε ωιχει
+        //ΧΧ ΧΧ¦Χ ΧΧª Χ”Χ΅Χ•Χ£ Χ©Χ Χ”ΧΧ•Χ— Χ‘ΧΧ™ ΧΧΧ¦Χ• Χ©Χ™Χ§Χ•Χ™
         if(y + yOffset == height)
         {
-            //ξεγις ωδβις μμξςμδ
+            //ΧΧ•Χ“Χ™ΧΆ Χ©Χ”Χ’Χ™ΧΆ ΧΧΧΧΆΧΧ”
             Debug.Log("i got to the top");
 
-            //ξζξο ηγωιν αμξςμδ
+            //ΧΧ–ΧΧ Χ—Χ“Χ©Χ™Χ Χ‘ΧΧΧΆΧΧ”
             SpawnCandyAtTop(x);
         }
     }
 
-    //ξζξο ηγωιν αμξςμδ ωμ δμεη
+    //ΧΧ–ΧΧ Χ—Χ“Χ©Χ™Χ Χ‘ΧΧΧΆΧΧ” Χ©Χ Χ”ΧΧ•Χ—
     private void SpawnCandyAtTop(int x)
     {
-        //ξεφΰ ΰϊ δξιχεν δλι πξεκ αμι λμεν
+        //ΧΧ•Χ¦Χ ΧΧª Χ”ΧΧ™Χ§Χ•Χ Χ”Χ›Χ™ Χ ΧΧ•Χ Χ‘ΧΧ™ Χ›ΧΧ•Χ
         int index = FindIndexOfLowestNull(x);
 
-        //ξηωα ΰϊ δξιχεν μτι δβεαδ
+        //ΧΧ—Χ©Χ‘ ΧΧª Χ”ΧΧ™Χ§Χ•Χ ΧΧ¤Χ™ Χ”Χ’Χ•Χ‘Χ”
         int locationToMoveTo = height - index;
 
-        //ξγεεη ςμ δπιριεο
+        //ΧΧ“Χ•Χ•Χ— ΧΆΧ Χ”Χ Χ™Χ΅Χ™Χ•Χ
         Debug.Log("about to spawn a candy,");
 
-        //ξωιβ ωιχει ψπγεξμι
+        //ΧΧ©Χ™Χ’ Χ©Χ™Χ§Χ•Χ™ Χ¨Χ Χ“Χ•ΧΧΧ™
         int randomIndex = UnityEngine.Random.Range(0, candyPrefabs.Length);
         GameObject newCandy = Instantiate(candyPrefabs[randomIndex], new Vector2(x - spacingX, height - spacingY), Quaternion.identity);
 
-        // μδφια ΰϊ δξξϊχ ϊηϊ ΰεαιιχθ δΰα
+        // ΧΧ”Χ¦Χ™Χ‘ ΧΧª Χ”ΧΧΧªΧ§ ΧªΧ—Χª ΧΧ•Χ‘Χ™Χ™Χ§Χ Χ”ΧΧ‘
         newCandy.transform.SetParent(boardParent.transform);
         
         
-        //γδβγψ ξιχεξιν
+        //Χ“Χ”Χ’Χ“Χ¨ ΧΧ™Χ§Χ•ΧΧ™Χ
         newCandy.GetComponent<candy>().setIndicies(x, index);
 
-        //δβγψ ΰεϊν μεη
+        //Χ”Χ’Χ“Χ¨ ΧΧ•ΧªΧ ΧΧ•Χ—
         candyBoard[x, index] = new Node(true, newCandy);
 
-        //δεζζ ΰεϊν μξχεν
+        //Χ”Χ•Χ–Χ– ΧΧ•ΧªΧ ΧΧΧ§Χ•Χ
         Vector3 targetPosition = new Vector3(newCandy.transform.localPosition.x, newCandy.transform.localPosition.y - (locationToMoveTo * boardScale), newCandy.transform.position.z);
         newCandy.GetComponent<candy>().MoveToTarget(targetPosition);
     }
 
 
-    //ξεφΰ ΰϊ δλι πξεκ 
+    //ΧΧ•Χ¦Χ ΧΧª Χ”Χ›Χ™ Χ ΧΧ•Χ 
     private int FindIndexOfLowestNull(int x)
     {
         int lowestNull = 99;
@@ -892,29 +905,29 @@ public class CandyBoard : MonoBehaviour
 
     private MatchResults SuperMach(MatchResults matchCandy)
     {
-        // αεγχ ΰν ιω μψεηα ΰε μψεηα βγεμ
+        // Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© ΧΧ¨Χ•Χ—Χ‘ ΧΧ• ΧΧ¨Χ•Χ—Χ‘ Χ’Χ“Χ•Χ
         if (matchCandy.direction == MatchDirection.Horizontal || matchCandy.direction == MatchDirection.LongHorizontal)
         {
-            //ςεαψ ςμ λμ δωιχειιν ωμ δδϊΰξδ 
+            //ΧΆΧ•Χ‘Χ¨ ΧΆΧ Χ›Χ Χ”Χ©Χ™Χ§Χ•Χ™Χ™Χ Χ©Χ Χ”Χ”ΧªΧΧΧ” 
             foreach (candy candy in matchCandy.connectedCandy)
             {
-                //τεϊη ψωιξϊ ϊεφΰεϊ ηγωδ
+                //Χ¤Χ•ΧªΧ— Χ¨Χ©Χ™ΧΧª ΧªΧ•Χ¦ΧΧ•Χª Χ—Χ“Χ©Χ”
                 List<candy> extraConnectedCandy = new();
 
-                //αεγχ μξςμδ εμξθδ
+                //Χ‘Χ•Χ“Χ§ ΧΧΧΆΧΧ” Χ•ΧΧΧΧ”
                 CheckDirection(candy, new Vector2Int(0,1), extraConnectedCandy);
                 CheckDirection(candy, new Vector2Int(0,-1), extraConnectedCandy);
 
-                //αεγχ ΰν ιω ιεϊψ ξ2 αιηγ 
+                //Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© Χ™Χ•ΧªΧ¨ Χ2 Χ‘Χ™Χ—Χ“ 
                 if (extraConnectedCandy.Count >= 2)
                 {
-                    //ξεφιΰ ΰιωεψ ωιω ιεϊψ ξ2 ξωξς ιω δϊΰξδ ρετψ βγεμδ
+                    //ΧΧ•Χ¦Χ™Χ ΧΧ™Χ©Χ•Χ¨ Χ©Χ™Χ© Χ™Χ•ΧªΧ¨ Χ2 ΧΧ©ΧΧΆ Χ™Χ© Χ”ΧªΧΧΧ” Χ΅Χ•Χ¤Χ¨ Χ’Χ“Χ•ΧΧ”
                     Debug.Log("super Horizontal match");
                     
-                    //ξερισ ΰϊ δδϊΰξδ μϊεφΰεϊ
+                    //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”Χ”ΧªΧΧΧ” ΧΧªΧ•Χ¦ΧΧ•Χª
                     extraConnectedCandy.AddRange(matchCandy.connectedCandy);
 
-                    //ξηζιψ ϊεφΰεϊ ηγωεϊ ςν δδθςξδ δβγεμδ
+                    //ΧΧ—Χ–Χ™Χ¨ ΧªΧ•Χ¦ΧΧ•Χª Χ—Χ“Χ©Χ•Χª ΧΆΧ Χ”Χ”ΧΧΆΧΧ” Χ”Χ’Χ“Χ•ΧΧ”
                     return new MatchResults
                     {
                         connectedCandy = extraConnectedCandy,
@@ -923,33 +936,33 @@ public class CandyBoard : MonoBehaviour
                 }
 
             }
-            //ΰν ΰιο δθςξεϊ ξηζιψ ΰϊ δδϊΰξδ δψβιμδ ωδιιϊδ
+            //ΧΧ ΧΧ™Χ Χ”ΧΧΆΧΧ•Χª ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ”Χ”ΧªΧΧΧ” Χ”Χ¨Χ’Χ™ΧΧ” Χ©Χ”Χ™Χ™ΧªΧ”
             return matchCandy;
         }
 
-        // αεγχ ΰν ιω μβεαδ ΰε μβεαδ βγεμ
+        // Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© ΧΧ’Χ•Χ‘Χ” ΧΧ• ΧΧ’Χ•Χ‘Χ” Χ’Χ“Χ•Χ
         else if (matchCandy.direction == MatchDirection.Vertical || matchCandy.direction == MatchDirection.LongVertical)
         {
-            //ςεαψ ςμ λμ δωιχειιν ωμ δδϊΰξδ 
+            //ΧΆΧ•Χ‘Χ¨ ΧΆΧ Χ›Χ Χ”Χ©Χ™Χ§Χ•Χ™Χ™Χ Χ©Χ Χ”Χ”ΧªΧΧΧ” 
             foreach (candy candy in matchCandy.connectedCandy)
             {
-                //τεϊη ψωιξϊ ϊεφΰεϊ ηγωδ
+                //Χ¤Χ•ΧªΧ— Χ¨Χ©Χ™ΧΧª ΧªΧ•Χ¦ΧΧ•Χª Χ—Χ“Χ©Χ”
                 List<candy> extraConnectedCandy = new();
 
-                //αεγχ μξςμδ εμξθδ
+                //Χ‘Χ•Χ“Χ§ ΧΧΧΆΧΧ” Χ•ΧΧΧΧ”
                 CheckDirection(candy, new Vector2Int(1, 0), extraConnectedCandy);
                 CheckDirection(candy, new Vector2Int(-1, 0), extraConnectedCandy);
 
-                //αεγχ ΰν ιω ιεϊψ ξ2 αιηγ 
+                //Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© Χ™Χ•ΧªΧ¨ Χ2 Χ‘Χ™Χ—Χ“ 
                 if (extraConnectedCandy.Count >= 2)
                 {
-                    //ξεφιΰ ΰιωεψ ωιω ιεϊψ ξ2 ξωξς ιω δϊΰξδ ρετψ βγεμδ
+                    //ΧΧ•Χ¦Χ™Χ ΧΧ™Χ©Χ•Χ¨ Χ©Χ™Χ© Χ™Χ•ΧªΧ¨ Χ2 ΧΧ©ΧΧΆ Χ™Χ© Χ”ΧªΧΧΧ” Χ΅Χ•Χ¤Χ¨ Χ’Χ“Χ•ΧΧ”
                     Debug.Log("super Vertical match");
 
-                    //ξερισ ΰϊ δδϊΰξδ μϊεφΰεϊ
+                    //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”Χ”ΧªΧΧΧ” ΧΧªΧ•Χ¦ΧΧ•Χª
                     extraConnectedCandy.AddRange(matchCandy.connectedCandy);
 
-                    //ξηζιψ ϊεφΰεϊ ηγωεϊ ςν δδθςξδ δβγεμδ
+                    //ΧΧ—Χ–Χ™Χ¨ ΧªΧ•Χ¦ΧΧ•Χª Χ—Χ“Χ©Χ•Χª ΧΆΧ Χ”Χ”ΧΧΆΧΧ” Χ”Χ’Χ“Χ•ΧΧ”
                     return new MatchResults
                     {
                         connectedCandy = extraConnectedCandy,
@@ -958,15 +971,15 @@ public class CandyBoard : MonoBehaviour
                 }
 
             }
-            //ΰν ΰιο δθςξεϊ ξηζιψ ΰϊ δδϊΰξδ δψβιμδ ωδιιϊδ
+            //ΧΧ ΧΧ™Χ Χ”ΧΧΆΧΧ•Χª ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ”Χ”ΧªΧΧΧ” Χ”Χ¨Χ’Χ™ΧΧ” Χ©Χ”Χ™Χ™ΧªΧ”
             return matchCandy;
         }
 
-        //ΰν ςαψ ξωδε ωδεΰ μΰ ϊεφΰδ αλμμ
+        //ΧΧ ΧΆΧ‘Χ¨ ΧΧ©Χ”Χ• Χ©Χ”Χ•Χ ΧΧ ΧªΧ•Χ¦ΧΧ” Χ‘Χ›ΧΧ
         return matchCandy;
     }
 
-    //αγιχδ ΰν ξηεαψ
+    //Χ‘Χ“Χ™Χ§Χ” ΧΧ ΧΧ—Χ•Χ‘Χ¨
     MatchResults IsConnected(candy candy)
     {
         List<candy> connectedCandy = new();
@@ -974,16 +987,16 @@ public class CandyBoard : MonoBehaviour
 
         connectedCandy.Add(candy);
 
-        //αεγχ ιξιπδ
+        //Χ‘Χ•Χ“Χ§ Χ™ΧΧ™Χ Χ”
         CheckDirection(candy, new Vector2Int(1,0), connectedCandy);
 
-        //αεγχ ωξΰμδ
+        //Χ‘Χ•Χ“Χ§ Χ©ΧΧΧΧ”
         CheckDirection(candy, new Vector2Int(-1, 0), connectedCandy);
 
-        // αεγχ ΰν ιω 3 μψεηα
+        // Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© 3 ΧΧ¨Χ•Χ—Χ‘
         if (connectedCandy.Count == 3)
         {
-            // ξεγις ςμ δϊΰξδ ωμ 3
+            // ΧΧ•Χ“Χ™ΧΆ ΧΆΧ Χ”ΧªΧΧΧ” Χ©Χ 3
             Debug.Log("has mached Horizontal 3 frome type: " + connectedCandy[0].candyType);
 
             return new MatchResults
@@ -993,10 +1006,10 @@ public class CandyBoard : MonoBehaviour
             };
         }
 
-        // αεγχ ΰν ιω ιεϊψ ξ3 μψεηα
+        // Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© Χ™Χ•ΧªΧ¨ Χ3 ΧΧ¨Χ•Χ—Χ‘
         else if (connectedCandy.Count > 3)
         {
-            // ξεγις ςμ δϊΰξδ ωμ ιεϊψ ξ-3
+            // ΧΧ•Χ“Χ™ΧΆ ΧΆΧ Χ”ΧªΧΧΧ” Χ©Χ Χ™Χ•ΧªΧ¨ Χ-3
             Debug.Log("has Horizontal mached more then 3 frome type: " + connectedCandy[0].candyType);
 
             if (connectedCandy.Count == 4)
@@ -1017,22 +1030,22 @@ public class CandyBoard : MonoBehaviour
             }
         }
 
-        // ΰν ΰιο δϊΰξδ ξπχδ ΰϊ δψωιξδ
+        // ΧΧ ΧΧ™Χ Χ”ΧªΧΧΧ” ΧΧ Χ§Χ” ΧΧª Χ”Χ¨Χ©Χ™ΧΧ”
         connectedCandy.Clear();
 
-        //ξηζιψ ΰϊ δψΰωεπι
+        //ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ”Χ¨ΧΧ©Χ•Χ Χ™
         connectedCandy.Add(candy);
 
-        // αεχγ μξςμδ
+        // Χ‘Χ•Χ§Χ“ ΧΧΧΆΧΧ”
         CheckDirection(candy, new Vector2Int(0, 1), connectedCandy);
 
-        //αεγχ μξθδ
+        //Χ‘Χ•Χ“Χ§ ΧΧΧΧ”
         CheckDirection(candy, new Vector2Int(0, -1), connectedCandy);
 
-        // αεγχ ΰν ιω 3 μβεαδ
+        // Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© 3 ΧΧ’Χ•Χ‘Χ”
         if (connectedCandy.Count == 3)
         {
-            // ξεγις ςμ δϊΰξδ ωμ 3
+            // ΧΧ•Χ“Χ™ΧΆ ΧΆΧ Χ”ΧªΧΧΧ” Χ©Χ 3
             Debug.Log("has Vertical mached 3 frome type: " + connectedCandy[0].candyType);
 
             return new MatchResults
@@ -1042,10 +1055,10 @@ public class CandyBoard : MonoBehaviour
             };
         }
 
-        // αεγχ ΰν ιω ιεϊψ ξ3 μβεαδ
+        // Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© Χ™Χ•ΧªΧ¨ Χ3 ΧΧ’Χ•Χ‘Χ”
         else if (connectedCandy.Count > 3)
         {
-            // ξεγις ςμ δϊΰξδ ωμ 3
+            // ΧΧ•Χ“Χ™ΧΆ ΧΆΧ Χ”ΧªΧΧΧ” Χ©Χ 3
             Debug.Log("has Vertical mached more then 3 frome type: " + connectedCandy[0].candyType);
 
             if (connectedCandy.Count == 4)
@@ -1073,27 +1086,27 @@ public class CandyBoard : MonoBehaviour
         };
     }
 
-    //αγεχ λιεεο
+    //Χ‘Χ“Χ•Χ§ Χ›Χ™Χ•Χ•Χ
     void CheckDirection(candy candy, Vector2Int direction, List<candy> connectedCandy)
     {
         CandyType candyType = candy.candyType;
         int x = candy.xIndex + direction.x;
         int y = candy.yIndex + direction.y;
 
-        // αεγχ ωζδ αϊεκ δμεη
+        // Χ‘Χ•Χ“Χ§ Χ©Χ–Χ” Χ‘ΧªΧ•Χ Χ”ΧΧ•Χ—
         while (x >= 0 && x < width && y >= 0 && y < height)
         {
             if (candyBoard[x, y].isUsabal)
             {
                  candy neighbourCandy = candyBoard[x, y].candy.GetComponent<candy>();
 
-                // δΰν δρεβ ξξϊχ ζδδ
+                // Χ”ΧΧ Χ”Χ΅Χ•Χ’ ΧΧΧªΧ§ Χ–Χ”Χ”
                 if (!neighbourCandy.isMatched && neighbourCandy.candyType == candyType)
                 {
-                    // ξϊΰιν ΰζ ξερισ ΰεϊε μψωιξδ 
+                    // ΧΧªΧΧ™Χ ΧΧ– ΧΧ•Χ΅Χ™Χ£ ΧΧ•ΧªΧ• ΧΧ¨Χ©Χ™ΧΧ” 
                     connectedCandy.Add(neighbourCandy);
 
-                    // αεγχ ςεγ αΰεϊε λιεεο
+                    // Χ‘Χ•Χ“Χ§ ΧΆΧ•Χ“ Χ‘ΧΧ•ΧªΧ• Χ›Χ™Χ•Χ•Χ
                     x += direction.x;
                     y += direction.y;
                 }
@@ -1109,23 +1122,23 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    // αεηψ ξξϊχ
+    // Χ‘Χ•Χ—Χ¨ ΧΧΧªΧ§
 
     public void SelectCandy(candy _candy)
     {
-        // ΰν ΰιο μι ξξϊχ ααηιψδ ΰζ ϊαηψ ηγω
+        // ΧΧ ΧΧ™Χ ΧΧ™ ΧΧΧªΧ§ Χ‘Χ‘Χ—Χ™Χ¨Χ” ΧΧ– ΧªΧ‘Χ—Χ¨ Χ—Χ“Χ©
         if (selectedCandy == null)
         {
             Debug.Log(_candy);
             selectedCandy = _candy;
         }
-        //ΰν αηψ ΰεϊε ωιχει αθμ ΰϊ δαηιψδ ωμε 
+        //ΧΧ Χ‘Χ—Χ¨ ΧΧ•ΧªΧ• Χ©Χ™Χ§Χ•Χ™ Χ‘ΧΧ ΧΧª Χ”Χ‘Χ—Χ™Χ¨Χ” Χ©ΧΧ• 
         else if (selectedCandy == _candy)
         {
             selectedCandy = null;
         }
 
-        //ΰν μΰ ΰεϊε γαψ ΰζ ξημισ
+        //ΧΧ ΧΧ ΧΧ•ΧªΧ• Χ“Χ‘Χ¨ ΧΧ– ΧΧ—ΧΧ™Χ£
         else if (selectedCandy != _candy)
         {
             SwapCandy(selectedCandy, _candy);
@@ -1134,82 +1147,82 @@ public class CandyBoard : MonoBehaviour
         }
     }
 
-    //ξημισ ΰϊ δξξϊχ
+    //ΧΧ—ΧΧ™Χ£ ΧΧª Χ”ΧΧΧªΧ§
     private void SwapCandy(candy _candy1, candy _candy2)
     {
-        //ΰν ζδ μΰ ΰηγ μιγ δωπι
+        //ΧΧ Χ–Χ” ΧΧ ΧΧ—Χ“ ΧΧ™Χ“ Χ”Χ©Χ Χ™
         if (!IsAdjacent(_candy1, _candy2))
         {
             selectedCandy = null;
             return;
         }
 
-        // δϊημ δημτδ
+        // Χ”ΧªΧ—Χ Χ”Χ—ΧΧ¤Χ”
         DoSwap(_candy1, _candy2);
 
-        //ξςγλο ωδϊηιμ ξδμκ εμΰ ΰτωψι μαφς λψβς ςεγ ΰηγ
+        //ΧΧΆΧ“Χ›Χ Χ©Χ”ΧªΧ—Χ™Χ ΧΧ”ΧΧ Χ•ΧΧ ΧΧ¤Χ©Χ¨Χ™ ΧΧ‘Χ¦ΧΆ Χ›Χ¨Χ’ΧΆ ΧΆΧ•Χ“ ΧΧ—Χ“
         isProcessingMove = true;
 
-        //ξϊηιμ λεψεθιπδ μξφιΰϊ δϊΰξεϊ
+        //ΧΧªΧ—Χ™Χ Χ›Χ•Χ¨Χ•ΧΧ™Χ Χ” ΧΧΧ¦Χ™ΧΧª Χ”ΧªΧΧΧ•Χª
         StartCoroutine(ProcessMatches(_candy1, _candy2));
     }
 
-    //ξημισ ατεςμ
+    //ΧΧ—ΧΧ™Χ£ Χ‘Χ¤Χ•ΧΆΧ
     private void DoSwap(candy _candy1, candy _candy2)
     {
 
-        //ωεξψ ΰϊ δψΰωεο
+        //Χ©Χ•ΧΧ¨ ΧΧª Χ”Χ¨ΧΧ©Χ•Χ
         GameObject temp = candyBoard[_candy1.xIndex, _candy1.yIndex].candy;
 
-        // ξημισ ψΰωεο αωπι
+        // ΧΧ—ΧΧ™Χ£ Χ¨ΧΧ©Χ•Χ Χ‘Χ©Χ Χ™
         candyBoard[_candy1.xIndex, _candy1.yIndex].candy = candyBoard[_candy2.xIndex, _candy2.yIndex].candy;
 
-        //ξημισ ωπι αωξιψδ ωμ ψΰωεο
+        //ΧΧ—ΧΧ™Χ£ Χ©Χ Χ™ Χ‘Χ©ΧΧ™Χ¨Χ” Χ©Χ Χ¨ΧΧ©Χ•Χ
         candyBoard[_candy2.xIndex, _candy2.yIndex].candy = temp;
 
-        //ξςγλο ξιχεξιν
-        //ωεξψ ξιχεν ζξπιϊ
+        //ΧΧΆΧ“Χ›Χ ΧΧ™Χ§Χ•ΧΧ™Χ
+        //Χ©Χ•ΧΧ¨ ΧΧ™Χ§Χ•Χ Χ–ΧΧ Χ™Χª
         int tempXIndex =_candy1.xIndex;
         int tempYIndex = _candy1.yIndex;
 
-        //ξημισ ψΰωεο αωπι
+        //ΧΧ—ΧΧ™Χ£ Χ¨ΧΧ©Χ•Χ Χ‘Χ©Χ Χ™
         _candy1.xIndex = _candy2.xIndex;
         _candy1.yIndex = _candy2.yIndex;
 
-        //ξημισ ωπι αχετι ωμ δψΰωεο
+        //ΧΧ—ΧΧ™Χ£ Χ©Χ Χ™ Χ‘Χ§Χ•Χ¤Χ™ Χ©Χ Χ”Χ¨ΧΧ©Χ•Χ
         _candy2.xIndex = tempXIndex;
         _candy2.yIndex = tempYIndex;
 
-        // ξηωα ΰϊ δξιχεξιν ςν χπδ ξιγδ
+        // ΧΧ—Χ©Χ‘ ΧΧª Χ”ΧΧ™Χ§Χ•ΧΧ™Χ ΧΆΧ Χ§Χ Χ” ΧΧ™Χ“Χ”
         Vector3 pos1 = new Vector3(
             (_candy1.xIndex - spacingX) * boardScale,
             (_candy1.yIndex - spacingY) * boardScale,
             _candy1.transform.position.z
         );
 
-        // ξηωα ΰϊ δξιχεξιν ςν χπδ ξιγδ
+        // ΧΧ—Χ©Χ‘ ΧΧª Χ”ΧΧ™Χ§Χ•ΧΧ™Χ ΧΆΧ Χ§Χ Χ” ΧΧ™Χ“Χ”
         Vector3 pos2 = new Vector3(
             (_candy2.xIndex - spacingX) * boardScale,
             (_candy2.yIndex - spacingY) * boardScale,
             _candy2.transform.position.z
         );
 
-        // ξζιζ ΰϊ δψΰωεο εδωπι μξιχεξιν δηγωιν ςν δϊηωαεϊ αχπδ ξιγδ
+        // ΧΧ–Χ™Χ– ΧΧª Χ”Χ¨ΧΧ©Χ•Χ Χ•Χ”Χ©Χ Χ™ ΧΧΧ™Χ§Χ•ΧΧ™Χ Χ”Χ—Χ“Χ©Χ™Χ ΧΆΧ Χ”ΧªΧ—Χ©Χ‘Χ•Χª Χ‘Χ§Χ Χ” ΧΧ™Χ“Χ”
         _candy1.MoveToTarget(pos1);
         _candy2.MoveToTarget(pos2);
     }
 
     private IEnumerator ProcessMatches(candy _candy1, candy _candy2)
     {
-        //ξηλδ ωδδημτδ ϊρϊιιν ΰν ΰπι ψεφδ μδερισ ζξπιν ωεπιν φψικ μτϊεψ τδ ΰϊ ζδ 
+        //ΧΧ—Χ›Χ” Χ©Χ”Χ”Χ—ΧΧ¤Χ” ΧªΧ΅ΧªΧ™Χ™Χ ΧΧ ΧΧ Χ™ Χ¨Χ•Χ¦Χ” ΧΧ”Χ•Χ΅Χ™Χ£ Χ–ΧΧ Χ™Χ Χ©Χ•Χ Χ™Χ Χ¦Χ¨Χ™Χ ΧΧ¤ΧªΧ•Χ¨ Χ¤Χ” ΧΧª Χ–Χ” 
         yield return new WaitForSeconds(0.4f);
         
-        //αεγχ ΰν ιω δϊΰξδ
+        //Χ‘Χ•Χ“Χ§ ΧΧ Χ™Χ© Χ”ΧªΧΧΧ”
         if (CheckBoard())
         {
             if(!CheckIfCandyIsSpecial(_candy1, _candy2))
             {
-                //ξϊηιμ χεψεθιπδ ωϊθτμ αϊεφΰεϊ
+                //ΧΧªΧ—Χ™Χ Χ§Χ•Χ¨Χ•ΧΧ™Χ Χ” Χ©ΧªΧΧ¤Χ Χ‘ΧªΧ•Χ¦ΧΧ•Χª
                 StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
             }
         }
@@ -1217,11 +1230,11 @@ public class CandyBoard : MonoBehaviour
         {
             //StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
         }
-        //ΰν ΰιο δϊΰξδ ΰζ δν ιηζψε μΰηεψ
+        //ΧΧ ΧΧ™Χ Χ”ΧªΧΧΧ” ΧΧ– Χ”Χ Χ™Χ—Χ–Χ¨Χ• ΧΧΧ—Χ•Χ¨
         else
         {
             DoSwap(_candy1, _candy2);
-            //ξςγλο ωριιν ξδμκ εΰτωψ μαφς ςεγ ΰηγ
+            //ΧΧΆΧ“Χ›Χ Χ©Χ΅Χ™Χ™Χ ΧΧ”ΧΧ Χ•ΧΧ¤Χ©Χ¨ ΧΧ‘Χ¦ΧΆ ΧΆΧ•Χ“ ΧΧ—Χ“
             isProcessingMove = false;
         }
 
@@ -1246,6 +1259,7 @@ public class CandyBoard : MonoBehaviour
 
     private void TriggerSpecialCandy(candy mainCandy, candy otherCandy)
     {
+        activeCoroutines++;
         switch (mainCandy.candyType)
         {
             case CandyType.vertical:
@@ -1265,31 +1279,31 @@ public class CandyBoard : MonoBehaviour
 
     IEnumerator PerformVertical(candy candy)
     {
-        //ψωιξδ ωμ ξξϊχιν μπιχεγ
+        //Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ ΧΧ Χ™Χ§Χ•Χ“
         List<candy> _candyList = new();
 
-        //ξηλδ εΰζ ςεωδ ΰτχθ
+        //ΧΧ—Χ›Χ” Χ•ΧΧ– ΧΆΧ•Χ©Χ” ΧΧ¤Χ§Χ
         yield return new WaitForSeconds(0.3f);
         GameObject toDestroy = candy.OnDestroyVFX();
 
-        int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // δξψηχ δξψαι μλμ λιεεο
+        int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // Χ”ΧΧ¨Χ—Χ§ Χ”ΧΧ¨Χ‘Χ™ ΧΧ›Χ Χ›Χ™Χ•Χ•Χ
 
         for (int y = 0; y <= maxDistance; y++)
         {
             bool removedAny = false;
 
-            // αγιχδ εξηιχδ λμτι ξςμδ
+            // Χ‘Χ“Χ™Χ§Χ” Χ•ΧΧ—Χ™Χ§Χ” Χ›ΧΧ¤Χ™ ΧΧΆΧΧ”
             int upperY = candy.yIndex + y;
             if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null)
             {
                 candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
                 if (targetCandy != null && targetCandy.isSpecial && y != 0)
                 {
-                    TriggerSpecialCandy(targetCandy, candy); // μδτςμϊ ωψωψϊ
+                    TriggerSpecialCandy(targetCandy, candy); // ΧΧ”Χ¤ΧΆΧΧª Χ©Χ¨Χ©Χ¨Χª
                 }
                 else
                 {
-                    //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+                    //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
                     _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
 
                     Destroy(candyBoard[candy.xIndex, upperY].candy.gameObject);
@@ -1298,11 +1312,11 @@ public class CandyBoard : MonoBehaviour
                 }
             }
 
-            // αγιχδ εξηιχδ λμτι ξθδ
+            // Χ‘Χ“Χ™Χ§Χ” Χ•ΧΧ—Χ™Χ§Χ” Χ›ΧΧ¤Χ™ ΧΧΧ”
             int lowerY = candy.yIndex - y;
             if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
             {
-                //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+                //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
                 _candyList.Add(candyBoard[candy.xIndex, lowerY].candy.GetComponent<candy>());
 
                 Destroy(candyBoard[candy.xIndex, lowerY].candy.gameObject);
@@ -1310,44 +1324,143 @@ public class CandyBoard : MonoBehaviour
                 removedAny = true;
             }
 
-            // ΰν πξηχ μτηεϊ ΰηγ - ξηλιν μτπι ωξξωιλιν μωμα δαΰ
+            // ΧΧ Χ ΧΧ—Χ§ ΧΧ¤Χ—Χ•Χª ΧΧ—Χ“ - ΧΧ—Χ›Χ™Χ ΧΧ¤Χ Χ™ Χ©ΧΧΧ©Χ™Χ›Χ™Χ ΧΧ©ΧΧ‘ Χ”Χ‘Χ
             if (removedAny)
             {
                 yield return new WaitForSeconds(0.1f);
             }
         }
 
-        //ξωπδ πιχεγ ελξεϊ ξδμλιν
+        //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
         GameManager.Instance.ProcessTurn(_candyList, false);
 
-        // ξηλιν ωδΰτχθ ιρϊιιν εΰζ ξεηχιν ΰεϊε
+        // ΧΧ—Χ›Χ™Χ Χ©Χ”ΧΧ¤Χ§Χ Χ™Χ΅ΧªΧ™Χ™Χ Χ•ΧΧ– ΧΧ•Χ—Χ§Χ™Χ ΧΧ•ΧªΧ•
         yield return new WaitForSeconds(0.1f);
         Destroy(toDestroy);
 
-
-        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        // ΧΧ—Χ›Χ™Χ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ”ΧΧ΅Χ Χ¨Χ™Χ§ ΧΧ¨Χ’ΧΆ Χ•ΧΧ¨Χ– ΧΧΧΧΧ™Χ
+        yield return new WaitForSeconds(0.3f);
+        activeCoroutines--;
+        if (activeCoroutines == 0)
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
     }
-
-    IEnumerator PerformHorizontal(candy candy)
+    /*IEnumerator PerformVertical(candy candy)
     {
-        //ψωιξδ ωμ ξξϊχιν μπιχεγ
+        //Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ ΧΧ Χ™Χ§Χ•Χ“
         List<candy> _candyList = new();
 
-        //ξηλδ εΰζ ςεωδ ΰτχθ
+        //ΧΧ—Χ›Χ” Χ•ΧΧ– ΧΆΧ•Χ©Χ” ΧΧ¤Χ§Χ
         yield return new WaitForSeconds(0.3f);
         GameObject toDestroy = candy.OnDestroyVFX();
 
-        int maxDistance = Mathf.Max(candy.xIndex, width - candy.xIndex); // δξψηχ δξψαι μλμ λιεεο αφιψ δ-X
+        int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // Χ”ΧΧ¨Χ—Χ§ Χ”ΧΧ¨Χ‘Χ™ ΧΧ›Χ Χ›Χ™Χ•Χ•Χ
+
+        for (int y = 0; y <= maxDistance; y++)
+        {
+            bool removedAny = false;
+
+            // Χ‘Χ“Χ™Χ§Χ” Χ•ΧΧ—Χ™Χ§Χ” Χ›ΧΧ¤Χ™ ΧΧΆΧΧ”
+            int upperY = candy.yIndex + y;
+            if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null && y != 0)
+            {
+                candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
+                if (targetCandy != null && targetCandy.isSpecial)
+                {
+                    TriggerSpecialCandy(targetCandy, candy); // ΧΧ”Χ¤ΧΆΧΧª Χ©Χ¨Χ©Χ¨Χª
+                }
+                else
+                {
+                    //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
+                    candyForScoring.Add(targetCandy);
+
+                    Destroy(candyBoard[targetCandy.xIndex, targetCandy.yIndex].candy.gameObject);
+                    candyBoard[targetCandy.xIndex, targetCandy.yIndex] = new Node(true, null);
+                    removedAny = true;
+                }
+                //removedAny = DeletCandyBySpecial(targetCandy, candy);
+            }
+
+            // Χ‘Χ“Χ™Χ§Χ” Χ•ΧΧ—Χ™Χ§Χ” Χ›ΧΧ¤Χ™ ΧΧΧ”
+            int lowerY = candy.yIndex - y;
+            if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
+            {
+                candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
+                if (targetCandy != null && targetCandy.isSpecial && y != 0)
+                {
+                    TriggerSpecialCandy(targetCandy, candy); // ΧΧ”Χ¤ΧΆΧΧª Χ©Χ¨Χ©Χ¨Χª
+                }
+                else
+                {
+                    //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
+                    candyForScoring.Add(targetCandy);
+
+                    Destroy(candyBoard[targetCandy.xIndex, targetCandy.yIndex].candy.gameObject);
+                    candyBoard[targetCandy.xIndex, targetCandy.yIndex] = new Node(true, null);
+                    removedAny = true;
+                }
+                //removedAny = DeletCandyBySpecial(targetCandy, candy);
+            }
+
+            // ΧΧ Χ ΧΧ—Χ§ ΧΧ¤Χ—Χ•Χª ΧΧ—Χ“ - ΧΧ—Χ›Χ™Χ ΧΧ¤Χ Χ™ Χ©ΧΧΧ©Χ™Χ›Χ™Χ ΧΧ©ΧΧ‘ Χ”Χ‘Χ
+            if (removedAny)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
+        GameManager.Instance.ProcessTurn(_candyList, false);
+
+        // ΧΧ—Χ›Χ™Χ Χ©Χ”ΧΧ¤Χ§Χ Χ™Χ΅ΧªΧ™Χ™Χ Χ•ΧΧ– ΧΧ•Χ—Χ§Χ™Χ ΧΧ•ΧªΧ•
+        yield return new WaitForSeconds(0.1f);
+        Destroy(toDestroy);
+
+        // ΧΧ—Χ›Χ™Χ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ”ΧΧ΅Χ Χ¨Χ™Χ§ ΧΧ¨Χ’ΧΆ Χ•ΧΧ¨Χ– ΧΧΧΧΧ™Χ
+        yield return new WaitForSeconds(0.3f);
+        activeCoroutines--;
+        if (activeCoroutines == 0)
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+    }*/
+
+    private bool DeletCandyBySpecial(candy targetCandy, candy callingCandy)
+    {
+        if (targetCandy != null && targetCandy.isSpecial)
+        {
+            TriggerSpecialCandy(targetCandy, callingCandy); // ΧΧ”Χ¤ΧΆΧΧª Χ©Χ¨Χ©Χ¨Χª
+        }
+        else
+        {
+            //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
+            candyForScoring.Add(targetCandy);
+
+            Destroy(candyBoard[targetCandy.xIndex, targetCandy.yIndex].candy.gameObject);
+            candyBoard[targetCandy.xIndex, targetCandy.yIndex] = new Node(true, null);
+            return true;
+        }
+        return false;
+    }
+
+
+    IEnumerator PerformHorizontal(candy candy)
+    {
+        //Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ ΧΧ Χ™Χ§Χ•Χ“
+        List<candy> _candyList = new();
+
+        //ΧΧ—Χ›Χ” Χ•ΧΧ– ΧΆΧ•Χ©Χ” ΧΧ¤Χ§Χ
+        yield return new WaitForSeconds(0.3f);
+        GameObject toDestroy = candy.OnDestroyVFX();
+
+        int maxDistance = Mathf.Max(candy.xIndex, width - candy.xIndex); // Χ”ΧΧ¨Χ—Χ§ Χ”ΧΧ¨Χ‘Χ™ ΧΧ›Χ Χ›Χ™Χ•Χ•Χ Χ‘Χ¦Χ™Χ¨ Χ”-X
 
         for (int x = 0; x <= maxDistance; x++)
         {
             bool removedAny = false;
 
-            // αγιχδ εξηιχδ λμτι ιξιο
+            // Χ‘Χ“Χ™Χ§Χ” Χ•ΧΧ—Χ™Χ§Χ” Χ›ΧΧ¤Χ™ Χ™ΧΧ™Χ
             int rightX = candy.xIndex + x;
             if (rightX < width && candyBoard[rightX, candy.yIndex].isUsabal && candyBoard[rightX, candy.yIndex].candy != null)
             {
-                //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+                //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
                 _candyList.Add(candyBoard[rightX, candy.yIndex].candy.GetComponent<candy>());
 
                 Destroy(candyBoard[rightX, candy.yIndex].candy.gameObject);
@@ -1355,11 +1468,11 @@ public class CandyBoard : MonoBehaviour
                 removedAny = true;
             }
 
-            // αγιχδ εξηιχδ λμτι ωξΰμ
+            // Χ‘Χ“Χ™Χ§Χ” Χ•ΧΧ—Χ™Χ§Χ” Χ›ΧΧ¤Χ™ Χ©ΧΧΧ
             int leftX = candy.xIndex - x;
             if (leftX >= 0 && candyBoard[leftX, candy.yIndex].isUsabal && candyBoard[leftX, candy.yIndex].candy != null)
             {
-                //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+                //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
                 _candyList.Add(candyBoard[leftX, candy.yIndex].candy.GetComponent<candy>());
 
                 Destroy(candyBoard[leftX, candy.yIndex].candy.gameObject);
@@ -1367,32 +1480,36 @@ public class CandyBoard : MonoBehaviour
                 removedAny = true;
             }
 
-            // ΰν πξηχ μτηεϊ ΰηγ - ξηλιν μτπι ωξξωιλιν μωμα δαΰ
+            // ΧΧ Χ ΧΧ—Χ§ ΧΧ¤Χ—Χ•Χª ΧΧ—Χ“ - ΧΧ—Χ›Χ™Χ ΧΧ¤Χ Χ™ Χ©ΧΧΧ©Χ™Χ›Χ™Χ ΧΧ©ΧΧ‘ Χ”Χ‘Χ
             if (removedAny)
             {
                 yield return new WaitForSeconds(0.1f);
             }
         }
 
-        //ξωπδ πιχεγ ελξεϊ ξδμλιν
+        //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
         GameManager.Instance.ProcessTurn(_candyList, false);
 
-        // ξηλιν ωδΰτχθ ιρϊιιν εΰζ ξεηχιν ΰεϊε
-        yield return new WaitForSeconds(0.1f); // ζξο ξεϊΰν μτι ξωκ δΰπιξφιδ
+        // ΧΧ—Χ›Χ™Χ Χ©Χ”ΧΧ¤Χ§Χ Χ™Χ΅ΧªΧ™Χ™Χ Χ•ΧΧ– ΧΧ•Χ—Χ§Χ™Χ ΧΧ•ΧªΧ•
+        yield return new WaitForSeconds(0.1f); // Χ–ΧΧ ΧΧ•ΧªΧΧ ΧΧ¤Χ™ ΧΧ©Χ Χ”ΧΧ Χ™ΧΧ¦Χ™Χ”
         Destroy(toDestroy);
 
 
-        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        // ΧΧ—Χ›Χ™Χ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ”ΧΧ΅Χ Χ¨Χ™Χ§ ΧΧ¨Χ’ΧΆ Χ•ΧΧ¨Χ– ΧΧΧΧΧ™Χ
+        yield return new WaitForSeconds(0.3f);
+        activeCoroutines--;
+        if (activeCoroutines == 0)
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
     }
 
     IEnumerator PerformSuper(candy candy1, candy candy2)
     {
-        //ψωιξδ ωμ ξξϊχιν μπιχεγ
+        //Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ ΧΧ Χ™Χ§Χ•Χ“
         List<candy> _candyList = new();
 
         GameObject efect = candy1.OnDestroyVFX();
-        // τςεμδ μξξϊχ ρετψ
-        // ξςαψ ςμ λμ δμεη λγι μξφεΰ ΰϊ λμ δξξϊχιν ςν ΰεϊε φας
+        // Χ¤ΧΆΧ•ΧΧ” ΧΧΧΧªΧ§ Χ΅Χ•Χ¤Χ¨
+        // ΧΧΆΧ‘Χ¨ ΧΆΧ Χ›Χ Χ”ΧΧ•Χ— Χ›Χ“Χ™ ΧΧΧ¦Χ•Χ ΧΧª Χ›Χ Χ”ΧΧΧªΧ§Χ™Χ ΧΆΧ ΧΧ•ΧªΧ• Χ¦Χ‘ΧΆ
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -1403,7 +1520,7 @@ public class CandyBoard : MonoBehaviour
 
                     if (currentCandy != null && currentCandy.candyType == candy2.candyType)
                     {
-                        //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+                        //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
                         _candyList.Add(currentCandy);
 
                         Destroy(candyBoard[x, y].candy.gameObject);
@@ -1413,29 +1530,34 @@ public class CandyBoard : MonoBehaviour
                 }
             }
         }
-        //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+        //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
         _candyList.Add(candyBoard[candy1.xIndex, candy1.yIndex].candy.GetComponent<candy>());
 
         Destroy(candyBoard[candy1.xIndex, candy1.yIndex].candy.gameObject);
         candyBoard[candy1.xIndex, candy1.yIndex] = new Node(true, null);
         //candyToRemove.Add(candy1);
 
-        //ξωπδ πιχεγ ελξεϊ ξδμλιν
+        //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
         GameManager.Instance.ProcessTurn(_candyList, false);
 
         yield return new WaitForSeconds(0.1f);
         Destroy(efect);
 
-        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        // ΧΧ—Χ›Χ™Χ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ”ΧΧ΅Χ Χ¨Χ™Χ§ ΧΧ¨Χ’ΧΆ Χ•ΧΧ¨Χ– ΧΧΧΧΧ™Χ
+        yield return new WaitForSeconds(0.3f);
+        activeCoroutines--;
+        if (activeCoroutines == 0)
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+
         yield break;
     }
     IEnumerator PerformBomb(candy candy)
     {
-        //ψωιξδ ωμ ξξϊχιν μπιχεγ
+        //Χ¨Χ©Χ™ΧΧ” Χ©Χ ΧΧΧªΧ§Χ™Χ ΧΧ Χ™Χ§Χ•Χ“
         List<candy> _candyList = new();
 
         GameObject efect = candy.OnDestroyVFX();
-        int explosionRadius = 1; //  ψγιερ 1 μλμ λιεεο ιεφψ ΰζεψ 3x3
+        int explosionRadius = 1; //  Χ¨Χ“Χ™Χ•Χ΅ 1 ΧΧ›Χ Χ›Χ™Χ•Χ•Χ Χ™Χ•Χ¦Χ¨ ΧΧ–Χ•Χ¨ 3x3
 
         for (int dx = -explosionRadius; dx <= explosionRadius; dx++)
         {
@@ -1444,14 +1566,14 @@ public class CandyBoard : MonoBehaviour
                 int newX = candy.xIndex + dx;
                 int newY = candy.yIndex + dy;
 
-                // αγιχδ ωδΰιπγχριν ϊχτιν αϊεκ βαεμεϊ δμεη
+                // Χ‘Χ“Χ™Χ§Χ” Χ©Χ”ΧΧ™Χ Χ“Χ§Χ΅Χ™Χ ΧªΧ§Χ¤Χ™Χ Χ‘ΧªΧ•Χ Χ’Χ‘Χ•ΧΧ•Χª Χ”ΧΧ•Χ—
                 if (newX >= 0 && newX < width && newY >= 0 && newY < height)
                 {
                     candy currentCandy = candyBoard[newX, newY]?.candy?.GetComponent<candy>();
 
                     if (currentCandy != null)
                     {
-                        //ξερισ ΰϊ δξξϊχ μψωιξδ μπιχεγ
+                        //ΧΧ•Χ΅Χ™Χ£ ΧΧª Χ”ΧΧΧªΧ§ ΧΧ¨Χ©Χ™ΧΧ” ΧΧ Χ™Χ§Χ•Χ“
                         _candyList.Add(currentCandy);
 
                         Destroy(candyBoard[newX, newY].candy.gameObject);
@@ -1462,18 +1584,23 @@ public class CandyBoard : MonoBehaviour
             }
         }
 
-        //ξωπδ πιχεγ ελξεϊ ξδμλιν
+        //ΧΧ©Χ Χ” Χ Χ™Χ§Χ•Χ“ Χ•Χ›ΧΧ•Χª ΧΧ”ΧΧ›Χ™Χ
         GameManager.Instance.ProcessTurn(_candyList, false);
 
         yield return new WaitForSeconds(0.1f);
         Destroy(efect);
 
-        StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+        // ΧΧ—Χ›Χ™Χ Χ©Χ™Χ¨ΧΧ” ΧΧª Χ”ΧΧ΅Χ Χ¨Χ™Χ§ ΧΧ¨Χ’ΧΆ Χ•ΧΧ¨Χ– ΧΧΧΧΧ™Χ
+        yield return new WaitForSeconds(0.3f);
+        activeCoroutines--;
+        if (activeCoroutines == 0)
+            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
+
         yield break;
     }
 
 
-    //αεγχ ΰν δν ΰηγ μιγ δωπι
+    //Χ‘Χ•Χ“Χ§ ΧΧ Χ”Χ ΧΧ—Χ“ ΧΧ™Χ“ Χ”Χ©Χ Χ™
     private bool IsAdjacent(candy _candy1, candy _candy2)
     {
         return Mathf.Abs(_candy1.xIndex - _candy2.xIndex) + Mathf.Abs(_candy1.yIndex - _candy2.yIndex) == 1;
@@ -1481,14 +1608,14 @@ public class CandyBoard : MonoBehaviour
 }
 
 
-// λιϊδ ωμ δϊεεφΰδ 
+// Χ›Χ™ΧªΧ” Χ©Χ Χ”ΧªΧ•Χ•Χ¦ΧΧ” 
 public class MatchResults
 {
     public List<candy> connectedCandy;
     public MatchDirection direction;
 }
 
-// λιεεπιν ΰτωψιιν
+// Χ›Χ™Χ•Χ•Χ Χ™Χ ΧΧ¤Χ©Χ¨Χ™Χ™Χ
 public enum MatchDirection
 {
     Vertical,
