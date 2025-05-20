@@ -1276,75 +1276,7 @@ public class CandyBoard : MonoBehaviour
                 break;
         }
     }
-
     IEnumerator PerformVertical(candy candy)
-    {
-        //רשימה של ממתקים לניקוד
-        List<candy> _candyList = new();
-
-        //מחכה ואז עושה אפקט
-        yield return new WaitForSeconds(0.3f);
-        GameObject toDestroy = candy.OnDestroyVFX();
-
-        int maxDistance = Mathf.Max(candy.yIndex, height - candy.yIndex); // המרחק המרבי לכל כיוון
-
-        for (int y = 0; y <= maxDistance; y++)
-        {
-            bool removedAny = false;
-
-            // בדיקה ומחיקה כלפי מעלה
-            int upperY = candy.yIndex + y;
-            if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null)
-            {
-                candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
-                if (targetCandy != null && targetCandy.isSpecial && y != 0)
-                {
-                    TriggerSpecialCandy(targetCandy, candy); // להפעלת שרשרת
-                }
-                else
-                {
-                    //מוסיף את הממתק לרשימה לניקוד
-                    _candyList.Add(candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>());
-
-                    Destroy(candyBoard[candy.xIndex, upperY].candy.gameObject);
-                    candyBoard[candy.xIndex, upperY] = new Node(true, null);
-                    removedAny = true;
-                }
-            }
-
-            // בדיקה ומחיקה כלפי מטה
-            int lowerY = candy.yIndex - y;
-            if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
-            {
-                //מוסיף את הממתק לרשימה לניקוד
-                _candyList.Add(candyBoard[candy.xIndex, lowerY].candy.GetComponent<candy>());
-
-                Destroy(candyBoard[candy.xIndex, lowerY].candy.gameObject);
-                candyBoard[candy.xIndex, lowerY] = new Node(true, null);
-                removedAny = true;
-            }
-
-            // אם נמחק לפחות אחד - מחכים לפני שממשיכים לשלב הבא
-            if (removedAny)
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
-
-        //משנה ניקוד וכמות מהלכים
-        GameManager.Instance.ProcessTurn(_candyList, false);
-
-        // מחכים שהאפקט יסתיים ואז מוחקים אותו
-        yield return new WaitForSeconds(0.1f);
-        Destroy(toDestroy);
-
-        // מחכים שיראה את המסך ריק לרגע וארז ממלאים
-        yield return new WaitForSeconds(0.3f);
-        activeCoroutines--;
-        if (activeCoroutines == 0)
-            StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
-    }
-    /*IEnumerator PerformVertical(candy candy)
     {
         //רשימה של ממתקים לניקוד
         List<candy> _candyList = new();
@@ -1384,7 +1316,7 @@ public class CandyBoard : MonoBehaviour
             int lowerY = candy.yIndex - y;
             if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
             {
-                candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
+                candy targetCandy = candyBoard[candy.xIndex, lowerY].candy.GetComponent<candy>();
                 if (targetCandy != null && targetCandy.isSpecial && y != 0)
                 {
                     TriggerSpecialCandy(targetCandy, candy); // להפעלת שרשרת
@@ -1420,7 +1352,7 @@ public class CandyBoard : MonoBehaviour
         activeCoroutines--;
         if (activeCoroutines == 0)
             StartCoroutine(ProsesTurnOnMatchedBoard(true, delayBetweenMatches));
-    }*/
+    }
 
     private bool DeletCandyBySpecial(candy targetCandy, candy callingCandy)
     {
