@@ -17,6 +17,8 @@ public class CandyBoard : MonoBehaviour
     // קוד לבדיקת אופציה של  הכנת מפות עם טילמפ
     public bool hasTilmap = false;
     public Tilemap tilemap; // ה-Tilemap המקורי
+    public Tilemap backgroundTilemap;  // ה-reference ל-Tilemap של הרקע
+    public TileBase backgroundTile;    // האריח עצמו – מים או שחור
 
     //מצלמה של הסצנה
     public Camera cam;
@@ -67,6 +69,8 @@ public class CandyBoard : MonoBehaviour
 
     //משתנה לשלוט על קנה המידה של הלוח
     public float boardScaleFactor = 1.0f;
+    //משתנה לשלוט על המרכז של הלוח של הלוח
+    public Vector2 boardOffsetFactor = new Vector2(0f, 0f);
 
     // אבא של כל התאורה
     public GameObject lightParent;
@@ -363,6 +367,20 @@ public class CandyBoard : MonoBehaviour
         // הגדר את גודל המצלמה החדש
         Camera.main.orthographicSize = newOrthoSize;
 
+        // הזז את המצלמה בהתאם ל־offset שהוזן, על בסיס הגודל החדש
+        Vector3 cameraPosition = Camera.main.transform.position;
+
+        // חשב את רוחב וגובה העולם (ביחידות Unity) שהמצלמה רואה
+        float cameraHeight = Camera.main.orthographicSize * 2f;
+        float cameraWidth = cameraHeight * aspectRatio;
+
+        // יישם את הסטייה על מיקום המצלמה
+        cameraPosition.x = boardOffsetFactor.x * cameraWidth / 2f;
+        cameraPosition.y = boardOffsetFactor.y * cameraHeight / 2f;
+
+        // שמור את מיקום המצלמה החדש
+        Camera.main.transform.position = cameraPosition;
+
         // חישוב יחס השינוי במצלמה
         float scaleFactor = newOrthoSize / initialOrthoSize;
 
@@ -372,6 +390,7 @@ public class CandyBoard : MonoBehaviour
             // התאם את קנה המידה של האובייקט שמכיל את התאורה
             lightParent.transform.localScale *= scaleFactor;
         }
+
     }
 
     void ConvertTilemapToGameBoard()
@@ -383,6 +402,9 @@ public class CandyBoard : MonoBehaviour
 
         spacingX = (float)(width - 1) / 2;
         spacingY = (float)(height - 1) / 2;
+
+        CreateBackgroundTiles(bounds);
+        CenterBackgroundTilemap(bounds);
 
         candyBoard = new Node[width, height];
         // יצירת אובייקט אב ללוח
@@ -449,6 +471,45 @@ public class CandyBoard : MonoBehaviour
 
         ScaleBoardToFitScreen();
     }
+
+    void CreateBackgroundTiles(BoundsInt bounds)
+    {
+        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        {
+            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+
+                // רק אם יש tile בלוח המשחק
+                if (tilemap.HasTile(pos))
+                {
+                    backgroundTilemap.SetTile(pos, backgroundTile);
+                }
+            }
+        }
+    }
+
+    void CenterBackgroundTilemap(BoundsInt bounds)
+    {
+        if (backgroundTilemap != null)
+        {
+            // חישוב מרכז התאים של ה־tilemap בדיוק (כולל חצאים)
+            Vector3 centerCell = new Vector3(
+                bounds.xMin + bounds.size.x / 2f,
+                bounds.yMin + bounds.size.y / 2f,
+                0);
+
+            // מקבל את המרכז במרחב המקומי המדויק (כולל שברים)
+            Vector3 centerLocal = backgroundTilemap.layoutGrid.CellToLocalInterpolated(centerCell);
+
+            // המרה למיקום עולמי לפי הטיילמפ
+            Vector3 centerWorld = backgroundTilemap.transform.TransformPoint(centerLocal);
+
+            // הזזת הטיילמפ כך שמרכזו יישב על (0,0)
+            backgroundTilemap.transform.position = -centerWorld;
+        }
+    }
+
 
     void OnTilmapRandomMaches()
     {
