@@ -16,18 +16,19 @@ public class GoalDesplayManeger : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        int  i = 0;
-        foreach (GoalDesplayer goal in goalsOBG)
+        for (int i = goalsOBG.Count - 1; i >= 0; i--)
         {
-            if (goals.Count > i)
+            if (i < goals.Count)
             {
-                goal.SetLook(goals[i]);
-                i++;
+                goalsOBG[i].SetLook(goals[i]);
             }
             else
             {
-                Destroy(goal.gameObject);
+                GoalDesplayer goalDesplayer = goalsOBG[i];
+                goalsOBG.RemoveAt(i);
+                Destroy(goalDesplayer.gameObject);
             }
         }
+
     }
 }

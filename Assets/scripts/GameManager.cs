@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         pointText.text = "Points: " + points.ToString();
-        movesText.text = "Moves: " + moves.ToString();
+        movesText.text = moves.ToString();
         goalText.text = "goals: " + goal.ToString();
     }
 
@@ -114,18 +114,20 @@ public class GameManager : MonoBehaviour
             // עבור כל ממתק ברשימה
             foreach (candy c in candiesToProcess)
             {
-                // מצא את המטרה המתאימה לסוג הממתק
-                Goal goalData = goals.Find(g => g.type == c.candyType);
-
-                // אם מצאנו מטרה עבור הסוג של הממתק
-                if (goalData != null && goalData.goalPerType > 0)
+                // הפחת ממטרה תואמת לסוג הממתק
+                Goal specificGoal = goals.Find(g => g.type == c.candyType && g.goalPerType > 0);
+                if (specificGoal != null)
                 {
-                    // הפחת את המטרה המוגדרת לכל סוג ממתק
-                    goalData.goalPerType--;
-
+                    specificGoal.goalPerType--;
                     points++;
-                    // עדכן את ה-Slider (אם יש צורך)
-                    scoreSlider.value = (float)points / goal;
+                }
+
+                // הפחת גם ממטרה רנדומלית אם קיימת
+                Goal randomGoal = goals.Find(g => g.type == CandyType.random && g.goalPerType > 0);
+                if (randomGoal != null)
+                {
+                    randomGoal.goalPerType--;
+                    points++; // רק אם לא ספרנו כבר בנקודה קודם
                 }
             }
         }
