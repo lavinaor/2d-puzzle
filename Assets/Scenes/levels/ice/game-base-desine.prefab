@@ -713,7 +713,7 @@ PrefabInstance:
       objectReference: {fileID: 4553670450403562562}
     - target: {fileID: 2431646849323306539, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 286.9994
+      value: 286.99933
       objectReference: {fileID: 0}
     - target: {fileID: 2911446096915917452, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
       propertyPath: m_Pivot.x
@@ -795,6 +795,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3638682205714561129, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 87d7d3f95822abb4d9f4c16de784d061, type: 3}
     - target: {fileID: 4185741152321330599, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -968,7 +972,7 @@ PrefabInstance:
       objectReference: {fileID: 6545220521703555385}
     - target: {fileID: 2061664527137689644, guid: 92fc6d41e41871040b35609b0359c5cf, type: 3}
       propertyPath: goals.Array.size
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2061664527137689644, guid: 92fc6d41e41871040b35609b0359c5cf, type: 3}
       propertyPath: stars.Array.data[0]

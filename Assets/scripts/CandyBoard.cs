@@ -397,8 +397,15 @@ public class CandyBoard : MonoBehaviour
     {
         tilemap.CompressBounds();
         BoundsInt bounds = tilemap.cellBounds;
-        width = bounds.xMax;
-        height = bounds.yMax;
+
+        int boardWidth = bounds.size.x;
+        int boardHeight = bounds.size.y;
+
+        int offsetX = bounds.xMin;
+        int offsetY = bounds.yMin;
+
+        width = boardWidth;
+        height = boardHeight;
 
         spacingX = (float)(width - 1) / 2;
         spacingY = (float)(height - 1) / 2;
@@ -407,7 +414,6 @@ public class CandyBoard : MonoBehaviour
         CenterBackgroundTilemap(bounds);
 
         candyBoard = new Node[width, height];
-        // יצירת אובייקט אב ללוח
         boardParent = new GameObject("BoardParent");
 
         for (int x = bounds.xMin; x < bounds.xMax; x++)
@@ -415,6 +421,9 @@ public class CandyBoard : MonoBehaviour
             for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
+                int arrayX = x - offsetX;
+                int arrayY = y - offsetY;
+
                 if (tile != null)
                 {
                     Debug.Log(tile.name);
@@ -429,48 +438,36 @@ public class CandyBoard : MonoBehaviour
 
                     if (prefabIndex != -1)
                     {
-                        //מחשב מיקום
-                        Vector2 pos = new Vector2(x - spacingX, y - spacingY);
+                        Vector2 pos = new Vector2(arrayX - spacingX, arrayY - spacingY);
 
-                        Vector3 worldPos = tilemap.GetCellCenterWorld(new Vector3Int(x, y, 0));
-                        GameObject prefab;
-                        if (!isSpecial)
-                        {
-                            prefab = candyPrefabs[prefabIndex]; 
-                        }
-                        else
-                        {
-                            prefab = specialCandyPrefabs[prefabIndex];
-                        }
+                        GameObject prefab = !isSpecial
+                            ? candyPrefabs[prefabIndex]
+                            : specialCandyPrefabs[prefabIndex];
 
                         GameObject newTile = Instantiate(prefab, pos, Quaternion.identity);
-                        newTile.transform.parent = boardParent.transform; // מציב תחת ההורה
+                        newTile.transform.parent = boardParent.transform;
 
-
-                        //מגדיר אותו 
-                        newTile.GetComponent<candy>().setIndicies(x - bounds.xMin, y - bounds.yMin);
-
-                        // מוסיף אותו למערך
-                        candyBoard[x, y] = new Node(true, newTile);
+                        newTile.GetComponent<candy>().setIndicies(arrayX, arrayY);
+                        candyBoard[arrayX, arrayY] = new Node(true, newTile);
                     }
                 }
                 else
                 {
-                    // מוסיף אותו למערך
-                    candyBoard[x, y] = new Node(false, null);
+                    candyBoard[arrayX, arrayY] = new Node(false, null);
                     Debug.Log(" is null");
                 }
             }
         }
+
         if (CheckBoard())
         {
             OnTilmapRandomMaches();
         }
 
-        Destroy(tilemap.gameObject); // מוחק את האובייקט של ה-Tilemap אבל שומר את האריחים
-
+        Destroy(tilemap.gameObject);
         ScaleBoardToFitScreen();
     }
+
 
     void CreateBackgroundTiles(BoundsInt bounds)
     {
