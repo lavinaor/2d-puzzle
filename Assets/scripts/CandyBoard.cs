@@ -1354,11 +1354,11 @@ public class CandyBoard : MonoBehaviour
             if (upperY < height && candyBoard[candy.xIndex, upperY].isUsabal && candyBoard[candy.xIndex, upperY].candy != null && y != 0)
             {
                 candy targetCandy = candyBoard[candy.xIndex, upperY].candy.GetComponent<candy>();
-                if (targetCandy != null && targetCandy.isSpecial)
+/*                if (targetCandy != null && targetCandy.isSpecial)
                 {
                     TriggerSpecialCandy(targetCandy, candy); // להפעלת שרשרת
                 }
-                else
+                else*/
                 {
                     //מוסיף את הממתק לרשימה לניקוד
                     candyForScoring.Add(targetCandy);
@@ -1375,11 +1375,11 @@ public class CandyBoard : MonoBehaviour
             if (lowerY >= 0 && candyBoard[candy.xIndex, lowerY].isUsabal && candyBoard[candy.xIndex, lowerY].candy != null)
             {
                 candy targetCandy = candyBoard[candy.xIndex, lowerY].candy.GetComponent<candy>();
-                if (targetCandy != null && targetCandy.isSpecial && y != 0)
+/*                if (targetCandy != null && targetCandy.isSpecial && y != 0)
                 {
                     TriggerSpecialCandy(targetCandy, candy); // להפעלת שרשרת
                 }
-                else
+                else*/
                 {
                     //מוסיף את הממתק לרשימה לניקוד
                     candyForScoring.Add(targetCandy);

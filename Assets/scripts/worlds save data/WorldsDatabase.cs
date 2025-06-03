@@ -50,6 +50,16 @@ public class WorldManager : MonoBehaviour
         return $"{world.worldName}-{level}";
     }
 
+    public string GetMainlevelSceneName(int level)
+    {
+        foreach (var _world in worlds)
+        {
+            if (level >= _world.startLevel && level <= _world.endLevel)
+                return _world.mainLevelSecen;
+        }
+        return null;
+    }
+
     public void LoadNextLevel(int currentLevel)
     {
         if (HasNextLevelInWorld(currentLevel))
@@ -74,4 +84,5 @@ public class WorldData
     public int startLevel;        // לדוגמה: 1
     public int endLevel;          // לדוגמה: 9
     public string displayName;    // שם מוצג: "ים"
+    public string mainLevelSecen;    // שם מוצג: "ים"
 }
