@@ -19,7 +19,11 @@ MonoBehaviour:
     width: 2560
     height: 1357
   m_ShowMode: 4
+<<<<<<< HEAD
   m_Title: Simulator
+=======
+  m_Title: Console
+>>>>>>> lavi
   m_RootView: {fileID: 10}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -40,6 +44,7 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
     y: 761
     width: 519
     height: 546
@@ -48,6 +53,16 @@ MonoBehaviour:
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
+=======
+    y: 553
+    width: 385
+    height: 386
+  m_MinSize: {x: 240, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 16}
+  m_Panes:
+  - {fileID: 16}
+>>>>>>> lavi
   m_Selected: 0
   m_LastSelected: 0
 --- !u!114 &3
@@ -63,6 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Children:
+<<<<<<< HEAD
   - {fileID: 7}
   - {fileID: 2}
   m_Position:
@@ -75,6 +91,20 @@ MonoBehaviour:
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
   controlID: 121
+=======
+  - {fileID: 4}
+  - {fileID: 2}
+  m_Position:
+    serializedVersion: 2
+    x: 1535
+    y: 0
+    width: 385
+    height: 939
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 8096, y: 16192}
+  vertical: 1
+  controlID: 109
+>>>>>>> lavi
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -86,6 +116,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+<<<<<<< HEAD
+=======
+  m_Name: InspectorWindow
+  m_EditorClassIdentifier: 
+  m_Children: []
+  m_Position:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 385
+    height: 553
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_ActualView: {fileID: 20}
+  m_Panes:
+  - {fileID: 20}
+  m_Selected: 0
+  m_LastSelected: 0
+--- !u!114 &5
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
+>>>>>>> lavi
   m_Name: SimulatorWindow
   m_EditorClassIdentifier: 
   m_Children: []
@@ -93,8 +152,13 @@ MonoBehaviour:
     serializedVersion: 2
     x: 671
     y: 0
+<<<<<<< HEAD
     width: 1370
     height: 1139
+=======
+    width: 505
+    height: 668
+>>>>>>> lavi
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 24}
@@ -102,7 +166,11 @@ MonoBehaviour:
   - {fileID: 24}
   m_Selected: 0
   m_LastSelected: 0
+<<<<<<< HEAD
 --- !u!114 &5
+=======
+--- !u!114 &6
+>>>>>>> lavi
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,8 +187,13 @@ MonoBehaviour:
     serializedVersion: 2
     x: 287
     y: 0
+<<<<<<< HEAD
     width: 384
     height: 1139
+=======
+    width: 761
+    height: 668
+>>>>>>> lavi
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 22}
@@ -128,7 +201,11 @@ MonoBehaviour:
   - {fileID: 22}
   m_Selected: 0
   m_LastSelected: 0
+<<<<<<< HEAD
 --- !u!114 &6
+=======
+--- !u!114 &7
+>>>>>>> lavi
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,6 +229,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
+<<<<<<< HEAD
   controlID: 120
   draggingID: 0
 --- !u!114 &7
@@ -180,6 +258,10 @@ MonoBehaviour:
   - {fileID: 20}
   m_Selected: 0
   m_LastSelected: 0
+=======
+  controlID: 108
+  draggingID: 0
+>>>>>>> lavi
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -197,8 +279,13 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 287
     height: 1139
+=======
+    width: 269
+    height: 668
+>>>>>>> lavi
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 21}
@@ -216,26 +303,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 1
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProjectBrowser
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
     serializedVersion: 2
     x: 0
+<<<<<<< HEAD
     y: 1139
     width: 2041
     height: 168
   m_MinSize: {x: 231, y: 271}
   m_MaxSize: {x: 10001, y: 10021}
   m_ActualView: {fileID: 19}
+=======
+    y: 668
+    width: 1535
+    height: 271
+  m_MinSize: {x: 101, y: 121}
+  m_MaxSize: {x: 4001, y: 4021}
+  m_ActualView: {fileID: 23}
+>>>>>>> lavi
   m_Panes:
   - {fileID: 19}
   - {fileID: 23}
   - {fileID: 17}
   - {fileID: 18}
+<<<<<<< HEAD
   - {fileID: 16}
   m_Selected: 0
   m_LastSelected: 1
+=======
+  - {fileID: 15}
+  m_Selected: 1
+  m_LastSelected: 0
+>>>>>>> lavi
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -250,7 +352,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Children:
   - {fileID: 11}
+<<<<<<< HEAD
   - {fileID: 6}
+=======
+  - {fileID: 7}
+>>>>>>> lavi
   - {fileID: 12}
   m_Position:
     serializedVersion: 2
@@ -331,7 +437,11 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
+<<<<<<< HEAD
   controlID: 43
+=======
+  controlID: 53
+>>>>>>> lavi
   draggingID: 0
 --- !u!114 &14
 MonoBehaviour:
@@ -347,8 +457,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Children:
   - {fileID: 8}
+<<<<<<< HEAD
   - {fileID: 5}
   - {fileID: 4}
+=======
+  - {fileID: 6}
+  - {fileID: 5}
+>>>>>>> lavi
   m_Position:
     serializedVersion: 2
     x: 0
@@ -358,6 +473,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 50}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
+<<<<<<< HEAD
   controlID: 44
   draggingID: 0
 --- !u!114 &15
@@ -395,6 +511,11 @@ MonoBehaviour:
     m_SaveData: []
     m_OverlaysVisible: 1
 --- !u!114 &16
+=======
+  controlID: 54
+  draggingID: 0
+--- !u!114 &15
+>>>>>>> lavi
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -576,6 +697,43 @@ MonoBehaviour:
   m_ShowReferencedBuses: 1
   m_ShowBusConnections: 0
   m_ShowBusConnectionsOfSelection: 0
+<<<<<<< HEAD
+=======
+--- !u!114 &16
+MonoBehaviour:
+  m_ObjectHideFlags: 52
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f683d99f24875748a6656966ca9cea0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinSize: {x: 240, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
+  m_TitleContent:
+    m_Text: Tile Palette
+    m_Image: {fileID: 0}
+    m_Tooltip: 
+  m_Pos:
+    serializedVersion: 2
+    x: 1535
+    y: 626
+    width: 384
+    height: 365
+  m_SerializedDataModeController:
+    m_DataMode: 0
+    m_PreferredDataMode: 0
+    m_SupportedDataModes: 
+    isAutomatic: 1
+  m_ViewDataDictionary: {fileID: 0}
+  m_OverlayCanvas:
+    m_LastAppliedPresetName: Default
+    m_SaveData: []
+    m_OverlaysVisible: 1
+>>>>>>> lavi
 --- !u!114 &17
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -612,7 +770,11 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
+<<<<<<< HEAD
   m_LastSelectedObjectID: -6140
+=======
+  m_LastSelectedObjectID: -2772
+>>>>>>> lavi
 --- !u!114 &18
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -728,7 +890,11 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
+<<<<<<< HEAD
     - Assets/Scenes/levels/desert
+=======
+    - Assets/Scenes/levels/ice
+>>>>>>> lavi
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -736,16 +902,27 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
+<<<<<<< HEAD
   - Assets/Scenes/levels/desert
+=======
+  - Assets/Scenes/levels/ice
+>>>>>>> lavi
   m_LastFoldersGridSize: -1
   m_LastProjectPath: E:\Games\2d-puzzle
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
+<<<<<<< HEAD
     scrollPos: {x: 0, y: 81}
     m_SelectedIDs: 3c8c0000
     m_LastClickedID: 35900
     m_ExpandedIDs: 00000000688600006a8600006c8600006e86000070860000728600007486000076860000788600007a8600007c8600007e86000080860000828600008486000086860000
+=======
+    scrollPos: {x: 0, y: 174}
+    m_SelectedIDs: de870000
+    m_LastClickedID: 34782
+    m_ExpandedIDs: 00000000f4860000f6860000f8860000fa860000fc860000fe8600000087000002870000048700000687000000ca9a3b
+>>>>>>> lavi
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -773,7 +950,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< HEAD
     m_ExpandedIDs: 00000000688600006a8600006c8600006e86000070860000728600007486000076860000788600007a8600007c8600007e86000080860000828600008486000086860000
+=======
+    m_ExpandedIDs: 00000000f4860000f6860000f8860000fa860000fc860000fe86000000870000028700000487000006870000
+>>>>>>> lavi
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -798,8 +979,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 465dffff
+    m_LastClickedInstanceID: -41658
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000108e0000468e00007e7100003e660000ae6c00007c660000b8660000f28c00002a7700009ef800006a770000c4730000c27300003c7700005e800000588000003a800000407f0000c878000016790000f478000016730000a0730000c0790000b4790000a4730000a2730000407a000018730000a8730000b87e0000ba7e0000aa790000ea760000ec760000ee760000f0760000f2760000f8760000f67600004c740000587f00000477000014770000d88b00003272000078790000f2790000427a0000f27200002c7a0000e4790000fc790000e8790000007a0000ee790000ce720000387a00000874000004740000c6730000cc720000087a0000347a00000a7c0000507a0000929a000000000000c07b0000ce9300002c920000c6650000c065000016650000ac65000060660000e0650000d6650000307a00007c8800002c880000fe880000308800005c88000038b10000703e0000a6850000c476000032750000bc930000609400007c8000006a870000088d00000e8e0000928e0000de8e000066900000f6900000d879000074910000d89e0000dc870000da790000dc790000968f0000de790000fa8e0000e2a600009c750100b473010006740100
     m_RenameOverlay:
@@ -828,7 +1009,11 @@ MonoBehaviour:
     m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 64
   m_SkipHiddenPackages: 0
+<<<<<<< HEAD
   m_DirectoriesAreaWidth: 395
+=======
+  m_DirectoriesAreaWidth: 149
+>>>>>>> lavi
 --- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -851,8 +1036,13 @@ MonoBehaviour:
     serializedVersion: 2
     x: 2041
     y: 73
+<<<<<<< HEAD
     width: 518
     height: 740
+=======
+    width: 384
+    height: 532
+>>>>>>> lavi
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -913,6 +1103,7 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
       m_SelectedIDs: 84400100
       m_LastClickedID: 0
       m_ExpandedIDs: aa63fdff1072fdfffc77fdffe27dfdffca83fdffb089fdff569dfdfff6b4fdff74c2fdff5cc8fdff48cefdff0cdcfdfff6e3fdffeae9fdffbceffdff48f6fdff7202feff4408feffc40efeff4c11fefff214feff0c19feffe019feffde1cfeffd61ffeffd81ffeff0024feffb625feffd24cfeffd65afeffe05afeff025efeff045efeff2e76feff3876feff5a79feff5c79feff3ed5feff48d5feff6ad8feff6cd8fefff40afffffe0affff200effff220effff0a30ffff1430ffff3633ffff3833ffff266effff306effff5271ffff5471ffffe6f7fffff0f7ffff04f9ffff12fbffff14fbffff
@@ -920,13 +1111,26 @@ MonoBehaviour:
         m_UserAcceptedRename: 0
         m_Name: Grid
         m_OriginalName: Grid
+=======
+      m_SelectedIDs: 465dffff
+      m_LastClickedID: -41658
+      m_ExpandedIDs: 5c5dffff665dffff8860ffff8a60ffff7066ffff646cffff4c72ffff3e89ffff608cffff628cfffff098ffff74b4ffff7eb4ffffa0b7ffffa2b7ffff86bdffff6ac3ffff4ec9ffff32cfffff1ed5fffff0f7ffff12fbffff14fbffff
+      m_RenameOverlay:
+        m_UserAcceptedRename: 0
+        m_Name: 
+        m_OriginalName: 
+>>>>>>> lavi
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
+<<<<<<< HEAD
         m_UserData: -37338
+=======
+        m_UserData: 0
+>>>>>>> lavi
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 0
@@ -1237,9 +1441,9 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 0
-      snapOffset: {x: -134, y: -43}
+      snapOffset: {x: 48, y: 48}
       snapOffsetDelta: {x: 0, y: 0}
-      snapCorner: 3
+      snapCorner: 0
       id: Scene View/Open Tile Palette
       index: 0
       layout: 4
@@ -1373,9 +1577,15 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
+<<<<<<< HEAD
     m_Target: {x: -1.2438902, y: 1.4883958, z: -0.0486095}
     speed: 2
     m_Value: {x: -1.2438902, y: 1.4883958, z: -0.0486095}
+=======
+    m_Target: {x: -9.877476, y: 0.63384366, z: 0.001652743}
+    speed: 2
+    m_Value: {x: -9.877476, y: 0.63384366, z: 0.001652743}
+>>>>>>> lavi
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1425,9 +1635,15 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
+<<<<<<< HEAD
     m_Target: 14.86095
     speed: 2
     m_Value: 14.86095
+=======
+    m_Target: 7.845208
+    speed: 2
+    m_Value: 7.845208
+>>>>>>> lavi
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1547,7 +1763,11 @@ MonoBehaviour:
     pluginStates:
     - '{"m_SerializationStates":{"thermalFoldout":false,"performanceFoldout":false,"developerFoldout":false,"indexerFoldout":false,"scalersFoldout":false,"deviceSettingsFoldout":false}}'
     - '{}'
+<<<<<<< HEAD
     scale: 34
+=======
+    scale: 19
+>>>>>>> lavi
     fitToScreenEnabled: 1
     rotationDegree: 0
     highlightSafeAreaEnabled: 0
