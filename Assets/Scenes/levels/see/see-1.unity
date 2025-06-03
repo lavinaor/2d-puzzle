@@ -490,6 +490,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: game-see-base-desine
       objectReference: {fileID: 0}
+    - target: {fileID: 2824191148624596529, guid: 32551a633175d6548be492ff00e0a719, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 88.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824191148624596529, guid: 32551a633175d6548be492ff00e0a719, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 80.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824191148624596529, guid: 32551a633175d6548be492ff00e0a719, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -285.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824191148624596529, guid: 32551a633175d6548be492ff00e0a719, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 852
+      objectReference: {fileID: 0}
     - target: {fileID: 3158416164791314091, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: m_Size.x
       value: 17
@@ -1422,10 +1438,6 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[59].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
-    - target: {fileID: 3672331670751220986, guid: 32551a633175d6548be492ff00e0a719, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4203844303112558811, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1476,7 +1488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6191061709535215691, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 286.9987
+      value: 286.99857
       objectReference: {fileID: 0}
     - target: {fileID: 6253496911857987263, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: m_IsActive
