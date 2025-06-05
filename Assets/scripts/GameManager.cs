@@ -150,6 +150,11 @@ public class GameManager : MonoBehaviour
             moves--;
         }
 
+
+
+
+
+        // סיום המשחק
         if (points >= goal || (moves == 0 && starCount > 0))
         {
             isGameEnded = true;
