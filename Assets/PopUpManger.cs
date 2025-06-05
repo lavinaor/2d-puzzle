@@ -143,4 +143,5 @@ public enum PopUpType
     settingsUI = 1,
     storUI = 2,
     confirmation = 3,
+    endScreen = 4,
 }
