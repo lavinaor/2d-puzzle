@@ -145,6 +145,7 @@ public class GameManager : MonoBehaviour
             scoreSlider.value = (float)points/* / goal*/;
         }
 
+        //מוריד מהלכים אם צריך
         if (_subtracMoves)
         {
             moves--;
@@ -160,7 +161,7 @@ public class GameManager : MonoBehaviour
             isGameEnded = true;
 
             //הפעל מצב ניצחון
-            beckgroundPanel.SetActive(true);
+            PopUpManger.Instance.ChangeUIState(4);
             victoryPanel.SetActive(true);
 
             //סאונד של ניצחון
@@ -172,7 +173,7 @@ public class GameManager : MonoBehaviour
         {
             isGameEnded = true;
             //הפעל מצב הפסד
-            beckgroundPanel.SetActive(true);
+            PopUpManger.Instance.ChangeUIState(4);
             losePanel.SetActive(true);
 
             //סאונד של הפסד

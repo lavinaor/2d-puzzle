@@ -6,6 +6,9 @@ using static UIManager;
 
 public class PopUpManger : MonoBehaviour
 {
+    //הופך אותו לסטטי
+    public static PopUpManger Instance;
+
     //שומר את כל הui
     [SerializeField]
     private PopUp[] popUps = new PopUp[0];
@@ -17,6 +20,11 @@ public class PopUpManger : MonoBehaviour
     //שומר את המספר של המסך הראשי
     [SerializeField]
     private int MainManuNum;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     // מסדר את זה בתחילת המשחק
     void Start()
@@ -143,4 +151,5 @@ public enum PopUpType
     settingsUI = 1,
     storUI = 2,
     confirmation = 3,
+    endScrean = 4,
 }
