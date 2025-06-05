@@ -6963,6 +6963,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: bord wood tem+dimons and cahs Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3183541519501447519, guid: 2ff60d09ed960f0498614ea1e33ac90b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5898886209051241420, guid: 2ff60d09ed960f0498614ea1e33ac90b, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 766
@@ -17561,8 +17565,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.159
   m_LocalBounds:
-    m_Center: {x: -1.7490501, y: -6.7308497, z: 0}
-    m_Extent: {x: 25.11255, y: 9.740049, z: 0}
+    m_Center: {x: -1.87675, y: -14.7966, z: 0}
+    m_Extent: {x: 25.23885, y: 17.805801, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -17574,8 +17578,17 @@ MonoBehaviour:
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath:
   - {x: 23.123535, y: -2.2194738, z: 0}
-  - {x: 19.601082, y: -16.23207, z: 0}
-  - {x: -26.618708, y: -13.919529, z: 0}
+  - {x: 19.601082, y: -32.363255, z: 0}
+  - {x: 11.053599, y: -29.827057, z: 0}
+  - {x: 7.29819, y: -28.0347, z: 0}
+  - {x: 4.0548835, y: -25.900946, z: 0}
+  - {x: -1.4928796, y: -27.351906, z: 0}
+  - {x: -4.3947854, y: -26.925152, z: 0}
+  - {x: -8.576945, y: -22.572294, z: 0}
+  - {x: -11.308151, y: -19.670382, z: 0}
+  - {x: -13.697956, y: -17.707333, z: 0}
+  - {x: -18.136168, y: -18.390133, z: 0}
+  - {x: -26.874762, y: -18.78449, z: 0}
   - {x: -26.62094, y: -0.93711925, z: 0}
   - {x: -15.170999, y: 2.534162, z: 0}
   - {x: 8.48741, y: 2.7689795, z: 0}
