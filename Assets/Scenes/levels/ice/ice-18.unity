@@ -122,6 +122,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &1801074329 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6994558657079949148, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+  m_PrefabInstance: {fileID: 3933923280414636530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db5cfb5031170de44a2f99d0f891d6a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3933923280414636530
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -149,6 +160,46 @@ PrefabInstance:
     - target: {fileID: 670967710518185756, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 721
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1801074329}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeUIState
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PopUpManger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: 2-2
+      objectReference: {fileID: 0}
+    - target: {fileID: 793517270163667510, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3166332511629648502, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: m_AnchorMax.x
@@ -181,6 +232,14 @@ PrefabInstance:
     - target: {fileID: 5231335123128571630, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5489069906554436274, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -39
+      objectReference: {fileID: 0}
+    - target: {fileID: 5523023202783532120, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.5136719
       objectReference: {fileID: 0}
     - target: {fileID: 5524734032150342374, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: m_margin.x
@@ -1181,6 +1240,10 @@ PrefabInstance:
     - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: goals.Array.data[0].goalPerType
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8841051221573028137, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
