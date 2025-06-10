@@ -17,7 +17,7 @@ public class LevelText : MonoBehaviour
         ParseSceneName();
         if (textObject != null)
         {
-            textObject.text = /*areaName + ": " +*/ stageNumber.ToString();
+            textObject.text = /*areaName + ": " +*/ "Level : " + stageNumber.ToString();
         }
         else
         {
