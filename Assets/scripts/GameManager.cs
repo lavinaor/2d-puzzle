@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviour
     private int starCount = 0;
 
     [Header("End screen")]
-    //הרקע ללוח
-    public GameObject beckgroundPanel;
     //מסך ניצחון
     public GameObject victoryPanel;
     //מסך הפסד
