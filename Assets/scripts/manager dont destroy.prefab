@@ -54,14 +54,17 @@ MonoBehaviour:
     startLevel: 1
     endLevel: 9
     displayName: sea
+    mainLevelSecen: 1 sea main
   - worldName: desert
     startLevel: 10
-    endLevel: 17
+    endLevel: 18
     displayName: desert
+    mainLevelSecen: 2 desert main
   - worldName: ice
-    startLevel: 18
-    endLevel: 26
-    displayName: ice
+    startLevel: 19
+    endLevel: 27
+    displayName: 3 ice main
+    mainLevelSecen: 3 ice main
 --- !u!114 &3129483209960286033
 MonoBehaviour:
   m_ObjectHideFlags: 0

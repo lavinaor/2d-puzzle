@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UIManager;
@@ -36,8 +37,13 @@ public class PopUpManger : MonoBehaviour
     //משנה את המצב לפי הסוג שנכנס
     public void ChangeUIState(int newState)
     {
+        // אם זה בסוף אז אי אפשר לשנות
+        if (currentPopUpType == PopUpType.endScrean)
+        {
+            return;
+        }
         //לחיצה על אותו הדבר מכבה אותו
-        if (currentPopUpType == (PopUpType)newState)
+        else if (currentPopUpType == (PopUpType)newState)
         {
             currentPopUpType = PopUpType.NoneUI;
         }
