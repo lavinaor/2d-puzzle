@@ -60,12 +60,12 @@ public class WorldManager : MonoBehaviour
         return null;
     }
 
-    public void LoadNextLevel(int currentLevel)
+    public void LoadNextLevel(int Level)
     {
-        if (HasNextLevelInWorld(currentLevel))
+        if (HasNextLevelInWorld(Level))
         {
-            currentLevel++;
-            string scene = GetSceneNameForLevel(currentLevel);
+            Level++;
+            string scene = GetSceneNameForLevel(Level);
             SceneManager.LoadScene(scene);
         }
         else
@@ -74,6 +74,46 @@ public class WorldManager : MonoBehaviour
             Debug.Log("סוף העולם, פותחים עולם חדש!");
             SceneManager.LoadScene("WorldUnlockScene");
         }
+    }
+
+    public int getLevel()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+
+        // פיצול לפי מקף
+        string[] parts = sceneName.Split('-');
+
+        if (parts.Length == 2)
+        {
+            int.TryParse(parts[1], out int stageNumber);
+            return stageNumber;
+        }
+        else
+        {
+            Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
+        }
+        return -1;
+    }
+
+    public string getWorld()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+
+        // פיצול לפי מקף
+        string[] parts = sceneName.Split('-');
+
+        if (parts.Length == 2)
+        {
+
+            return parts[0];
+        }
+        else
+        {
+            Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
+        }
+        return null;
     }
 }
 
