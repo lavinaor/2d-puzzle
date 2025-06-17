@@ -1327,9 +1327,9 @@ RectTransform:
   - {fileID: 172963389}
   m_Father: {fileID: 2026807026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 99.7323, y: -142.918}
   m_SizeDelta: {x: 139.4646, y: 252.32216}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &695310839
@@ -1378,7 +1378,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 695310842}
         m_TargetAssemblyTypeName: IslandLockButton, Assembly-CSharp
-        m_MethodName: OnChangeSeneDeley
+        m_MethodName: OnChangeSeneSound
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1438,7 +1438,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40de2880ebbd04449905a4906ae401b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deley: 3
   sceneTransitionSound: {fileID: 8300000, guid: aba6fd49989e2d6479de75c7f8e95d07, type: 3}
   starLockText: {fileID: 1687132030}
   starLock: 0
@@ -4867,9 +4866,9 @@ RectTransform:
   - {fileID: 1312741194}
   m_Father: {fileID: 2026807026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 239.1969, y: -142.918}
   m_SizeDelta: {x: 139.4646, y: 288.75183}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1846796271
@@ -4884,7 +4883,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40de2880ebbd04449905a4906ae401b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deley: 3
   sceneTransitionSound: {fileID: 8300000, guid: aba6fd49989e2d6479de75c7f8e95d07, type: 3}
   starLockText: {fileID: 1119980336}
   starLock: 2
@@ -4943,9 +4941,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1846796271}
+      - m_Target: {fileID: 695310842}
         m_TargetAssemblyTypeName: IslandLockButton, Assembly-CSharp
-        m_MethodName: OnChangeSeneDeley
+        m_MethodName: OnChangeSeneSound
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5217,9 +5215,9 @@ RectTransform:
   - {fileID: 1884543745}
   m_Father: {fileID: 2026807026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 378.6615, y: -142.918}
   m_SizeDelta: {x: 139.4646, y: 285.7188}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2008703328
@@ -5234,7 +5232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40de2880ebbd04449905a4906ae401b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deley: 3
   sceneTransitionSound: {fileID: 8300000, guid: aba6fd49989e2d6479de75c7f8e95d07, type: 3}
   starLockText: {fileID: 27545521}
   starLock: 5
@@ -5293,9 +5290,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2008703328}
+      - m_Target: {fileID: 695310842}
         m_TargetAssemblyTypeName: IslandLockButton, Assembly-CSharp
-        m_MethodName: OnChangeSeneDeley
+        m_MethodName: OnChangeSeneSound
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
