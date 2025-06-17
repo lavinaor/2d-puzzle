@@ -726,6 +726,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1937827683628107239, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1937827683628107239, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6994558657079949148}
+    - target: {fileID: 1937827683628107239, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeUIState
+      objectReference: {fileID: 0}
+    - target: {fileID: 1937827683628107239, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PopUpManger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1937827683628107239, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2911446096915917452, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -834,6 +854,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6758416765016524131, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -39.000244
+      objectReference: {fileID: 0}
     - target: {fileID: 6907930277561945801, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
       propertyPath: m_Name
       value: Canvas ui for game seeans
@@ -870,7 +894,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8930594739887720596, guid: 97bcd2ff3435ea24a9605dccee71667e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1835,3 +1860,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3351582483540700179, guid: 92fc6d41e41871040b35609b0359c5cf, type: 3}
   m_PrefabInstance: {fileID: 7760343129875771947}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6994558657079949148 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 766716945109173623, guid: 92fc6d41e41871040b35609b0359c5cf, type: 3}
+  m_PrefabInstance: {fileID: 7760343129875771947}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db5cfb5031170de44a2f99d0f891d6a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -373,9 +373,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6669586955098190480}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: OnChangeSeneDeley
-        m_Mode: 5
+        m_TargetAssemblyTypeName: LevelButton, Assembly-CSharp
+        m_MethodName: OnChangeSeneSound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -396,13 +396,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ccc9bf35027cb4ea8d619ab0b168fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deley: 0.3
-  sceneTransitionSound: {fileID: 8300000, guid: aba6fd49989e2d6479de75c7f8e95d07, type: 3}
   stars:
   - {fileID: 619759755336639728}
   - {fileID: 5378743639852364322}
   - {fileID: 9218992045789368995}
   level: 1
+  sceneTransitionSound: {fileID: 8300000, guid: aba6fd49989e2d6479de75c7f8e95d07, type: 3}
   levelText: {fileID: 3108391710329402940}
   lockedVisual: {fileID: 4040118181021806402}
   visualsToGray:

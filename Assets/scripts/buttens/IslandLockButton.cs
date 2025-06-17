@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class IslandLockButton : SceneChanger
+public class IslandLockButton : MonoBehaviour
 {
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip sceneTransitionSound;
+
     [SerializeField]
     private TextMeshProUGUI starLockText;
 
@@ -64,13 +69,21 @@ public class IslandLockButton : SceneChanger
         }
     }
 
-    public override void OnChangeSeneDeley(string sceneName)
+    public void OnChangeSeneSound(string sceneName)
     {
         if (isEnough)
         {
             if (musicmaneger.Instance != null && musicCngeClip != null)
                 musicmaneger.Instance.PlayMusicWithFade(musicCngeClip, musicClipVolume);
-            base.OnChangeSeneDeley(sceneName);
+
+            // השמעת הסאונד בעזרת SoundFXManager
+            if (SoundFXManager.Instance != null)
+            {
+                // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+                SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
+            }
+
+            SceneManager.LoadScene(sceneName);
         }
         else
         {

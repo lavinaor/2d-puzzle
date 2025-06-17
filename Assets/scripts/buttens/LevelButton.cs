@@ -4,13 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LevelButton : SceneChanger
+public class LevelButton : MonoBehaviour
 {
     [SerializeField]
     private List<Image> stars; // רשימת תמונות של כוכבים
 
     [SerializeField]
     private int level; // מספר שלב
+
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip sceneTransitionSound;
 
     [SerializeField]
     private TextMeshProUGUI levelText;
@@ -91,12 +95,20 @@ public class LevelButton : SceneChanger
         }
     }
 
-    public override void OnChangeSeneDeley(string sceneName)
+    public void OnChangeSeneSound()
     {
         if (isUnlocked)
         {
             string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
-            base.OnChangeSeneDeley(levelName);
+
+            // השמעת הסאונד בעזרת SoundFXManager
+            if (SoundFXManager.Instance != null)
+            {
+                // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+                SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
+            }
+
+            SceneManager.LoadScene(levelName);
         }
         else
         {
