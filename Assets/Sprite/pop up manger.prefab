@@ -4598,7 +4598,6 @@ GameObject:
   - component: {fileID: 8902534090521648561}
   - component: {fileID: 7307870209353749784}
   - component: {fileID: 1088359005200613496}
-  - component: {fileID: 496786579619921234}
   m_Layer: 5
   m_Name: Button -ritarn to gaem
   m_TagString: Untagged
@@ -4708,10 +4707,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 496786579619921234}
-        m_TargetAssemblyTypeName: SceneChanger, Assembly-CSharp
-        m_MethodName: OnChangeSeneDeley
-        m_Mode: 5
+      - m_Target: {fileID: 7281315906416334639}
+        m_TargetAssemblyTypeName: PopUpManger, Assembly-CSharp
+        m_MethodName: GoToMainManu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4720,20 +4719,6 @@ MonoBehaviour:
           m_StringArgument: 2-2
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &496786579619921234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7886304849373233455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2220b94bd307912459adfb7809e2b0be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deley: 0.3
-  sceneTransitionSound: {fileID: 8300000, guid: aba6fd49989e2d6479de75c7f8e95d07, type: 3}
 --- !u!1 &7992324475833179364
 GameObject:
   m_ObjectHideFlags: 0
