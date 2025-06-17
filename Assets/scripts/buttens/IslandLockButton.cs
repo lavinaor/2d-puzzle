@@ -40,7 +40,7 @@ public class IslandLockButton : MonoBehaviour
     private void Start()
     {
         int starsNum = SaveManager.Instance.GetStarsInTotal();
-        starLockText.text = (starsNum + "/" + starLock);
+        starLockText.text = ("stars: " + starsNum + "/" + starLock);
         if (starsNum >= starLock)
         {
             isEnough = true;

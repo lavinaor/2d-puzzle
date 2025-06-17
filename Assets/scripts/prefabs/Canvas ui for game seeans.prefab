@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -301.5, y: 662.1001}
+  m_AnchoredPosition: {x: -293, y: 681}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2563186838577020973
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0f83e5463a74e7643b7c89fdfbef457a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c8df269973aa0b049a790dae4fc24500, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -748,7 +748,6 @@ GameObject:
   - component: {fileID: 2058708565508780225}
   - component: {fileID: 4570404942795130901}
   - component: {fileID: 1937827683628107239}
-  - component: {fileID: 8930594739887720596}
   m_Layer: 5
   m_Name: setings ui butten
   m_TagString: Untagged
@@ -858,7 +857,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8930594739887720596}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ButtonSettings, Assembly-CSharp
         m_MethodName: ButtonOpenSettings
         m_Mode: 1
@@ -870,18 +869,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &8930594739887720596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3969934758333253237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15b6f2a7c77ca4041854d2982f8451df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4368991029169876946
 GameObject:
   m_ObjectHideFlags: 0
