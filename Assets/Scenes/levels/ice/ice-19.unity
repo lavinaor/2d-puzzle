@@ -1674,7 +1674,8 @@ PrefabInstance:
       propertyPath: goals.Array.data[0].goalPerType
       value: 30
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7640488002209625925, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
     m_RemovedGameObjects:
     - {fileID: 676538786630874458, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
     m_AddedGameObjects: []

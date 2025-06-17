@@ -95,7 +95,7 @@ public class LevelButton : MonoBehaviour
         }
     }
 
-    public void OnChangeSeneSound(string sceneName)
+    public void OnChangeSeneSound()
     {
         if (isUnlocked)
         {
@@ -108,7 +108,7 @@ public class LevelButton : MonoBehaviour
                 SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
             }
 
-            SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene(levelName);
         }
         else
         {
