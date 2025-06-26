@@ -274,10 +274,16 @@ public class CandyBoard : MonoBehaviour
 
     candy GetAdjacentCandy(candy origin, Vector2 direction)
     {
+        if (origin == null)
+        {
+            Debug.LogWarning("GetAdjacentCandy called with null origin!");
+            return null;
+        }
+
         int x = origin.xIndex + (int)direction.x;
         int y = origin.yIndex + (int)direction.y;
 
-        if (x >= 0 && x < width && y >= 0 && y < height)
+        if (x >= 0 && x < width && y >= 0 && y < height && candyBoard[x, y].isUsabal == true)
         {
             return candyBoard[x, y].candy.GetComponent<candy>();
         }

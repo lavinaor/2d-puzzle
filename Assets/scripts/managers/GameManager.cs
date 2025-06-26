@@ -38,6 +38,10 @@ public class GameManager : MonoBehaviour
     public List<Image> stars;
     private int starCount = 0;
 
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip starSound;
+
     [Header("End screen")]
     //מסך ניצחון
     public GameObject victoryPanel;
@@ -186,18 +190,27 @@ public class GameManager : MonoBehaviour
 
         if (progress >= 0.5f)
         {
+            // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+            SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
+
             stars[0].gameObject.SetActive(true);
             starsEndScree[0].gameObject.SetActive(true);
             starCount = 1;
         }
         if (progress >= 0.8f)
         {
+            // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+            SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
+
             stars[1].gameObject.SetActive(true);
             starsEndScree[1].gameObject.SetActive(true);
             starCount = 2;
         }
         if (progress >= 1.0f)
         {
+            // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+            SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
+
             stars[2].gameObject.SetActive(true);
             starsEndScree[2].gameObject.SetActive(true);
             starCount = 3;

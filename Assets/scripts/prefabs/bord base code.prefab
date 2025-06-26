@@ -1031,15 +1031,15 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  beckgroundPanel: {fileID: 4938863711818228017}
+  starSound: {fileID: 8300000, guid: ea7f6a1aa6a12fe478fb15898edb3599, type: 3}
   victoryPanel: {fileID: 3117863657596744588}
   losePanel: {fileID: 1567369839935428957}
   starsEndScree:
   - {fileID: 8316652945836318577}
   - {fileID: 4891295410848713356}
   - {fileID: 3019122410163198822}
-  winSound: {fileID: 0}
-  loseSound: {fileID: 0}
+  winSound: {fileID: 8300000, guid: 25717ef75a0fb0740bd53c9a4c5a59c5, type: 3}
+  loseSound: {fileID: 8300000, guid: 90d7fc2a9cb18f3468ae161f05d100b3, type: 3}
 --- !u!1001 &1493347032492769074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1308,11 +1308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &4938863711818228017 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3109133706232050537, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
-  m_PrefabInstance: {fileID: 8047794833027863128}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8316652945836318577 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2073112718459407657, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
