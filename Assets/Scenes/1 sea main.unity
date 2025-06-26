@@ -1288,6 +1288,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: pop up manger
       objectReference: {fileID: 0}
+    - target: {fileID: 1596127615448125096, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596127615448125096, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596127615448125096, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596127615448125096, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PopUpManger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1596127615448125096, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1767248095663355523, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.4350905

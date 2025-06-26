@@ -472,15 +472,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1341098515389764534, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: goals.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1341098515389764534, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: goals.Array.data[0].type
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1341098515389764534, guid: 32551a633175d6548be492ff00e0a719, type: 3}
+      propertyPath: goals.Array.data[1].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341098515389764534, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: goals.Array.data[0].goalPerType
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341098515389764534, guid: 32551a633175d6548be492ff00e0a719, type: 3}
+      propertyPath: goals.Array.data[1].goalPerType
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1473166468774097186, guid: 32551a633175d6548be492ff00e0a719, type: 3}
       propertyPath: m_IsActive

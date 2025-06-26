@@ -1712,15 +1712,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: goals.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: goals.Array.data[0].type
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: goals.Array.data[1].type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: goals.Array.data[2].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: goals.Array.data[0].goalPerType
-      value: 30
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: goals.Array.data[1].goalPerType
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8588019256660304391, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
+      propertyPath: goals.Array.data[2].goalPerType
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8794437900549553381, guid: a6ded442dc0cdd24b97d5eccbb57c0e2, type: 3}
       propertyPath: m_AnchorMax.x
