@@ -7,6 +7,10 @@ using static UIManager;
 
 public class PopUpManger : MonoBehaviour
 {
+    // קובץ הסאונד להשמעה
+    [SerializeField]
+    private AudioClip allButtenSound;
+
     //הופך אותו לסטטי
     public static PopUpManger Instance;
 
@@ -37,6 +41,9 @@ public class PopUpManger : MonoBehaviour
     //משנה את המצב לפי הסוג שנכנס
     public void ChangeUIState(int newState)
     {
+        // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+        SoundFXManager.Instance.PlaySoundFXClip(allButtenSound, transform, 1f, true);
+
         // אם זה בסוף אז אי אפשר לשנות
         if (currentPopUpType == PopUpType.endScrean)
         {
@@ -97,6 +104,9 @@ public class PopUpManger : MonoBehaviour
     // מתחיל מחדש את הסצנה 
     public void RestartLevel()
     {
+        // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+        SoundFXManager.Instance.PlaySoundFXClip(allButtenSound, transform, 1f, true);
+
         //מאתר את הסצנה הנוככית ומתחיל אותה מחדש
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
@@ -107,6 +117,9 @@ public class PopUpManger : MonoBehaviour
     //סוגר את המשחק
     public void ExitGame()
     {
+        // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+        SoundFXManager.Instance.PlaySoundFXClip(allButtenSound, transform, 1f, true);
+
         //עובד ככה שביוניטי זה יכבה את המשחק ומחות ליוניטי זה יכבה את האפליקציה וכאלה
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -118,6 +131,9 @@ public class PopUpManger : MonoBehaviour
     // מחזיר למסך ההתחלה
     public void GoToMainManu()
     {
+        // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+        SoundFXManager.Instance.PlaySoundFXClip(allButtenSound, transform, 1f, true);
+
         //טוען את מסך ההתחלה לפי מה שהוכנס
         SceneManager.LoadScene(MainManuNum);
 

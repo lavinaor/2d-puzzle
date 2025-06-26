@@ -60,8 +60,9 @@ public class WorldManager : MonoBehaviour
         return null;
     }
 
-    public void LoadNextLevel(int Level)
+    public void LoadNextLevel()
     {
+        int Level = getLevel();
         if (HasNextLevelInWorld(Level))
         {
             Level++;
