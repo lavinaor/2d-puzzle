@@ -42,6 +42,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private AudioClip starSound;
 
+    // אפקט בפריפב
+    [SerializeField]
+    private GameObject vfx;
+
     [Header("End screen")]
     //מסך ניצחון
     public GameObject victoryPanel;
@@ -56,10 +60,14 @@ public class GameManager : MonoBehaviour
     // קובץ הסאונד להשמעה
     [SerializeField]
     private AudioClip winSound;
-
-    // קובץ הסאונד להשמעה
     [SerializeField]
     private AudioClip loseSound;
+
+    // אפקטים לניצחון והפסד
+    [SerializeField]
+    private GameObject winVFX;
+    [SerializeField]
+    private GameObject loseVFX;
 
     private void Awake()
     {
@@ -162,6 +170,9 @@ public class GameManager : MonoBehaviour
         {
             isGameEnded = true;
 
+            // אפקט של ניצחון
+            Instantiate(winVFX, victoryPanel.transform.position, Quaternion.identity);
+
             //הפעל מצב ניצחון
             PopUpManger.Instance.ChangeUIState(4);
             victoryPanel.SetActive(true);
@@ -174,6 +185,10 @@ public class GameManager : MonoBehaviour
         if (moves == 0 && starCount <= 0)
         {
             isGameEnded = true;
+
+            // אפקט של הפסד
+            Instantiate(loseVFX, losePanel.transform.position, Quaternion.identity);
+
             //הפעל מצב הפסד
             PopUpManger.Instance.ChangeUIState(4);
             losePanel.SetActive(true);
@@ -193,6 +208,9 @@ public class GameManager : MonoBehaviour
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
 
+            // אפקט ויזואלי לכוכב
+            Instantiate(vfx, stars[0].transform.position, Quaternion.identity);
+
             stars[0].gameObject.SetActive(true);
             starsEndScree[0].gameObject.SetActive(true);
             starCount = 1;
@@ -202,6 +220,9 @@ public class GameManager : MonoBehaviour
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
 
+            // אפקט ויזואלי לכוכב
+            Instantiate(vfx, stars[1].transform.position, Quaternion.identity);
+
             stars[1].gameObject.SetActive(true);
             starsEndScree[1].gameObject.SetActive(true);
             starCount = 2;
@@ -210,6 +231,9 @@ public class GameManager : MonoBehaviour
         {
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
+
+            // אפקט ויזואלי לכוכב
+            Instantiate(vfx, stars[2].transform.position, Quaternion.identity);
 
             stars[2].gameObject.SetActive(true);
             starsEndScree[2].gameObject.SetActive(true);
