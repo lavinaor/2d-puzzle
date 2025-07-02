@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviour
     {
         float progress = (float)points / goal;
 
-        if (progress >= 0.5f)
+        if (progress >= 0.5f && starCount < 1)
         {
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
@@ -215,7 +215,7 @@ public class GameManager : MonoBehaviour
             starsEndScree[0].gameObject.SetActive(true);
             starCount = 1;
         }
-        if (progress >= 0.8f)
+        if (progress >= 0.8f && starCount < 2)
         {
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);
@@ -227,7 +227,7 @@ public class GameManager : MonoBehaviour
             starsEndScree[1].gameObject.SetActive(true);
             starCount = 2;
         }
-        if (progress >= 1.0f)
+        if (progress >= 1.0f && starCount < 3)
         {
             // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(starSound, transform, 1f, true);

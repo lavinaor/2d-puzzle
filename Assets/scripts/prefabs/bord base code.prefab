@@ -1032,6 +1032,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   starSound: {fileID: 8300000, guid: ea7f6a1aa6a12fe478fb15898edb3599, type: 3}
+  vfx: {fileID: 100006, guid: 8fc06027b01064e4f885fd8dd2929310, type: 3}
   victoryPanel: {fileID: 3117863657596744588}
   losePanel: {fileID: 1567369839935428957}
   starsEndScree:
@@ -1040,6 +1041,8 @@ MonoBehaviour:
   - {fileID: 3019122410163198822}
   winSound: {fileID: 8300000, guid: 25717ef75a0fb0740bd53c9a4c5a59c5, type: 3}
   loseSound: {fileID: 8300000, guid: 90d7fc2a9cb18f3468ae161f05d100b3, type: 3}
+  winVFX: {fileID: 100006, guid: 8fc06027b01064e4f885fd8dd2929310, type: 3}
+  loseVFX: {fileID: 100006, guid: 8fc06027b01064e4f885fd8dd2929310, type: 3}
 --- !u!1001 &1493347032492769074
 PrefabInstance:
   m_ObjectHideFlags: 0
