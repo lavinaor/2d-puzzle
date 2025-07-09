@@ -1716,9 +1716,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 7bb96fbaf03dd09438644965711f99e8, type: 3}
     - target: {fileID: 2636514468032329452, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
+      propertyPath: starLock
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2636514468032329452, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: musicCngeClip
       value: 
-      objectReference: {fileID: 8300000, guid: 27450d35bfae7534ead98d2f0e069cf3, type: 3}
+      objectReference: {fileID: 8300000, guid: 0aae16b3bf9f8be459b66ff185ceae07, type: 3}
     - target: {fileID: 5322489821060801342, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_Name
       value: Button Island (2)
@@ -2191,9 +2195,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d16afc7d2f318a04f8994d4c7fdec2ee, type: 3}
     - target: {fileID: 2636514468032329452, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
+      propertyPath: starLock
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2636514468032329452, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: musicCngeClip
       value: 
-      objectReference: {fileID: 8300000, guid: 50b44e24a4410c24180930bc48e6856f, type: 3}
+      objectReference: {fileID: 8300000, guid: 929a414889434d54282a4fc7c3e0dbf5, type: 3}
     - target: {fileID: 5237069448593404408, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -3902,6 +3910,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c8df269973aa0b049a790dae4fc24500, type: 3}
+    - target: {fileID: 2636514468032329452, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
+      propertyPath: musicCngeClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 727593d394b955040a364e861c274db4, type: 3}
     - target: {fileID: 5237069448593404408, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_Sprite
       value: 
