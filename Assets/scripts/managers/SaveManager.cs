@@ -89,6 +89,13 @@ public class SaveManager : MonoBehaviour
         return totalStars;
     }
 
+    public void ResetProgress()
+    {
+        PlayerPrefs.DeleteKey("SaveData");
+        PlayerPrefs.Save();
+    }
+
+
     #endregion
 
     #region מערכת מטבעות
