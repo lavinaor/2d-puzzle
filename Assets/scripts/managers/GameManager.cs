@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     [Header("End screen")]
     //מסך ניצחון
-    public GameObject victoryPanel;
+    public GameObject[] victoryPanel = new GameObject[0];
     //מסך הפסד
     public GameObject losePanel;
 
@@ -171,11 +171,14 @@ public class GameManager : MonoBehaviour
             isGameEnded = true;
 
             // אפקט של ניצחון
-            Instantiate(winVFX, victoryPanel.transform.position, Quaternion.identity);
+            Instantiate(winVFX, victoryPanel[0].transform.position, Quaternion.identity);
 
             //הפעל מצב ניצחון
             PopUpManger.Instance.ChangeUIState(4);
-            victoryPanel.SetActive(true);
+            foreach (var panel in victoryPanel)
+            {
+                panel.SetActive(true);
+            }
 
             //סאונד של ניצחון
             SoundFXManager.Instance.PlaySoundFXClip(winSound, transform, 1f, false);

@@ -1033,7 +1033,9 @@ MonoBehaviour:
   - {fileID: 0}
   starSound: {fileID: 8300000, guid: ea7f6a1aa6a12fe478fb15898edb3599, type: 3}
   vfx: {fileID: 5548714461723219304, guid: b33d0eba630f82b44b2dbe99bce72b93, type: 3}
-  victoryPanel: {fileID: 3117863657596744588}
+  victoryPanel:
+  - {fileID: 3117863657596744588}
+  - {fileID: 7164339359150139140}
   losePanel: {fileID: 1567369839935428957}
   starsEndScree:
   - {fileID: 8316652945836318577}
@@ -1125,6 +1127,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pop up manger
       objectReference: {fileID: 0}
+    - target: {fileID: 919678197533504860, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2095191585665803863, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1147,6 +1153,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2504952603958617343, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
       propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3109133706232050537, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4570792028651680753, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
@@ -1311,6 +1321,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7164339359150139140 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919678197533504860, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+  m_PrefabInstance: {fileID: 8047794833027863128}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8316652945836318577 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2073112718459407657, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
