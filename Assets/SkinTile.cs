@@ -56,11 +56,14 @@ public class SkinTile : MonoBehaviour
         // מצב ויזואלי התחלתי
         ApplyStateVisuals();
 
-        // כפתור לחיצה לפתיחת פופאפ
-        if (button != null)
+        button.onClick.AddListener(() =>
         {
-            button.onClick.AddListener(() => { SkinShopUI.Instance.OpenPopup(skinIndex); });
-        }
+            // קודם כל טוענים את הדאטה בפופאפ
+            SkinShopUI.Instance.popup.Prepare(skinIndex, skin, price);
+
+            // ואז אומרים למנג'ר לפתוח את הפופאפ
+            PopUpManger.Instance.ChangeUIState((int)PopUpType.skinPopup);
+        });
     }
 
     private void Update()

@@ -38,7 +38,9 @@ public class SkinShopUI : MonoBehaviour
     public void OpenPopup(int skinIndex)
     {
         var skin = CandySkinManager.Instance.allSkins[skinIndex];
-        popup.Show(skinIndex, skin, defaultPrice);
+        popup.Prepare(skinIndex, skin, defaultPrice);
+        PopUpManger.Instance.ChangeUIState((int)PopUpType.skinPopup);
+
     }
 }
 

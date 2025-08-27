@@ -174,4 +174,5 @@ public enum PopUpType
     storUI = 2,
     confirmation = 3,
     endScrean = 4,
+    skinPopup = 5,
 }
