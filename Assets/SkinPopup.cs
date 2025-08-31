@@ -194,13 +194,13 @@ public class SkinPopup : MonoBehaviour
             if (selected)
             {
                 // מצויד כרגע
-                if (actionButtonText) actionButtonText.text = "select";
+                if (actionButtonText) actionButtonText.text = "selected";
                 if (actionButton) actionButton.interactable = false;
             }
             else
             {
                 // אפשר לצייד
-                if (actionButtonText) actionButtonText.text = "selected";
+                if (actionButtonText) actionButtonText.text = "select";
                 if (actionButton) actionButton.interactable = true;
 
                 actionButton.onClick.AddListener(() =>
