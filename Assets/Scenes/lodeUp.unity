@@ -1340,7 +1340,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232059158}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 920888dd4ec022940b0f77acd95db7b0, type: 3}
   m_Name: 
@@ -1348,7 +1348,6 @@ MonoBehaviour:
   waitBeforeLoad: 5
   nextSceneName: play ui
   AudioClip: {fileID: 8300000, guid: 4f5e2a4cb6e1eb04d81f058ae83d5cff, type: 3}
-  scoreSlider: {fileID: 0}
 --- !u!4 &1232059160
 Transform:
   m_ObjectHideFlags: 0
