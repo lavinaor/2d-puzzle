@@ -6,4 +6,5 @@ public class CandySkin : ScriptableObject
 {
     public string skinName;
     public List<CandyTypeSpritePair> candyPairs = new List<CandyTypeSpritePair>();
+    public int price;
 }
