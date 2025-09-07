@@ -101,6 +101,7 @@ public class LevelButton : MonoBehaviour
             SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
         }
         SceneManager.LoadScene(levelName);
+        SaveManager.Instance.ChanglastLevelEnterd(level);
 
         /*        if (isUnlocked)
                 {
