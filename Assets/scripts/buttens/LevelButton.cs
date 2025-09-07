@@ -40,7 +40,7 @@ public class LevelButton : MonoBehaviour
         button = GetComponent<Button>();
         int starsNum = SaveManager.Instance.GetStarsForLevel(level);
         Debug.Log("starsNum לשלב " + level + ": " + starsNum);
-        CheckIfUnlocked();
+        //CheckIfUnlocked();
         UpdateStars(starsNum);
     }
 
@@ -92,22 +92,32 @@ public class LevelButton : MonoBehaviour
 
     public void OnChangeSeneSound()
     {
-        if (isUnlocked)
-        {
-            string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
+        string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
 
-            // השמעת הסאונד בעזרת SoundFXManager
-            if (SoundFXManager.Instance != null)
-            {
-                // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
-                SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
-            }
-
-            SceneManager.LoadScene(levelName);
-        }
-        else
+        // השמעת הסאונד בעזרת SoundFXManager
+        if (SoundFXManager.Instance != null)
         {
-            Debug.Log("שלב נעול");
+            // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+            SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
         }
+        SceneManager.LoadScene(levelName);
+
+        /*        if (isUnlocked)
+                {
+                    string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
+
+                    // השמעת הסאונד בעזרת SoundFXManager
+                    if (SoundFXManager.Instance != null)
+                    {
+                        // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+                        SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
+                    }
+
+                    SceneManager.LoadScene(levelName);
+                }
+                else
+                {
+                    Debug.Log("שלב נעול");
+                }*/
     }
 }
