@@ -516,16 +516,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498549187}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 3.385474, y: 3.385474, z: 3.385474}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 7.987071}
+  m_LocalScale: {x: 0.2517491, y: 0.31153953, z: 0.31153953}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1687202145}
+  m_Father: {fileID: 900947182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1061, y: -334}
+  m_AnchoredPosition: {x: 78.89746, y: -37.05658}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &498549189
@@ -609,7 +609,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 498549189}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 900947186}
+        m_TargetAssemblyTypeName: ScrollViewArrowController, Assembly-CSharp
+        m_MethodName: ScrollRight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &578493360 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2109159424555701149, guid: 6a157fbe855910c429ce93847cbb7a38, type: 3}
@@ -1073,6 +1085,7 @@ GameObject:
   - component: {fileID: 900947185}
   - component: {fileID: 900947184}
   - component: {fileID: 900947183}
+  - component: {fileID: 900947186}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -1093,6 +1106,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1113413777}
+  - {fileID: 498549188}
+  - {fileID: 1654988351}
   m_Father: {fileID: 1687202145}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1168,6 +1183,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 900947181}
   m_CullTransparentMesh: 1
+--- !u!114 &900947186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900947181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bee1b51799ba9949bb0caa29e9d51b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollRect: {fileID: 900947183}
+  content: {fileID: 2026807026}
+  layoutGroup: {fileID: 2026807028}
+  currentIndex: 0
+  scrollDuration: 0.2
 --- !u!1 &901915185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1765,7 +1797,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1773,7 +1805,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1813,11 +1845,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 378.6615
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -142.94452
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2160,7 +2192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2168,7 +2200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2208,11 +2240,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 239.1969
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -142.94452
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2493,16 +2525,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654988350}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 3.385474, y: 3.385474, z: 3.385474}
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 7.987071}
+  m_LocalScale: {x: 0.2517491, y: 0.31153953, z: 0.31153953}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1687202145}
+  m_Father: {fileID: 900947182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1044, y: -334.00006}
+  m_AnchoredPosition: {x: -77.63336, y: -37.05655}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1654988352
@@ -2586,7 +2618,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1654988352}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 900947186}
+        m_TargetAssemblyTypeName: ScrollViewArrowController, Assembly-CSharp
+        m_MethodName: ScrollLeft
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1687202141
 GameObject:
   m_ObjectHideFlags: 0
@@ -2687,8 +2731,6 @@ RectTransform:
   - {fileID: 2061680495}
   - {fileID: 900947182}
   - {fileID: 1596282663}
-  - {fileID: 498549188}
-  - {fileID: 1654988351}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3945,7 +3987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMin.x
@@ -3953,7 +3995,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_SizeDelta.x
@@ -3993,11 +4035,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 99.7323
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -142.94452
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2379808983729054858, guid: 93fb0a3e8c49879409dc43f8d0f56b69, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
