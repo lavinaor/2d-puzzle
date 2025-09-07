@@ -14,6 +14,7 @@ public class GameSaveData
 {
     public List<LevelEntry> levels = new List<LevelEntry>();
 
+    public int lastLevelEnterd = 0; // השלב האחרון שהשחקן שיחק
     public int totalCoins = 0; // אוצרות
     public int totalGems = 0;  // יהלומים
 }
@@ -36,6 +37,22 @@ public class SaveManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    public void ChanglastLevelEnterd(int level)
+    {
+        GameSaveData data = LoadData();
+        data.lastLevelEnterd = level;
+        SaveData(data);
+    }
+    public int GetlastLevelEnterd()
+    {
+        string json = PlayerPrefs.GetString("SaveData", "{}");
+        if (string.IsNullOrEmpty(json)) return 0;
+
+        GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
+        if (data == null) return 0;
+
+        return data.lastLevelEnterd;
     }
 
     #region מערכת כוכבים
