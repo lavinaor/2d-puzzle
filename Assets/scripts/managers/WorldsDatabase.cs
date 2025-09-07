@@ -68,6 +68,7 @@ public class WorldManager : MonoBehaviour
             Level++;
             string scene = GetSceneNameForLevel(Level);
             SceneManager.LoadScene(scene);
+            SaveManager.Instance.ChanglastLevelEnterd(Level);
         }
         else
         {
