@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static SaveManager;
 
 [System.Serializable]
 public class LevelEntry
@@ -17,6 +18,9 @@ public class GameSaveData
     public int lastLevelEnterd = 0; // השלב האחרון שהשחקן שיחק
     public int totalCoins = 0; // אוצרות
     public int totalGems = 0;  // יהלומים
+
+    // רשימה של ממתקים מיוחדים
+    public List<SpecialCandyEntry> specialCandies = new List<SpecialCandyEntry>();
 }
 
 public class SaveManager : MonoBehaviour
@@ -54,6 +58,41 @@ public class SaveManager : MonoBehaviour
 
         return data.lastLevelEnterd;
     }
+
+    [System.Serializable]
+    public class SpecialCandyEntry
+    {
+        public string candyId;
+        public int amount;
+    }
+
+    // מחזיר כמה יש מהממתק
+    public int GetCandyAmount(string candyId)
+    {
+        GameSaveData data = LoadData();
+        var entry = data.specialCandies.Find(c => c.candyId == candyId);
+        return entry != null ? entry.amount : 0;
+    }
+
+    // מוסיף (או מוריד) כמות מהממתק
+    public void AddCandy(string candyId, int amount)
+    {
+        GameSaveData data = LoadData();
+        var entry = data.specialCandies.Find(c => c.candyId == candyId);
+
+        if (entry == null)
+        {
+            entry = new SpecialCandyEntry { candyId = candyId, amount = 0 };
+            data.specialCandies.Add(entry);
+        }
+
+        entry.amount += amount;
+        if (entry.amount < 0) entry.amount = 0; // לא לרדת מתחת ל־0
+
+        SaveData(data);
+    }
+
+
 
     #region מערכת כוכבים
 
