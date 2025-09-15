@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2158909395286645770}
   - component: {fileID: 9126654169232163579}
   - component: {fileID: 981009175718991644}
+  - component: {fileID: 8147471142374580916}
   m_Layer: 0
   m_Name: manager dont destroy
   m_TagString: Untagged
@@ -256,3 +257,28 @@ MonoBehaviour:
     price: 0
   saveData:
     ownedCandies: []
+--- !u!114 &8147471142374580916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2250088938357336228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b18beb9b5ea572942a5878f58d553434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allPackages:
+  - id: free
+    coinAmount: 100
+    priceUSD: 0
+    icon: {fileID: 111828039, guid: 04428ef9dfb6071438e11f00c2ed5b59, type: 3}
+  - id: payed
+    coinAmount: 1000
+    priceUSD: 100
+    icon: {fileID: 458618130, guid: 9bbf750e4f254914da3c45ad68148298, type: 3}
+  - id: free for test
+    coinAmount: 1000000
+    priceUSD: 0
+    icon: {fileID: 1233584677, guid: 9bbf750e4f254914da3c45ad68148298, type: 3}

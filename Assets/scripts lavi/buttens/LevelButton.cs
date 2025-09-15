@@ -39,7 +39,6 @@ public class LevelButton : MonoBehaviour
         levelText.text = level.ToString();
         button = GetComponent<Button>();
         int starsNum = SaveManager.Instance.GetStarsForLevel(level);
-        Debug.Log("starsNum μωμα " + level + ": " + starsNum);
         //CheckIfUnlocked();
         UpdateStars(starsNum);
     }
