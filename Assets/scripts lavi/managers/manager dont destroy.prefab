@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4074582003373386513}
   - component: {fileID: 2158909395286645770}
   - component: {fileID: 9126654169232163579}
+  - component: {fileID: 981009175718991644}
   m_Layer: 0
   m_Name: manager dont destroy
   m_TagString: Untagged
@@ -79,6 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allSkins:
   - {fileID: 11400000, guid: c99273bf61534944ab8d1ef88d6a3e9e, type: 2}
+  - {fileID: 11400000, guid: 95bbcae5dad32804ab2f7b1dbcee22c6, type: 2}
   selectedSkinIndex: 0
 --- !u!114 &5387452848558369679
 MonoBehaviour:
@@ -215,3 +217,42 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &981009175718991644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2250088938357336228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb34a182b9510e479b1f561be3efc81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allCandies:
+  - candyId: bome
+    displayName: bome
+    icon: {fileID: 1816974325, guid: 4b4b1401c4de6c941b6362a1d8b22bd0, type: 3}
+    candyType: 8
+    amount: 2
+    price: 100
+  - candyId: super
+    displayName: mega gem
+    icon: {fileID: -141189986, guid: 4b4b1401c4de6c941b6362a1d8b22bd0, type: 3}
+    candyType: 9
+    amount: 0
+    price: 300
+  - candyId: horizontal
+    displayName: horizontal
+    icon: {fileID: -1437554147, guid: 9bbf750e4f254914da3c45ad68148298, type: 3}
+    candyType: 6
+    amount: 10
+    price: 0
+  - candyId: vertical
+    displayName: vertical
+    icon: {fileID: 1036779553, guid: 9bbf750e4f254914da3c45ad68148298, type: 3}
+    candyType: 7
+    amount: 10
+    price: 0
+  saveData:
+    ownedCandies: []

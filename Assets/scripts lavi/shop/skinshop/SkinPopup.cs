@@ -8,8 +8,8 @@ public class SkinPopup : MonoBehaviour
     public static SkinPopup Instance;
 
     [Header("UI Refs")]
-    [SerializeField] private Image background;           // רקע הפופאפ
-    [SerializeField] private Image previewImage;         // התצוגה הגדולה
+    [SerializeField] private Image background;
+    [SerializeField] private Image previewImage;
     [SerializeField] private TextMeshProUGUI skinNameText;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private Button actionButton;
@@ -26,8 +26,8 @@ public class SkinPopup : MonoBehaviour
     [SerializeField] private Color colSelected = new Color(0.9f, 0.9f, 1f, 1f);
 
     [Header("Animation")]
-    [SerializeField] private float frameDuration = 1.0f; // כמה זמן כל ספרייט על המסך
-    [SerializeField] private float fadeDuration = 0.15f; // משך מעבר רך
+    [SerializeField] private float frameDuration = 1.0f;
+    [SerializeField] private float fadeDuration = 0.15f;
 
     private int skinIndex;
     private CandySkin skin;
@@ -42,9 +42,6 @@ public class SkinPopup : MonoBehaviour
         Instance = this;
     }
 
-    /// <summary>
-    /// מזריק נתונים לפני פתיחת הפופאפּ (לא מדליק אותו!)
-    /// </summary>
     public void Prepare(int index, CandySkin data, int cost)
     {
         skinIndex = index;
@@ -53,31 +50,37 @@ public class SkinPopup : MonoBehaviour
 
         if (skinNameText) skinNameText.text = skin != null ? skin.skinName : string.Empty;
 
-        // לאתחל תצוגת ספרייט ראשונה
+        // אתחול אנימציה
         frame = 0;
         timer = 0f;
-        if (previewImage && skin != null && skin.candyPairs != null && skin.candyPairs.Count > 0)
+
+        if (previewImage != null && skin != null && skin.candyPairs != null && skin.candyPairs.Count > 0)
+        {
             previewImage.sprite = skin.candyPairs[0].sprite;
+            previewImage.color = Color.white; // חשוב: צבע מלא כדי לא להיתקע חצי מטושטש
+        }
 
         ApplyStateVisuals();
     }
 
     private void OnEnable()
     {
-        // כשנפתח ע"י המנגר – לאתחל שוב כדי להבטיח סטייט תקין
+        // אתחול מחדש של האנימציה בכל כניסה לפופאפ
         frame = 0;
         timer = 0f;
-        if (previewImage && skin != null && skin.candyPairs != null && skin.candyPairs.Count > 0)
+        if (previewImage != null && skin != null && skin.candyPairs != null && skin.candyPairs.Count > 0)
+        {
             previewImage.sprite = skin.candyPairs[0].sprite;
+            previewImage.color = Color.white; // צבע מלא
+        }
     }
 
     private void Update()
     {
-        if (skin == null || previewImage == null) return;
-        var list = skin.candyPairs;
-        if (list == null || list.Count == 0) return;
+        if (skin == null || previewImage == null || skin.candyPairs == null || skin.candyPairs.Count == 0)
+            return;
 
-        timer += Time.unscaledDeltaTime; // זמן "אמיתי" גם כשה־timeScale=0
+        timer += Time.unscaledDeltaTime;
         if (timer >= frameDuration && !fading)
         {
             timer = 0f;
@@ -92,56 +95,49 @@ public class SkinPopup : MonoBehaviour
 
         fading = true;
 
-        // הספרייט הבא
         frame = (frame + 1) % skin.candyPairs.Count;
         Sprite nextSprite = skin.candyPairs[frame].sprite;
+
         if (nextSprite == null)
         {
             fading = false;
             yield break;
         }
 
-        // Fade Out ידני
         float t = 0f;
         Color start = previewImage.color;
         Color transparent = new Color(start.r, start.g, start.b, 0f);
+
         while (t < fadeDuration)
         {
             t += Time.unscaledDeltaTime;
-            float a = Mathf.Clamp01(t / fadeDuration);
-            previewImage.color = Color.Lerp(start, transparent, a);
+            previewImage.color = Color.Lerp(start, transparent, t / fadeDuration);
             yield return null;
         }
 
-        // החלפת ספרייט
         previewImage.sprite = nextSprite;
 
-        // Fade In ידני
         t = 0f;
         while (t < fadeDuration)
         {
             t += Time.unscaledDeltaTime;
-            float a = Mathf.Clamp01(t / fadeDuration);
-            previewImage.color = Color.Lerp(transparent, start, a);
+            previewImage.color = Color.Lerp(transparent, start, t / fadeDuration);
             yield return null;
         }
-        previewImage.color = start;
 
+        previewImage.color = start;
         fading = false;
     }
 
-    /// <summary>
-    /// רקע + טקסטים + כפתור פעולה לפי מצב (נעול/נקנה/נבחר)
-    /// </summary>
     private void ApplyStateVisuals()
     {
-        if (skin == null) return;
+        if (skin == null || CandySkinManager.Instance == null)
+            return;
 
         bool unlocked = CandySkinManager.Instance.IsSkinUnlocked(skinIndex);
-        bool selected = (CandySkinManager.Instance.selectedSkinIndex == skinIndex);
+        bool selected = CandySkinManager.Instance.selectedSkinIndex == skinIndex;
 
-        // רקע לפי ספרייטים או צבעים
-        if (background)
+        if (background != null)
         {
             if (useBgSprites)
             {
@@ -157,10 +153,10 @@ public class SkinPopup : MonoBehaviour
             }
         }
 
-        // מנעול
-        if (lockIcon) lockIcon.SetActive(!unlocked);
+        if (lockIcon != null) lockIcon.SetActive(!unlocked);
 
-        // מחיר/כפתור
+        if (actionButton == null || actionButtonText == null) return;
+
         actionButton.onClick.RemoveAllListeners();
 
         if (!unlocked)
@@ -171,42 +167,39 @@ public class SkinPopup : MonoBehaviour
                 priceText.text = $"price: {price}";
             }
 
-            if (actionButtonText) actionButtonText.text = "buy";
-            if (actionButton) actionButton.interactable = SaveManager.Instance.GetCoins() >= price;
+            actionButtonText.text = "buy";
+            actionButton.interactable = SaveManager.Instance != null && SaveManager.Instance.GetCoins() >= price;
 
             actionButton.onClick.AddListener(() =>
             {
-                if (SaveManager.Instance.GetCoins() >= price)
+                if (SaveManager.Instance != null && SaveManager.Instance.GetCoins() >= price)
                 {
                     SaveManager.Instance.AddCoins(-price);
                     CandySkinManager.Instance.UnlockSkin(skinIndex);
-                    CandySkinManager.Instance.SelectSkin(skinIndex); // אפשרי: מייד מצייד אחרי קניה
-                    SkinShopUI.Instance.RefreshGrid();
+                    CandySkinManager.Instance.SelectSkin(skinIndex);
+                    SkinShopUI.Instance?.RefreshGrid();
                     ApplyStateVisuals();
                 }
             });
         }
         else
         {
-            // כבר נקנה
             if (priceText) priceText.gameObject.SetActive(false);
 
             if (selected)
             {
-                // מצויד כרגע
-                if (actionButtonText) actionButtonText.text = "selected";
-                if (actionButton) actionButton.interactable = false;
+                actionButtonText.text = "selected";
+                actionButton.interactable = false;
             }
             else
             {
-                // אפשר לצייד
-                if (actionButtonText) actionButtonText.text = "select";
-                if (actionButton) actionButton.interactable = true;
+                actionButtonText.text = "select";
+                actionButton.interactable = true;
 
                 actionButton.onClick.AddListener(() =>
                 {
                     CandySkinManager.Instance.SelectSkin(skinIndex);
-                    SkinShopUI.Instance.RefreshGrid();
+                    SkinShopUI.Instance?.RefreshGrid();
                     ApplyStateVisuals();
                 });
             }
@@ -215,7 +208,6 @@ public class SkinPopup : MonoBehaviour
 
     public void Close()
     {
-        // סוגר דרך המנגר (כדי לשמור קונסיסטנטיות)
-        PopUpManger.Instance.ChangeUIState((int)PopUpType.NoneUI);
+        PopUpManger.Instance?.ChangeUIState((int)PopUpType.NoneUI);
     }
 }

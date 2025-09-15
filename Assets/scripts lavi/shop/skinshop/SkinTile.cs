@@ -34,6 +34,8 @@ public class SkinTile : MonoBehaviour
     private float timer = 0f;
     private bool fading = false;
 
+    private Coroutine fadeCoroutine;
+
     public void Setup(CandySkin skinData, int index)
     {
         skin = skinData;
@@ -70,17 +72,20 @@ public class SkinTile : MonoBehaviour
     {
         if (skin == null || icon == null || skin.candyPairs.Count == 0) return;
 
-        timer += Time.unscaledDeltaTime; // חשוב! לא Time.deltaTime
+        timer += Time.unscaledDeltaTime;
         if (timer >= frameDuration && !fading)
         {
             timer = 0f;
-            StartCoroutine(FadeToNextSprite());
+
+            // אם יש Fade קודם - מבטלים אותו לפני שמתחילים חדש
+            if (fadeCoroutine != null)
+            {
+                StopCoroutine(fadeCoroutine);
+            }
+
+            fadeCoroutine = StartCoroutine(FadeToNextSprite());
         }
     }
-
-
-
-
 
     private IEnumerator FadeToNextSprite()
     {
@@ -88,7 +93,7 @@ public class SkinTile : MonoBehaviour
 
         fading = true;
 
-        // בוחר את הספרייט הבא
+        // הספרייט הבא
         frame = (frame + 1) % skin.candyPairs.Count;
         Sprite nextSprite = skin.candyPairs[frame].sprite;
 
@@ -102,21 +107,22 @@ public class SkinTile : MonoBehaviour
         Color originalColor = icon.color;
         Color transparentColor = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
 
-        // Fade out
+        // Fade Out
         while (elapsed < fadeDuration)
         {
+            if (icon == null) yield break;
             elapsed += Time.unscaledDeltaTime;
             icon.color = Color.Lerp(originalColor, transparentColor, elapsed / fadeDuration);
             yield return null;
         }
 
-        // מחליף ספרייט
         icon.sprite = nextSprite;
 
-        // Fade in
+        // Fade In
         elapsed = 0f;
         while (elapsed < fadeDuration)
         {
+            if (icon == null) yield break;
             elapsed += Time.unscaledDeltaTime;
             icon.color = Color.Lerp(transparentColor, originalColor, elapsed / fadeDuration);
             yield return null;
@@ -124,10 +130,29 @@ public class SkinTile : MonoBehaviour
 
         icon.color = originalColor;
         fading = false;
+        fadeCoroutine = null;
     }
 
+    private void OnDisable()
+    {
+        // עוצר כל קורוטינות שרצות
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
+        }
 
+        // מחזיר את התמונה למצב רגיל
+        if (icon != null)
+        {
+            Color resetColor = icon.color;
+            resetColor.a = 1f;
+            icon.color = resetColor;
+        }
 
+        fading = false;
+        timer = 0f;
+    }
 
     /// <summary>
     /// עדכון מצב ויזואלי לפי אם הסקין נעול/קנוי/נבחר
