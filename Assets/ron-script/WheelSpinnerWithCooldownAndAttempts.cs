@@ -142,7 +142,7 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
             if (cooldownText != null)
             {
                 int displayTime = Mathf.CeilToInt(remaining);
-                cooldownText.text = $"מחכה {displayTime} שניות...";
+                cooldownText.text = $"waiting {displayTime} seconds";
             }
 
             remaining -= Time.deltaTime;
@@ -167,7 +167,7 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
     {
         if (spinsLeftText != null)
         {
-            spinsLeftText.text = $"עוד {spinsLeft} סיבובים";
+            spinsLeftText.text = $"  More  {spinsLeft} rounds";
         }
     }
 
