@@ -75,10 +75,11 @@ public class WorldManager : MonoBehaviour
             Level++;
             string scene = GetSceneNameForLevel(Level);
             SceneManager.LoadScene(scene);
+            SaveManager.Instance.ChanglastLevelEnterd(Level);
 
-            // עולם נגמר, לך למסך מעבר/פתיחה
+/*            // עולם נגמר, לך למסך מעבר/פתיחה
             Debug.Log("סוף העולם, פותחים עולם חדש!");
-            SceneManager.LoadScene("WorldUnlockScene");
+            SceneManager.LoadScene("WorldUnlockScene");*/
         }
     }
 
