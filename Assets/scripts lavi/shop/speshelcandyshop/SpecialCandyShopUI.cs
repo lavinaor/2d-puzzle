@@ -1,12 +1,16 @@
-using UnityEngine;
+ο»Ώusing UnityEngine;
 
 public class SpecialCandyShopUI : MonoBehaviour
 {
     public static SpecialCandyShopUI Instance;
 
     [Header("UI Refs")]
-    [SerializeField] private RectTransform gridContainer;  // δβψιγ αϊεκ δρχψεμ
-    [SerializeField] private GameObject tilePrefab;        // δτψιτΰα ωμ δθιιμ
+    [SerializeField] private RectTransform gridContainer; // Χ”Χ’Χ¨Χ™Χ“ Χ‘ΧªΧ•Χ Χ”Χ΅Χ§Χ¨Χ•Χ
+    [SerializeField] private GameObject tilePrefab;       // Χ”Χ¤Χ¨Χ™Χ¤ΧΧ‘ Χ©Χ Χ”ΧΧ™Χ™Χ
+
+    [Header("Settings")]
+    [SerializeField] private bool isInventoryMode = false;
+    // β… ΧΧ ΧΧ΅Χ•ΧΧ - ΧΧ¦Χ‘ ΧΧ™Χ Χ•Χ•Χ ΧΧ•Χ¨Χ™, ΧΧ ΧΧ - ΧΧ¦Χ‘ Χ—Χ Χ•Χª
 
     private void Awake()
     {
@@ -15,39 +19,46 @@ public class SpecialCandyShopUI : MonoBehaviour
 
     private void Start()
     {
-        // ξςγιτιν Start ςμ OnEnable λγι ωδ-Manager ιρτιχ μδϊΰτρ α-Awake
+        // ΧΧ©ΧªΧΧ©Χ™Χ Χ‘-Start Χ›Χ“Χ™ Χ©Χ Χ΅Χ¤Χ™Χ§ ΧΧΧΆΧ•Χ ΧΧª Χ”-SpecialCandyManager
         RefreshGrid();
     }
 
     /// <summary>
-    /// αεπδ ξηγω ΰϊ δβψιγ ωμ δηπεϊ μτι λμ δξξϊχιν αξωηχ
+    /// Χ‘Χ•Χ Χ” ΧΧ—Χ“Χ© ΧΧª Χ”Χ’Χ¨Χ™Χ“ Χ©Χ Χ”Χ—Χ Χ•Χª ΧΧ• Χ”ΧΧ™Χ Χ•Χ•Χ ΧΧ•Χ¨Χ™
     /// </summary>
     public void RefreshGrid()
     {
-        // ΰν ΰιο Manager τςιμ, μΰ ςεωιν λμεν
         if (SpecialCandyManager.Instance == null)
         {
             Debug.LogError("SpecialCandyManager.Instance is NULL! Make sure the manager is in the scene.");
             return;
         }
 
-        // ξπχδ ΰϊ δβψιγ
+        // ΧΧ Χ§Χ” ΧΧª Χ”Χ’Χ¨Χ™Χ“ Χ”Χ§Χ™Χ™Χ
         foreach (Transform child in gridContainer)
             Destroy(child.gameObject);
 
-        // ξεωκ ΰϊ δψωιξδ δψΰωιϊ ωμ λμ δξξϊχιν
+        // ΧΧ•Χ©Χ ΧΧª Χ¨Χ©Χ™ΧΧª Χ›Χ Χ”ΧΧΧªΧ§Χ™Χ
         var allCandies = SpecialCandyManager.Instance.allCandies;
 
         foreach (var candy in allCandies)
         {
-            var obj = Instantiate(tilePrefab, gridContainer);
-
-            // ξεωκ ΰϊ δλξεϊ ωιω μωηχο ξδξξϊχ δζδ
             int playerAmount = SpecialCandyManager.Instance.GetCandyAmount(candy.candyId);
 
-            // ωεμη ΰϊ λμ δξιγς μθιιμ
+            // β… ΧΧ ΧΧ¦Χ‘ ΧΧ™Χ Χ•Χ•Χ ΧΧ•Χ¨Χ™ - ΧΧ¦Χ™Χ’Χ™Χ Χ¨Χ§ ΧΧ Χ™Χ© ΧΧ©Χ—Χ§Χ Χ›ΧΧ•Χª > 0
+            if (isInventoryMode && playerAmount <= 0)
+                continue;
+
+            var obj = Instantiate(tilePrefab, gridContainer);
+
             var tile = obj.GetComponent<PowerupTile>();
             tile.Setup(candy, playerAmount);
+
+            // Χ‘ΧΧ¦Χ‘ ΧΧ™Χ Χ•Χ•Χ ΧΧ•Χ¨Χ™ - ΧΧ—Χ‘Χ™ΧΧ™Χ ΧΧª Χ›Χ¤ΧªΧ•Χ¨ Χ”Χ§Χ Χ™Χ™Χ”
+            if (isInventoryMode)
+                tile.SetBuyButtonVisible(false);
+            else
+                tile.SetBuyButtonVisible(true);
         }
     }
 }

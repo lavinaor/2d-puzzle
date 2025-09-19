@@ -1314,7 +1314,7 @@ MonoBehaviour:
     isTimePase: 1
   - popUpType: 2
     popUpGameObject: {fileID: 5117810137243020242}
-    isTimePase: 0
+    isTimePase: 1
   - popUpType: 3
     popUpGameObject: {fileID: 3992275617660354429}
     isTimePase: 1
@@ -1323,6 +1323,9 @@ MonoBehaviour:
     isTimePase: 1
   - popUpType: 5
     popUpGameObject: {fileID: 6091887310874676621}
+    isTimePase: 1
+  - popUpType: 6
+    popUpGameObject: {fileID: 0}
     isTimePase: 1
   currentPopUpType: 0
   MainManuNum: 2
@@ -2116,6 +2119,7 @@ MonoBehaviour:
   gridContainer: {fileID: 9099079819523935014}
   tilePrefab: {fileID: 4428477529872647706, guid: e46cbb38941f2ae4996baeca3055c165, type: 3}
   popup: {fileID: 7456875608244111434}
+  isInventoryMode: 0
   defaultPrice: 100
 --- !u!114 &373495339815450671
 MonoBehaviour:
@@ -2131,6 +2135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridContainer: {fileID: 7863307174104722084}
   tilePrefab: {fileID: 8152766922103067811, guid: ec6f1d08fef5be740b43ec427027c76e, type: 3}
+  isInventoryMode: 0
 --- !u!114 &1823146367742431182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4062,7 +4067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1816429469257213285
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6047,10 +6052,10 @@ RectTransform:
   - {fileID: 7985702222559516188}
   - {fileID: 6912079701521622961}
   - {fileID: 2925578893522106443}
-  - {fileID: 2198951700700115361}
   - {fileID: 3041305989365029417}
   - {fileID: 5533186880275041043}
   - {fileID: 4719761520333981382}
+  - {fileID: 2198951700700115361}
   m_Father: {fileID: 7182791471510590657}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

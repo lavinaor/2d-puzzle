@@ -25,14 +25,18 @@ public class PowerupTile : MonoBehaviour
         buyButton.onClick.AddListener(BuyCandy);
     }
 
+    public void SetBuyButtonVisible(bool visible)
+    {
+        if (buyButton != null)
+            buyButton.gameObject.SetActive(visible);
+    }
+
     private void BuyCandy()
     {
-        // רכישה
         bool success = SpecialCandyManager.Instance.BuyCandy(currentCandy.candyId);
 
         if (success)
         {
-            // עדכון הכמות במסך אחרי רכישה
             int newAmount = SpecialCandyManager.Instance.GetCandyAmount(currentCandy.candyId);
             amountText.text = newAmount.ToString();
         }

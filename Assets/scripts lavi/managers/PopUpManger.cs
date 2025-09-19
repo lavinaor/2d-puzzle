@@ -175,4 +175,5 @@ public enum PopUpType
     confirmation = 3,
     endScrean = 4,
     skinPopup = 5,
+    inventoryUI = 6
 }
