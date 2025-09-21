@@ -32,4 +32,30 @@ public class ImageSelector : MonoBehaviour
             Debug.LogWarning("אינדקס מחוץ לטווח!");
         }
     }
+
+    // פונקציה חדשה - רכישת פריט לפי אינדקס ומחיר
+    public void BuyItem(int index, int price)
+    {
+        if (index < 0 || index >= availableSprites.Length)
+        {
+            Debug.LogWarning("אינדקס מחוץ לטווח!");
+            return;
+        }
+
+        // בודק אם יש מספיק מטבעות
+        if (SaveManager.Instance.GetCoins () >= price)
+        {
+            // מוריד מטבעות
+            SaveManager.Instance.AddCoins(-price);
+
+            // בוחר את הפריט שנרכש
+            SelectImage(index);
+
+            Debug.Log($"נרכש פריט מספר {index} במחיר {price} מטבעות.");
+        }
+        else
+        {
+            Debug.Log("אין מספיק מטבעות לרכישה!");
+        }
+    }
 }

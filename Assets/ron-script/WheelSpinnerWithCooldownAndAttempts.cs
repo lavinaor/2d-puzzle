@@ -48,6 +48,9 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
     private bool isSpinning = false;
     private int spinsLeft;
 
+    // משתנה חדש למעקב אחרי הסיבוב הנוכחי
+    private int currentSpinIndex = 0;
+
     public enum CooldownUnit
     {
         Seconds,
@@ -78,7 +81,9 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
         if (spinAudio != null) spinAudio.Play();
         if (buttonAnimator != null) buttonAnimator.SetTrigger("Pressed");
 
-        int targetSegment = Random.Range(0, segments);
+        // שימוש בסיבוב הנוכחי במקום רנדום
+        int targetSegment = currentSpinIndex % segments;
+
         float segmentAngle = 360f / segments;
         float totalRotation = 360f * Random.Range(minFullSpins, maxFullSpins) + targetSegment * segmentAngle;
 
@@ -111,13 +116,14 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
             }
         }
 
+        // עדכון הסיבוב הבא
+        currentSpinIndex++;
+
         isSpinning = false;
 
         if (spinsLeft <= 0)
         {
-            // מפעיל קולדאון רק אחרי שנגמרו הסיבובים
             canSpin = false;
-
             float cooldownTime = GetCooldownInSeconds();
             if (cooldownText != null)
                 cooldownText.gameObject.SetActive(true);
