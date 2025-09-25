@@ -6,13 +6,12 @@ using DG.Tweening;
 
 public class SimpleCoinClick : MonoBehaviour, IPointerClickHandler
 {
-    public Image targetImage;       // התמונה שתחליף ותיעלם
-    public Sprite newSprite;        // התמונה החדשה
-    public AudioSource audioSource; // מקור קול
-    public AudioClip clickSound;    // הצליל להשמעה
-    public TMP_Text coinsText;      // הטקסט שמראה את המטבעות
-    public int addAmount = 25;      // כמה להוסיף בכל לחיצה
-    public float fadeDuration = 0.3f; // זמן ההעלמה
+    public GameObject vfxPrefab;    // VFX שיופעל בלחיצה
+    public AudioSource audioSource;  // מקור קול
+    public AudioClip clickSound;     // הצליל להשמעה
+    public TMP_Text coinsText;       // הטקסט שמראה את המטבעות
+    public int addAmount = 25;       // כמה להוסיף בכל לחיצה
+    public float vfxDuration = 1f;   // כמה זמן האפקט יישאר
 
     private static int currentCoins = 0; // סטטי כדי שכולם ישתפו את אותו מונה
     private const string PLAYER_PREFS_KEY = "Coins"; // מפתח לשמירה
@@ -30,9 +29,12 @@ public class SimpleCoinClick : MonoBehaviour, IPointerClickHandler
         if (audioSource && clickSound)
             audioSource.PlayOneShot(clickSound);
 
-        // להחליף תמונה
-        if (targetImage && newSprite)
-            targetImage.sprite = newSprite;
+        // להפעיל VFX
+        if (vfxPrefab != null)
+        {
+            GameObject vfx = Instantiate(vfxPrefab, transform.position, Quaternion.identity);
+            Destroy(vfx, vfxDuration);
+        }
 
         // להוסיף למונה
         currentCoins += addAmount;
@@ -42,15 +44,8 @@ public class SimpleCoinClick : MonoBehaviour, IPointerClickHandler
         PlayerPrefs.SetInt(PLAYER_PREFS_KEY, currentCoins);
         PlayerPrefs.Save();
 
-        // להעלים את התמונה עם אנימציה
-        if (targetImage)
-        {
-            targetImage.transform.DOScale(0f, fadeDuration).SetEase(Ease.InBack);
-            targetImage.DOFade(0f, fadeDuration).OnComplete(() =>
-            {
-                targetImage.gameObject.SetActive(false);
-            });
-        }
+        // להשבית את הכפתור לגמרי
+        gameObject.SetActive(false);
     }
 
     void UpdateCoinsText()
