@@ -4463,13 +4463,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5319475215855475970, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
-      propertyPath: m_Size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5117810137243020242, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5319475215855475970, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
+      propertyPath: m_Size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5382547711472559034, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4655,10 +4655,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7281315906416334639, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
-      propertyPath: popUps.Array.data[5].popUpGameObject
-      value: 
-      objectReference: {fileID: 1669162817}
     - target: {fileID: 7334902783305988055, guid: 237cb8253cfcd384180d2beca0697e98, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -5986,7 +5982,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.07371429, y: 0.7373289}
   m_AnchorMax: {x: 0.9376392, y: 0.80967116}
-  m_AnchoredPosition: {x: -1, y: -198.08577}
+  m_AnchoredPosition: {x: -1, y: -198.08575}
   m_SizeDelta: {x: -6.6054688, y: 87.564514}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &997600691
@@ -12812,7 +12808,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.1916503, y: 0.67}
   m_AnchorMax: {x: 0.2286503, y: 0.79800004}
-  m_AnchoredPosition: {x: 394.16406, y: 1112.0844}
+  m_AnchoredPosition: {x: 394.16406, y: 1112.084}
   m_SizeDelta: {x: 1309.7244, y: 379.7896}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1976843108
