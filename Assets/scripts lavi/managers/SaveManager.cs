@@ -145,7 +145,6 @@ public class SaveManager : MonoBehaviour
         GameSaveData data = LoadData();
         data.totalCoins += amount;
         SaveData(data);
-
         OnCoinsChanged?.Invoke();  // קריאה לאירוע של שינוי מטבעות
     }
 

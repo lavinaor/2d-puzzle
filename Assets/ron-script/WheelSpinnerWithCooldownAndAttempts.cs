@@ -2,32 +2,44 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.IO;
 
 [System.Serializable]
 public class WheelSegment
 {
     public string prizeName;
     public Sprite prizeImage;
+
+    public PrizeType prizeType;
+    public int prizeValue;
+}
+
+public enum PrizeType
+{
+    Coins,
+    Gems,
+    Lives,
+    Custom // נשתמש בו לפרסים מיוחדים בעתיד
 }
 
 public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
 {
-    [Header("גלגל")]
+    [Header("wheel")]
     public int segments = 10;
     public float spinDuration = 3f;
     public int minFullSpins = 3;
     public int maxFullSpins = 6;
 
-    [Header("סאונד")]
+    [Header("sound")]
     public AudioSource spinAudio;
 
-    [Header("אנימציה של לחיצה")]
+    [Header("animashen")]
     public Animator buttonAnimator;
 
-    [Header("פלחים ופרסים")]
+    [Header("prizees")]
     public WheelSegment[] segmentPrizes;
 
-    [Header("UI להצגת פרס")]
+    [Header("UI prize Display")]
     public Image prizeDisplayImage;
     public TMP_Text prizeDisplayText;
 
@@ -36,11 +48,11 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
     public CooldownUnit cooldownUnit = CooldownUnit.Seconds;
     public TMP_Text cooldownText;
 
-    [Header("נסיונות לפני קולדאון")]
+    [Header("spins befor culdown")]
     public int maxSpinsBeforeCooldown = 3;
     public TMP_Text spinsLeftText;
 
-    [Header("אנימציית פרס")]
+    [Header("prize animashen")]
     public float prizePopScale = 1.3f;
     public float prizePopDuration = 0.25f;
 
@@ -114,6 +126,9 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
                 prizeDisplayText.text = prize.prizeName;
                 StartCoroutine(AnimatePrizeText(prizeDisplayText.transform));
             }
+
+            // הפעלת הפעולה בפועל
+            AddPrize(prize);
         }
 
         // עדכון הסיבוב הבא
@@ -136,6 +151,25 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
 
             if (cooldownText != null)
                 cooldownText.gameObject.SetActive(false);
+        }
+    }
+
+    public void AddPrize(WheelSegment prize)
+    {
+        switch (prize.prizeType)
+        {
+            case PrizeType.Coins:
+                SaveManager.Instance.AddCoins(prize.prizeValue);
+                break;
+            case PrizeType.Gems:
+                SaveManager.Instance.AddGems(prize.prizeValue);
+                break;
+            case PrizeType.Lives:
+                Debug.Log("no live system yet");
+                break;
+            case PrizeType.Custom:
+                // תוכל להוסיף כאן כל לוגיקה מיוחדת
+                break;
         }
     }
 

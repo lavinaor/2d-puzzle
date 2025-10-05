@@ -14,23 +14,28 @@ public class SoundMixerManager : MonoBehaviour
 
     private void Start()
     {
-        // טוען ערכים שנשמרו או ערכי ברירת מחדל אם לא נשמרו
-        MasterVolumeslider.value = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        MusicVolumeslider.value = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        SoundFXVolumeslider.value = PlayerPrefs.GetFloat("SoundFXVolume", 0.75f);
+        // שלב 1: טען את ההגדרות הקיימות מה-PlayerPrefs
+        float masterValue = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
+        float musicValue = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
+        float sfxValue = PlayerPrefs.GetFloat("SoundFXVolume", 0.75f);
 
-        // מיישם את הערכים על ה-AudioMixer
-        SetMasterVolume(MasterVolumeslider.value);
-        SetMusicVolume(MusicVolumeslider.value);
-        SetSoundFXVolume(SoundFXVolumeslider.value);
+        // שלב 2: עדכן את הסליידרים לפי ההגדרות השמורות
+        MasterVolumeslider.value = masterValue;
+        MusicVolumeslider.value = musicValue;
+        SoundFXVolumeslider.value = sfxValue;
+
+        // שלב 3: החל את הערכים על ה-AudioMixer בפועל
+        SetMasterVolume(masterValue);
+        SetMusicVolume(musicValue);
+        SetSoundFXVolume(sfxValue);
     }
 
     // פונקציה לשינוי ולשמירת עוצמת ה-Master
     public void SetMasterVolume(float level)
     {
         audioMixer.SetFloat("MasterVolume", Mathf.Log10(Mathf.Max(level, 0.0001f)) * 20f);
-        PlayerPrefs.SetFloat("MasterVolume", level); // שמירת הערך
-        PlayerPrefs.Save(); // שמירה בדיסק
+        PlayerPrefs.SetFloat("MasterVolume", level);
+        PlayerPrefs.Save();
     }
 
     // פונקציה לשינוי ולשמירת עוצמת המוזיקה

@@ -41,7 +41,7 @@ public class SimpleCoinSpriteClick : MonoBehaviour
         }
 
         // тглеп оерд
-        currentCoins += addAmount;
+        SaveManager.Instance.AddCoins(addAmount);
         UpdateCoinsText();
 
         PlayerPrefs.SetInt(PLAYER_PREFS_KEY, currentCoins);

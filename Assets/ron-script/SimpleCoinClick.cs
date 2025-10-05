@@ -37,7 +37,7 @@ public class SimpleCoinClick : MonoBehaviour, IPointerClickHandler
         }
 
         // להוסיף למונה
-        currentCoins += addAmount;
+        SaveManager.Instance.AddCoins(addAmount);
         UpdateCoinsText();
 
         // שמירה ל־PlayerPrefs

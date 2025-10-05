@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CoinsTextUpdater : MonoBehaviour
 {
     public TMP_Text coinsText;  // טקסט מטבעות להציג
+
+    private void Awake()
+    {
+        SaveManager.OnCoinsChanged += UpdateCoinsText;
+    }
 
     private void OnEnable()
     {
