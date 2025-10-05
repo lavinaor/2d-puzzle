@@ -1,16 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Linq;
-using System;
 using UnityEngine.VFX;
-using System.Reflection;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.VolumeComponent;
-using UnityEngine.EventSystems;
+using DG.Tweening; // לוודא שהוספת DOTween למעלה
+
 
 public class CandyBoard : MonoBehaviour
 {
@@ -48,6 +43,8 @@ public class CandyBoard : MonoBehaviour
     // שיקוי שנבחר אחרון להוזזה
     [SerializeField]
     private candy selectedCandy;
+    private Vector2Int lastTouchedCandyPos = new Vector2Int(-1, -1);
+
 
     //האם אני מוזיז כרגע
     [SerializeField]
@@ -790,7 +787,29 @@ public class CandyBoard : MonoBehaviour
 
                     //מזמן את הממתק המיוחד
                     Vector3 newPosishen = new Vector3((bestCandy.x - spacingX) * boardScale, (bestCandy.y - spacingY) * boardScale, 0);
-                    GameObject newCandy = Instantiate(specialCandyPrefabs[prefabIndex], newPosishen, Quaternion.identity);
+/*                    //GameObject newCandy = Instantiate(specialCandyPrefabs[prefabIndex], newPosishen, Quaternion.identity);*/
+
+                    GameObject newCandy = Instantiate(
+                        specialCandyPrefabs[prefabIndex],
+                        newPosishen,
+                        Quaternion.identity
+                        );
+
+                    newCandy.transform.SetParent(boardParent.transform);
+
+                    // הגדרת אינדקסים
+                    newCandy.GetComponent<candy>().setIndicies(bestCandy.x, bestCandy.y);
+                    candyBoard[bestCandy.x, bestCandy.y] = new Node(true, newCandy);
+
+                    // 🎨 אפקט DOTween
+                    newCandy.transform.localScale = Vector3.zero;
+                    newCandy.transform
+                        .DOScale(1.2f, 0.3f) // גדל לגודל 120% ב־0.3 שניות
+                        .SetEase(Ease.OutBack)
+                        .OnComplete(() =>
+                        {
+                            newCandy.transform.DOScale(1f, 0.2f); // חוזר לגודל רגיל
+                        });
 
                     // להציב את הממתק תחת אובייקט האב
                     newCandy.transform.SetParent(boardParent.transform);
@@ -826,32 +845,31 @@ public class CandyBoard : MonoBehaviour
 
     private Vector2Int GetBestPositionForSpecialCandy(MatchResults matchResults)
     {
-        if (matchResults.connectedCandy.Count == 0) return Vector2Int.zero; // אם אין מקומות זמינים
+        if (matchResults.connectedCandy.Count == 0)
+            return Vector2Int.zero;
 
-        // שלב 1: מצא את האינדקס Y הנמוך ביותר
-        int minY = matchResults.connectedCandy.Min(candy => candy.yIndex);
+        // שלב 1: מוצא את המינימום Y
+        int minY = matchResults.connectedCandy.Min(c => c.yIndex);
 
-        // שלב 2: סינון רק לממתקים עם אותו Y הכי נמוך
-        List<candy> filteredCandies = matchResults.connectedCandy
-            .Where(candy => candy.yIndex == minY)
+        // שלב 2: מסנן רק ממתקים בגובה הזה
+        var filtered = matchResults.connectedCandy
+            .Where(c => c.yIndex == minY)
             .ToList();
 
-        if(selectedCandy == null)
+        // שלב 3: אם יש יותר מאחד, בוחר את הקרוב ביותר למיקום האחרון של השחקן
+        if (filtered.Count > 1 && lastTouchedCandyPos.x >= 0)
         {
-            selectedCandy = filteredCandies.FirstOrDefault();
-        }
-
-        // שלב 3: אם יש כמה באותו גובה, בחר את הקרוב ביותר ל-selectedCandy
-        if (filteredCandies.Count > 1 && selectedCandy != null)
-        {
-            filteredCandies = filteredCandies
-                .OrderBy(candy => Vector2Int.Distance(new Vector2Int(candy.xIndex, candy.yIndex), new Vector2Int(selectedCandy.xIndex, selectedCandy.yIndex)))
+            filtered = filtered
+                .OrderBy(c => Vector2Int.Distance(
+                    new Vector2Int(c.xIndex, c.yIndex),
+                    lastTouchedCandyPos
+                ))
                 .ToList();
         }
 
-        // שלב 4: מחזיר את המיקום של הממתק הכי מתאים
-        return new Vector2Int(filteredCandies.First().xIndex, filteredCandies.First().yIndex);
+        return new Vector2Int(filtered[0].xIndex, filtered[0].yIndex);
     }
+
 
     private int GetSpecialPrefabIndex(MatchResults matchResults)
     {
@@ -1190,6 +1208,9 @@ public class CandyBoard : MonoBehaviour
 
     public void SelectCandy(candy _candy)
     {
+        // שומר את המיקום האחרון שהשחקן נגע בו
+        lastTouchedCandyPos = new Vector2Int(_candy.xIndex, _candy.yIndex);
+
         // אם אין לי ממתק בבחירה אז תבחר חדש
         if (selectedCandy == null)
         {
