@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class SoundMixerManager : MonoBehaviour
 {
@@ -12,45 +10,66 @@ public class SoundMixerManager : MonoBehaviour
     [SerializeField] private Slider MusicVolumeslider;
     [SerializeField] private Slider SoundFXVolumeslider;
 
+    private bool isInitializing = true;
+
     private void Start()
     {
-        // שלב 1: טען את ההגדרות הקיימות מה-PlayerPrefs
-        float masterValue = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        float musicValue = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
-        float sfxValue = PlayerPrefs.GetFloat("SoundFXVolume", 0.75f);
+        // טוען ערכים מה־PlayerPrefs או ברירת מחדל (1f)
+        float master = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        float music = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        float sfx = PlayerPrefs.GetFloat("SFXVolume", 1f);
 
-        // שלב 2: עדכן את הסליידרים לפי ההגדרות השמורות
-        MasterVolumeslider.value = masterValue;
-        MusicVolumeslider.value = musicValue;
-        SoundFXVolumeslider.value = sfxValue;
+        // מגדיר את הערכים גם במיקסר וגם בסליידרים
+        SetMasterVolume(master);
+        SetMusicVolume(music);
+        SetSFXVolume(sfx);
 
-        // שלב 3: החל את הערכים על ה-AudioMixer בפועל
-        SetMasterVolume(masterValue);
-        SetMusicVolume(musicValue);
-        SetSoundFXVolume(sfxValue);
+        MasterVolumeslider.value = master;
+        MusicVolumeslider.value = music;
+        SoundFXVolumeslider.value = sfx;
+
+        // מסמן שסיימנו את שלב האתחול
+        isInitializing = false;
+
+        // מאזין לשינויים
+        MasterVolumeslider.onValueChanged.AddListener(OnMasterSliderChanged);
+        MusicVolumeslider.onValueChanged.AddListener(OnMusicSliderChanged);
+        SoundFXVolumeslider.onValueChanged.AddListener(OnSFXSliderChanged);
     }
 
-    // פונקציה לשינוי ולשמירת עוצמת ה-Master
-    public void SetMasterVolume(float level)
+    private void OnMasterSliderChanged(float value)
     {
-        audioMixer.SetFloat("MasterVolume", Mathf.Log10(Mathf.Max(level, 0.0001f)) * 20f);
-        PlayerPrefs.SetFloat("MasterVolume", level);
-        PlayerPrefs.Save();
+        if (isInitializing) return;
+        SetMasterVolume(value);
+        PlayerPrefs.SetFloat("MasterVolume", value);
     }
 
-    // פונקציה לשינוי ולשמירת עוצמת המוזיקה
-    public void SetMusicVolume(float level)
+    private void OnMusicSliderChanged(float value)
     {
-        audioMixer.SetFloat("MusicVolume", Mathf.Log10(Mathf.Max(level, 0.0001f)) * 20f);
-        PlayerPrefs.SetFloat("MusicVolume", level);
-        PlayerPrefs.Save();
+        if (isInitializing) return;
+        SetMusicVolume(value);
+        PlayerPrefs.SetFloat("MusicVolume", value);
     }
 
-    // פונקציה לשינוי ולשמירת עוצמת אפקטים
-    public void SetSoundFXVolume(float level)
+    private void OnSFXSliderChanged(float value)
     {
-        audioMixer.SetFloat("SoundFXVolume", Mathf.Log10(Mathf.Max(level, 0.0001f)) * 20f);
-        PlayerPrefs.SetFloat("SoundFXVolume", level);
-        PlayerPrefs.Save();
+        if (isInitializing) return;
+        SetSFXVolume(value);
+        PlayerPrefs.SetFloat("SFXVolume", value);
+    }
+
+    private void SetMasterVolume(float value)
+    {
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(Mathf.Clamp(value, 0.001f, 1f)) * 20);
+    }
+
+    private void SetMusicVolume(float value)
+    {
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(Mathf.Clamp(value, 0.001f, 1f)) * 20);
+    }
+
+    private void SetSFXVolume(float value)
+    {
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(Mathf.Clamp(value, 0.001f, 1f)) * 20);
     }
 }

@@ -73,7 +73,7 @@ public class IslandLockButton : MonoBehaviour
     {
         if (isEnough)
         {
-            if (musicmaneger.Instance != null && musicCngeClip != null)
+/*            if (musicmaneger.Instance != null && musicCngeClip != null)
                 musicmaneger.Instance.PlayMusicWithFade(musicCngeClip, musicClipVolume);
 
             // השמעת הסאונד בעזרת SoundFXManager
@@ -81,7 +81,7 @@ public class IslandLockButton : MonoBehaviour
             {
                 // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
                 SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
-            }
+            }*/
 
             SceneManager.LoadScene(sceneName);
         }
