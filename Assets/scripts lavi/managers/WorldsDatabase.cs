@@ -2,11 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class WorldManager : MonoBehaviour
+using UnityEngine.Advertisements;
+
+public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
 {
     public static WorldManager Instance { get; private set; }
 
     public List<WorldData> worlds;
+
+    [Header("Ads Settings")]
+    [SerializeField] private string _androidAdUnitId = "Interstitial_Android";
+    [SerializeField] private string _iOSAdUnitId = "Interstitial_iOS";
+    private string _adUnitId;
+    private string _nextSceneToLoad;
 
     private void Awake()
     {
@@ -17,8 +25,70 @@ public class WorldManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // שומר את האובייקט בין סצנות
+        DontDestroyOnLoad(gameObject);
+
+#if UNITY_IOS
+        _adUnitId = _iOSAdUnitId;
+#else
+        _adUnitId = _androidAdUnitId;
+#endif
     }
+
+    public void LoadNextLevel()
+    {
+        int currentLevel = getLevel();
+        int nextLevel = currentLevel + 1;
+        string nextScene = GetSceneNameForLevel(nextLevel);
+
+        if (string.IsNullOrEmpty(nextScene))
+        {
+            Debug.LogWarning("לא נמצא שלב הבא לטעינה");
+            return;
+        }
+
+        SaveManager.Instance.ChanglastLevelEnterd(nextLevel);
+        _nextSceneToLoad = nextScene;
+
+        Debug.Log("טוען מודעה לפני טעינת השלב הבא...");
+        Advertisement.Load(_adUnitId, this);
+    }
+
+    // -------------------------
+    // IUnityAdsLoadListener
+    // -------------------------
+    public void OnUnityAdsAdLoaded(string adUnitId)
+    {
+        Debug.Log("מודעה נטענה בהצלחה. מציג...");
+        Advertisement.Show(_adUnitId, this);
+    }
+
+    public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
+    {
+        Debug.LogWarning($"שגיאה בטעינת מודעה: {error} - {message}");
+        SceneManager.LoadScene(_nextSceneToLoad); // ממשיך בלי מודעה
+    }
+
+    // -------------------------
+    // IUnityAdsShowListener
+    // -------------------------
+    public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
+    {
+        Debug.LogWarning($"שגיאה בהצגת מודעה: {error} - {message}");
+        SceneManager.LoadScene(_nextSceneToLoad);
+    }
+
+    public void OnUnityAdsShowStart(string adUnitId) { }
+    public void OnUnityAdsShowClick(string adUnitId) { }
+
+    public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
+    {
+        Debug.Log("מודעה הסתיימה, טוען את השלב הבא...");
+        SceneManager.LoadScene(_nextSceneToLoad);
+    }
+
+    // -------------------------
+    // שאר הפונקציות שלך נשארות כמו שהיו
+    // -------------------------
 
     public WorldData GetWorldForLevel(int level)
     {
@@ -60,66 +130,27 @@ public class WorldManager : MonoBehaviour
         return null;
     }
 
-    public void LoadNextLevel()
-    {
-        int Level = getLevel();
-        if (HasNextLevelInWorld(Level))
-        {
-            Level++;
-            string scene = GetSceneNameForLevel(Level);
-            SceneManager.LoadScene(scene);
-            SaveManager.Instance.ChanglastLevelEnterd(Level);
-        }
-        else
-        {
-            Level++;
-            string scene = GetSceneNameForLevel(Level);
-            SceneManager.LoadScene(scene);
-            SaveManager.Instance.ChanglastLevelEnterd(Level);
-
-/*            // עולם נגמר, לך למסך מעבר/פתיחה
-            Debug.Log("סוף העולם, פותחים עולם חדש!");
-            SceneManager.LoadScene("WorldUnlockScene");*/
-        }
-    }
-
     public int getLevel()
     {
         string sceneName = SceneManager.GetActiveScene().name;
-
-
-        // פיצול לפי מקף
         string[] parts = sceneName.Split('-');
 
-        if (parts.Length == 2)
-        {
-            int.TryParse(parts[1], out int stageNumber);
+        if (parts.Length == 2 && int.TryParse(parts[1], out int stageNumber))
             return stageNumber;
-        }
-        else
-        {
-            Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
-        }
+
+        Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
         return -1;
     }
 
     public string getWorld()
     {
         string sceneName = SceneManager.GetActiveScene().name;
-
-
-        // פיצול לפי מקף
         string[] parts = sceneName.Split('-');
 
         if (parts.Length == 2)
-        {
-
             return parts[0];
-        }
-        else
-        {
-            Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
-        }
+
+        Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
         return null;
     }
 }
@@ -127,9 +158,9 @@ public class WorldManager : MonoBehaviour
 [System.Serializable]
 public class WorldData
 {
-    public string worldName;      // לדוגמה: "sea"
-    public int startLevel;        // לדוגמה: 1
-    public int endLevel;          // לדוגמה: 9
-    public string displayName;    // שם מוצג: "ים"
-    public string mainLevelSecen;    // שם מוצג: "ים"
+    public string worldName;
+    public int startLevel;
+    public int endLevel;
+    public string displayName;
+    public string mainLevelSecen;
 }
