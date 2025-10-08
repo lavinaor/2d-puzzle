@@ -9,13 +9,10 @@ public class IntroSceneLoader : MonoBehaviour
 
     [SerializeField] private string nextSceneName = "GameScene"; // השם של הסצנה הבאה
 
-    [SerializeField]
-    private AudioClip AudioClip;
 
     private void Start()
     {
         // שמור כוכבים
-        SoundFXManager.Instance.PlaySoundFXClipNoSpawn(AudioClip, false);
         StartCoroutine(LoadNextScene());
     }
 
