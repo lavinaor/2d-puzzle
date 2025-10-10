@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 9126654169232163579}
   - component: {fileID: 981009175718991644}
   - component: {fileID: 8147471142374580916}
+  - component: {fileID: 8136110354317765094}
+  - component: {fileID: 7794122341487175537}
   m_Layer: 0
   m_Name: manager dont destroy
   m_TagString: Untagged
@@ -288,3 +290,32 @@ MonoBehaviour:
     coinAmount: 1000000
     priceUSD: 0
     icon: {fileID: 1233584677, guid: 9bbf750e4f254914da3c45ad68148298, type: 3}
+--- !u!114 &8136110354317765094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2250088938357336228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2a5a16847756541ba096b4af3afa0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _androidGameId: 5945989
+  _iOSGameId: 
+  _testMode: 1
+--- !u!114 &7794122341487175537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2250088938357336228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a374b394ae4a3b744b9b961a4c9ca25b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _androidAdUnitId: Interstitial_Android
+  _iOSAdUnitId: Interstitial_iOS
