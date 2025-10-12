@@ -1,4 +1,4 @@
-using System.Collections;
+ο»Ώusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,6 +13,9 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
     [Header("Ads Settings")]
     [SerializeField] private string _androidAdUnitId = "Interstitial_Android";
     [SerializeField] private string _iOSAdUnitId = "Interstitial_iOS";
+    [Range(0, 100)]
+    [SerializeField] private int adChancePercent = 20; // Χ΅Χ™Χ›Χ•Χ™ Χ‘ΧΧ—Χ•Χ–Χ™Χ ΧΧ”Χ¦Χ’Χª Χ¤Χ¨Χ΅Χ•ΧΧª
+
     private string _adUnitId;
     private string _nextSceneToLoad;
 
@@ -42,15 +45,25 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
 
         if (string.IsNullOrEmpty(nextScene))
         {
-            Debug.LogWarning("μΰ πξφΰ ωμα δαΰ μθςιπδ");
+            Debug.LogWarning("ΧΧ Χ ΧΧ¦Χ Χ©ΧΧ‘ Χ”Χ‘Χ ΧΧΧΆΧ™Χ Χ”");
             return;
         }
 
         SaveManager.Instance.ChanglastLevelEnterd(nextLevel);
         _nextSceneToLoad = nextScene;
 
-        Debug.Log("θεςο ξεγςδ μτπι θςιπϊ δωμα δαΰ...");
-        Advertisement.Load(_adUnitId, this);
+        // Χ‘Χ“Χ™Χ§Χ” ΧΧ¤Χ™ Χ΅Χ™Χ›Χ•Χ™ ΧΧ”Χ¦Χ’Χª Χ¤Χ¨Χ΅Χ•ΧΧª
+        int roll = Random.Range(0, 100);
+        if (roll < adChancePercent)
+        {
+            Debug.Log($"π² Χ‘Χ—Χ¨ ΧΧ”Χ¦Χ™Χ’ ΧΧ•Χ“ΧΆΧ” ({roll}% ΧΧªΧ•Χ {adChancePercent}%)");
+            Advertisement.Load(_adUnitId, this);
+        }
+        else
+        {
+            Debug.Log($"π² ΧΧ“ΧΧ’ ΧΆΧ ΧΧ•Χ“ΧΆΧ” Χ”Χ¤ΧΆΧ ({roll}% ΧΧªΧ•Χ {adChancePercent}%)");
+            SceneManager.LoadScene(_nextSceneToLoad);
+        }
     }
 
     // -------------------------
@@ -58,14 +71,14 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
     // -------------------------
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        Debug.Log("ξεγςδ πθςπδ αδφμηδ. ξφιβ...");
+        Debug.Log("ΧΧ•Χ“ΧΆΧ” Χ ΧΧΆΧ Χ” Χ‘Χ”Χ¦ΧΧ—Χ”. ΧΧ¦Χ™Χ’...");
         Advertisement.Show(_adUnitId, this);
     }
 
     public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
     {
-        Debug.LogWarning($"ωβιΰδ αθςιπϊ ξεγςδ: {error} - {message}");
-        SceneManager.LoadScene(_nextSceneToLoad); // ξξωικ αμι ξεγςδ
+        Debug.LogWarning($"Χ©Χ’Χ™ΧΧ” Χ‘ΧΧΆΧ™Χ Χª ΧΧ•Χ“ΧΆΧ”: {error} - {message}");
+        SceneManager.LoadScene(_nextSceneToLoad); // ΧΧΧ©Χ™Χ Χ‘ΧΧ™ ΧΧ•Χ“ΧΆΧ”
     }
 
     // -------------------------
@@ -73,7 +86,7 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
     // -------------------------
     public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
     {
-        Debug.LogWarning($"ωβιΰδ αδφβϊ ξεγςδ: {error} - {message}");
+        Debug.LogWarning($"Χ©Χ’Χ™ΧΧ” Χ‘Χ”Χ¦Χ’Χª ΧΧ•Χ“ΧΆΧ”: {error} - {message}");
         SceneManager.LoadScene(_nextSceneToLoad);
     }
 
@@ -82,13 +95,9 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        Debug.Log("ξεγςδ δρϊιιξδ, θεςο ΰϊ δωμα δαΰ...");
+        Debug.Log("ΧΧ•Χ“ΧΆΧ” Χ”Χ΅ΧªΧ™Χ™ΧΧ”, ΧΧ•ΧΆΧ ΧΧª Χ”Χ©ΧΧ‘ Χ”Χ‘Χ...");
         SceneManager.LoadScene(_nextSceneToLoad);
     }
-
-    // -------------------------
-    // ωΰψ δτεπχφιεϊ ωμκ πωΰψεϊ λξε ωδιε
-    // -------------------------
 
     public WorldData GetWorldForLevel(int level)
     {
