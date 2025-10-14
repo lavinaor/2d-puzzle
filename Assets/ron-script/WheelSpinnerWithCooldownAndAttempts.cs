@@ -207,7 +207,7 @@ public class WheelSpinnerWithCooldownAndAttempts : MonoBehaviour
     {
         if (spinsLeftText != null)
         {
-            spinsLeftText.text = $"  You have  {spinsLeft} Turn left";
+            spinsLeftText.text = $"  You have  {spinsLeft} Turns left";
         }
     }
 
