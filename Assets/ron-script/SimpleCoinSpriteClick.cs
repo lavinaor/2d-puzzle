@@ -1,4 +1,4 @@
-using UnityEngine;
+ο»Ώusing UnityEngine;
 using TMPro;
 using DG.Tweening;
 
@@ -11,43 +11,44 @@ public class SimpleCoinSpriteClick : MonoBehaviour
     public TMP_Text coinsText;
     public int addAmount = 25;
     public float fadeDuration = 0.3f;
-    public float newSpriteScale = 0.2f; // ιηρ μβεγμ δξχεψι
+    public float newSpriteScale = 0.2f; // Χ™Χ—Χ΅ ΧΧ’Χ•Χ“Χ Χ”ΧΧ§Χ•Χ¨Χ™
 
     private static int currentCoins = 0;
     private const string PLAYER_PREFS_KEY = "Coins";
-    private Vector3 originalScale; // ωξιψϊ ρχιιμ δϊημϊι
+    private Vector3 originalScale; // Χ©ΧΧ™Χ¨Χª Χ΅Χ§Χ™Χ™Χ Χ”ΧªΧ—ΧΧªΧ™
 
     private void Awake()
     {
-        // ωξιψϊ ρχιιμ ξχεψι
+        // Χ©ΧΧ™Χ¨Χª Χ΅Χ§Χ™Χ™Χ ΧΧ§Χ•Χ¨Χ™
         originalScale = targetSpriteRenderer.transform.localScale;
 
-        // θςιπϊ ξθαςεϊ ωξεψιν
+        // ΧΧΆΧ™Χ Χª ΧΧΧ‘ΧΆΧ•Χª Χ©ΧΧ•Χ¨Χ™Χ
         currentCoins = PlayerPrefs.GetInt(PLAYER_PREFS_KEY, 0);
         UpdateCoinsText();
     }
 
     private void OnMouseDown()
     {
-        // χεμ
+        // Χ§Χ•Χ
         if (audioSource && clickSound)
             audioSource.PlayOneShot(clickSound);
 
-        // ωιπει ρτψιιθ εωιπει ρχιιμ αφεψδ ιηριϊ
+        // Χ©Χ™Χ Χ•Χ™ Χ΅Χ¤Χ¨Χ™Χ™Χ Χ‘ΧΧ‘Χ“ - Χ‘ΧΧ™ Χ©Χ™Χ Χ•Χ™ Χ΅Χ§Χ™Χ™Χ
         if (targetSpriteRenderer && newSprite)
         {
             targetSpriteRenderer.sprite = newSprite;
-            targetSpriteRenderer.transform.localScale = originalScale * newSpriteScale;
+            // β Χ”Χ΅Χ¨Χ Χ• ΧΧª Χ©Χ™Χ Χ•Χ™ Χ”-scale
+            // targetSpriteRenderer.transform.localScale = originalScale * newSpriteScale;
         }
 
-        // ςγλεο ξεπδ
+        // ΧΆΧ“Χ›Χ•Χ ΧΧ•Χ Χ”
         SaveManager.Instance.AddCoins(addAmount);
         UpdateCoinsText();
 
         PlayerPrefs.SetInt(PLAYER_PREFS_KEY, currentCoins);
         PlayerPrefs.Save();
 
-        // τιιγ ΰΰεθ ημχ
+        // Χ¤Χ™Χ™Χ“ ΧΧΧ•Χ Χ—ΧΧ§
         if (targetSpriteRenderer)
         {
             targetSpriteRenderer
