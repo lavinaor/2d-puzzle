@@ -58,7 +58,7 @@ MonoBehaviour:
     startLevel: 1
     endLevel: 9
     displayName: sea
-    mainLevelSecen: 1 sea main
+    mainLevelSecen: 1 sae main
   - worldName: desert
     startLevel: 10
     endLevel: 18
@@ -67,8 +67,11 @@ MonoBehaviour:
   - worldName: ice
     startLevel: 19
     endLevel: 27
-    displayName: 3 ice main
+    displayName: ice
     mainLevelSecen: 3 ice main
+  _androidAdUnitId: Interstitial_Android
+  _iOSAdUnitId: Interstitial_iOS
+  adChancePercent: 20
 --- !u!114 &3129483209960286033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +143,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -4865292183769544373, guid: 95ad06a1cd41b8242bbe60ecad381754, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 8e83aaf26b825bc419a303b271003d1d, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 8e83aaf26b825bc419a303b271003d1d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
