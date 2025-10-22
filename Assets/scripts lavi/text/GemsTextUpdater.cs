@@ -25,6 +25,10 @@ public class GemsTextUpdater : MonoBehaviour
     private void UpdateGemsText()
     {
         int gems = SaveManager.Instance.GetGems();  // קבלת כמות האבנים
-        gemsText.text = "Gems: " + gems.ToString();  // עדכון הטקסט
+        if (gems < 10000)
+            gemsText.text = gems.ToString();  // עדכון הטקסט
+        else
+            gemsText.text = (gems/1000).ToString() + "k";  // עדכון הטקסט
+
     }
 }

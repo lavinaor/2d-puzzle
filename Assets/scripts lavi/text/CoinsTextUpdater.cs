@@ -31,6 +31,9 @@ public class CoinsTextUpdater : MonoBehaviour
     private void UpdateCoinsText()
     {
         int coins = SaveManager.Instance.GetCoins();  // קבלת כמות המטבעות
-        coinsText.text = coins.ToString();  // עדכון הטקסט
+        if (coins < 10000)
+            coinsText.text = coins.ToString();  // עדכון הטקסט
+        else
+            coinsText.text = (coins / 1000).ToString() + "k";  // עדכון הטקסט
     }
 }
