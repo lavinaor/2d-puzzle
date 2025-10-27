@@ -341,8 +341,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c208398b6c63db4abab219bd25eb35e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  allFrames: []
-  allPortraits: []
+  allFrames:
+  - frameName: 1
+    frameSprite: {fileID: -6388010195180618459, guid: ca238d93a931a7a42836848155eb28a2, type: 3}
+    price: 0
+  - frameName: 9
+    frameSprite: {fileID: 1834133875534569792, guid: ca238d93a931a7a42836848155eb28a2, type: 3}
+    price: 20
+  - frameName: 7
+    frameSprite: {fileID: -5355093016188430678, guid: ca238d93a931a7a42836848155eb28a2, type: 3}
+    price: 100
+  allPortraits:
+  - portraitName: 2
+    portraitSprite: {fileID: -843858992622955712, guid: 3b887e2531a5cc2468b4721919989332, type: 3}
+    price: 0
+  - portraitName: 5
+    portraitSprite: {fileID: -390174510, guid: 3b887e2531a5cc2468b4721919989332, type: 3}
+    price: 20
+  - portraitName: 3
+    portraitSprite: {fileID: 823264707, guid: 3b887e2531a5cc2468b4721919989332, type: 3}
+    price: 100
   saveData:
     selectedFrameIndex: 0
     selectedPortraitIndex: 0

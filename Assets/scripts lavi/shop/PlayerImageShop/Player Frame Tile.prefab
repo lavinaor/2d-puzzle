@@ -280,11 +280,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70232f98591adf74996c032d3de8ea5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFrameTile
-  iconImage: {fileID: 599025556594744941}
+  button: {fileID: 6551618710540372584}
+  icon: {fileID: 599025556594744941}
+  background: {fileID: 1745818660882056819}
+  lockIcon: {fileID: 2064540603498028072}
+  selectedIcon: {fileID: 6898616606716855887}
   nameText: {fileID: 4791838430396239418}
   priceText: {fileID: 4901264414042060944}
-  buyButton: {fileID: 6551618710540372584}
-  selectButton: {fileID: 6551618710540372584}
+  useBgSprites: 1
+  bgLocked: {fileID: -1026621757, guid: 0fad3db4c7ffba446bbbf103c2507dea, type: 3}
+  bgUnlocked: {fileID: -549976730, guid: 42f7fc0a1705f2f40b30790bfd69452d, type: 3}
+  bgSelected: {fileID: -549976730, guid: 42f7fc0a1705f2f40b30790bfd69452d, type: 3}
+  colLocked: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  colUnlocked: {r: 1, g: 1, b: 1, a: 1}
+  colSelected: {r: 0.9, g: 0.9, b: 1, a: 1}
+  fadeDuration: 0.15
 --- !u!1 &5207228507943917048
 GameObject:
   m_ObjectHideFlags: 0

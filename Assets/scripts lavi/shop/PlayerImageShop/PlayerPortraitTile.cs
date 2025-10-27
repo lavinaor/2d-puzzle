@@ -1,61 +1,173 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class PlayerPortraitTile : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text priceText;
-    [SerializeField] private Button buyButton;
-    [SerializeField] private Button selectButton;
+    [Header("UI Refs")]
+    [SerializeField] private Button button;
+    public Image icon;
+    public Image background;
+    public GameObject lockIcon;
+    public GameObject selectedIcon;
+    public TMP_Text nameText;
+    public TMP_Text priceText;
+    public TMP_Text buttonLabel;
 
+    [Header("Background (choose sprites OR colors)")]
+    public bool useBgSprites = false;
+    public Sprite bgLocked;
+    public Sprite bgUnlocked;
+    public Sprite bgSelected;
+    public Color colLocked = new Color(0.2f, 0.2f, 0.2f, 1f);
+    public Color colUnlocked = Color.white;
+    public Color colSelected = new Color(0.9f, 0.9f, 1f, 1f);
+
+    [Header("Animation")]
+    public float fadeDuration = 0.15f;
+
+    private PlayerPortrait portrait;
     private int portraitIndex;
-    private PlayerPortrait portraitData;
-    private bool isUnlocked;
+    private int price;
 
-    public void Setup(PlayerPortrait portrait, int index, bool unlocked)
+    private Coroutine fadeCoroutine;
+
+    public void Setup(PlayerPortrait portraitData, int index, bool unlocked)
     {
-        portraitData = portrait;
+        portrait = portraitData;
         portraitIndex = index;
-        isUnlocked = unlocked;
+        price = portraitData.price;
 
-        iconImage.sprite = portrait.portraitSprite;
-        nameText.text = portrait.portraitName;
-        priceText.text = portrait.price.ToString();
+        if (nameText)
+            nameText.text = portrait.portraitName;
 
-        buyButton.gameObject.SetActive(!unlocked);
-        selectButton.gameObject.SetActive(unlocked);
+        if (icon)
+        {
+            icon.canvasRenderer.SetAlpha(1f);
+            icon.sprite = portrait.portraitSprite;
+        }
 
-        buyButton.onClick.RemoveAllListeners();
-        selectButton.onClick.RemoveAllListeners();
+        ApplyStateVisuals();
 
-        buyButton.onClick.AddListener(BuyPortrait);
-        selectButton.onClick.AddListener(SelectPortrait);
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(OnTileClick);
     }
 
-    private void BuyPortrait()
+    private void OnTileClick()
     {
-        int coins = SaveManager.Instance.GetCoins();
+        bool unlocked = PlayerImageManager.Instance.IsPortraitUnlocked(portraitIndex);
 
-        if (coins >= portraitData.price)
+        if (!unlocked)
         {
-            SaveManager.Instance.AddCoins(-portraitData.price);
-            PlayerImageManager.Instance.UnlockPortrait(portraitIndex);
-
-            isUnlocked = true;
-            buyButton.gameObject.SetActive(false);
-            selectButton.gameObject.SetActive(true);
+            int coins = SaveManager.Instance.GetCoins();
+            if (coins >= price)
+            {
+                SaveManager.Instance.AddCoins(-price);
+                PlayerImageManager.Instance.UnlockPortrait(portraitIndex);
+                FadeFlash();
+                ApplyStateVisuals();
+            }
+            else
+            {
+                Debug.Log("אין מספיק מטבעות!");
+            }
         }
         else
         {
-            Debug.Log("אין מספיק מטבעות!");
+            PlayerImageManager.Instance.saveData.selectedPortraitIndex = portraitIndex;
+            PlayerImageManager.Instance.SaveData();
+            FadeFlash();
+            ApplyStateVisuals();
         }
     }
 
-    private void SelectPortrait()
+    private void FadeFlash()
     {
-        PlayerImageManager.Instance.saveData.selectedPortraitIndex = portraitIndex;
-        PlayerImageManager.Instance.SaveData();
+        if (fadeCoroutine != null)
+            StopCoroutine(fadeCoroutine);
+        fadeCoroutine = StartCoroutine(FadeEffect());
+    }
+
+    private IEnumerator FadeEffect()
+    {
+        if (icon == null) yield break;
+        float elapsed = 0f;
+        Color baseColor = icon.color;
+        Color highlight = new Color(baseColor.r + 0.2f, baseColor.g + 0.2f, baseColor.b + 0.2f);
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            icon.color = Color.Lerp(baseColor, highlight, elapsed / fadeDuration);
+            yield return null;
+        }
+
+        elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            icon.color = Color.Lerp(highlight, baseColor, elapsed / fadeDuration);
+            yield return null;
+        }
+
+        icon.color = baseColor;
+        fadeCoroutine = null;
+    }
+
+    public void ApplyStateVisuals()
+    {
+        bool unlocked = PlayerImageManager.Instance.IsPortraitUnlocked(portraitIndex);
+        bool selected = PlayerImageManager.Instance.saveData.selectedPortraitIndex == portraitIndex;
+
+        if (!unlocked)
+        {
+            if (useBgSprites && bgLocked) background.sprite = bgLocked;
+            else background.color = colLocked;
+
+            lockIcon?.SetActive(true);
+            selectedIcon?.SetActive(false);
+            priceText.text = price.ToString();
+
+            if (buttonLabel) buttonLabel.text = "Buy"; 
+        }
+        else if (selected)
+        {
+            if (useBgSprites && bgSelected) background.sprite = bgSelected;
+            else background.color = colSelected;
+
+            lockIcon?.SetActive(false);
+            selectedIcon?.SetActive(true);
+            priceText.text = "selected";
+
+            if (buttonLabel) buttonLabel.text = "Selected";
+        }
+        else
+        {
+            if (useBgSprites && bgUnlocked) background.sprite = bgUnlocked;
+            else background.color = colUnlocked;
+
+            lockIcon?.SetActive(false);
+            selectedIcon?.SetActive(false);
+            priceText.text = "select";
+
+            if (buttonLabel) buttonLabel.text = "Select"; 
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
+        }
+
+        if (icon != null)
+        {
+            Color c = icon.color;
+            c.a = 1f;
+            icon.color = c;
+        }
     }
 }

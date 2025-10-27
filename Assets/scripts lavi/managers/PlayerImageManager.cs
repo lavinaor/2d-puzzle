@@ -1,5 +1,7 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 [System.Serializable]
 public class PlayerFrame
@@ -26,6 +28,11 @@ public class PlayerImageSaveData
     public List<int> unlockedPortraits = new List<int>();
 }
 
+public static class PlayerImageEvents
+{
+    public static Action OnImageChanged;
+}
+
 public class PlayerImageManager : MonoBehaviour
 {
     public static PlayerImageManager Instance;
@@ -43,11 +50,32 @@ public class PlayerImageManager : MonoBehaviour
         {
             Instance = this;
             LoadData();
+            EnsureDefaultUnlocked(); //  נוספה השורה הזאת
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    //  פונקציה חדשה — שומרת על ברירת המחדל
+    private void EnsureDefaultUnlocked()
+    {
+        // ודא שהפריטים הראשונים קיימים ונעולים כברירת מחדל
+        if (allFrames.Count > 0 && !saveData.unlockedFrames.Contains(0))
+            saveData.unlockedFrames.Add(0);
+
+        if (allPortraits.Count > 0 && !saveData.unlockedPortraits.Contains(0))
+            saveData.unlockedPortraits.Add(0);
+
+        // אם אין בחירה תקפה, קבע את הראשונה
+        if (saveData.selectedFrameIndex < 0 || saveData.selectedFrameIndex >= allFrames.Count)
+            saveData.selectedFrameIndex = 0;
+
+        if (saveData.selectedPortraitIndex < 0 || saveData.selectedPortraitIndex >= allPortraits.Count)
+            saveData.selectedPortraitIndex = 0;
+
+        SaveData();
     }
 
     public void SaveData()
@@ -87,21 +115,24 @@ public class PlayerImageManager : MonoBehaviour
     {
         saveData.selectedFrameIndex = index;
         SaveData();
+        PlayerImageEvents.OnImageChanged?.Invoke(); // ✅ התווסף
     }
 
     public void SelectPortrait(int index)
     {
         saveData.selectedPortraitIndex = index;
         SaveData();
+        PlayerImageEvents.OnImageChanged?.Invoke(); // ✅ התווסף
     }
+
 
     public PlayerFrame GetSelectedFrame() =>
         (saveData.selectedFrameIndex >= 0 && saveData.selectedFrameIndex < allFrames.Count)
         ? allFrames[saveData.selectedFrameIndex]
-        : null;
+        : (allFrames.Count > 0 ? allFrames[0] : null); // ✅ נוספה תמיכה בדיפולט
 
     public PlayerPortrait GetSelectedPortrait() =>
         (saveData.selectedPortraitIndex >= 0 && saveData.selectedPortraitIndex < allPortraits.Count)
         ? allPortraits[saveData.selectedPortraitIndex]
-        : null;
+        : (allPortraits.Count > 0 ? allPortraits[0] : null); // ✅ נוספה תמיכה בדיפולט
 }
