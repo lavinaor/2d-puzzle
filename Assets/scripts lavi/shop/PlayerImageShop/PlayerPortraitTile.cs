@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems; // for IPointerClickHandler
+using UnityEngine.EventSystems;
 
 public class PlayerPortraitTile : MonoBehaviour, IPointerClickHandler
 {
@@ -31,91 +31,44 @@ public class PlayerPortraitTile : MonoBehaviour, IPointerClickHandler
     private PlayerPortrait portrait;
     private int portraitIndex;
     private int price;
-
     private Coroutine fadeCoroutine;
-
-    // small flag so we know if Setup was called
     private bool isSetup = false;
 
     private void Awake()
     {
-        Debug.Log($"[PlayerPortraitTile] Awake on '{name}'");
-        // try to auto-find button if not assigned
         if (button == null)
-        {
             button = GetComponentInChildren<Button>(true);
-            if (button != null)
-                Debug.Log($"[PlayerPortraitTile] Auto-found Button on '{name}' -> {button.name}");
-            else
-                Debug.LogWarning($"[PlayerPortraitTile] Button NOT assigned and not found in children of '{name}'");
-        }
 
-        // attach safety listener if button exists (this ensures the listener exists even if Setup is forgotten)
         if (button != null)
         {
-            // ensure interactable
             button.interactable = true;
-
-            // ensure clicking the button triggers the onboard handler (PublicOnClick)
-            button.onClick.RemoveListener(PublicOnClick); // remove only this listener to avoid wiping others
+            button.onClick.RemoveListener(PublicOnClick);
             button.onClick.AddListener(PublicOnClick);
-        }
-
-        // quick runtime checks
-        if (EventSystem.current == null)
-        {
-            Debug.LogWarning("[PlayerPortraitTile] NO EventSystem found in scene! UI clicks will NOT work without an EventSystem.");
-        }
-
-        // Check for GraphicRaycaster on canvas root
-        var canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
-            Debug.LogWarning($"[PlayerPortraitTile] No parent Canvas found for '{name}'.");
-        else
-        {
-            var gr = canvas.GetComponent<UnityEngine.UI.GraphicRaycaster>();
-            if (gr == null) Debug.LogWarning($"[PlayerPortraitTile] Canvas '{canvas.name}' missing GraphicRaycaster.");
         }
     }
 
     private void OnEnable()
     {
-        // Useful to see when object becomes active
-        Debug.Log($"[PlayerPortraitTile] OnEnable '{name}' - isSetup={isSetup}");
+        PlayerImageEvents.OnImageChanged += ApplyStateVisuals;
     }
 
-    /// <summary>
-    /// Call this to initialize the tile. (Same signature as before)
-    /// </summary>
+    private void OnDisable()
+    {
+        PlayerImageEvents.OnImageChanged -= ApplyStateVisuals;
+
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+            fadeCoroutine = null;
+        }
+    }
+
     public void Setup(PlayerPortrait portraitData, int index, bool unlocked)
     {
-        Debug.Log($"[PlayerPortraitTile] Setup called for '{name}' index={index} unlocked={unlocked}");
-        // ensure button exists
-        if (button == null)
-        {
-            button = GetComponentInChildren<Button>(true);
-            if (button == null)
-            {
-                Debug.LogError($"[PlayerPortraitTile] Setup: No Button found in '{name}'. Aborting Setup.");
-                return;
-            }
-            else
-            {
-                Debug.Log($"[PlayerPortraitTile] Setup: Auto-found Button '{button.name}'");
-            }
-        }
-
-        // attach listener safely: remove only our PublicOnClick then re-add
-        button.onClick.RemoveListener(PublicOnClick);
-        button.onClick.AddListener(PublicOnClick);
-        button.interactable = true;
-
-        // store data
         portrait = portraitData;
         portraitIndex = index;
         price = portraitData != null ? portraitData.price : 0;
 
-        // fill visuals
         if (nameText && portrait != null)
             nameText.text = portrait.portraitName;
 
@@ -125,50 +78,24 @@ public class PlayerPortraitTile : MonoBehaviour, IPointerClickHandler
             icon.sprite = portrait.portraitSprite;
         }
 
-        // apply visuals and mark setup
         ApplyStateVisuals();
         isSetup = true;
-
-        // debug
-        Debug.Log($"[PlayerPortraitTile] Setup finished for '{name}' (portrait {(portrait != null ? portrait.portraitName : "null")})");
     }
 
-    // This is the central click handler called by button and by pointer handler
     private void PublicOnClick()
     {
-        // call the same logic as before
         HandleClick();
     }
 
-    // IPointerClickHandler fallback: will be called if EventSystem receives pointer events
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log($"[PlayerPortraitTile] OnPointerClick on '{name}', pointer button {eventData.button}");
         HandleClick();
     }
 
-    // centralized handling logic
     private void HandleClick()
     {
-        if (!isSetup)
-        {
-            Debug.LogWarning($"[PlayerPortraitTile] HandleClick called but tile NOT setup yet for '{name}'");
-            // still attempt minimal behavior so we can see logs
-        }
-
-        // safety checks for managers
-        if (PlayerImageManager.Instance == null)
-        {
-            Debug.LogError("[PlayerPortraitTile] PlayerImageManager.Instance is NULL!");
+        if (!isSetup || PlayerImageManager.Instance == null || SaveManager.Instance == null)
             return;
-        }
-        if (SaveManager.Instance == null)
-        {
-            Debug.LogError("[PlayerPortraitTile] SaveManager.Instance is NULL!");
-            return;
-        }
-
-        Debug.Log($"[PlayerPortraitTile] Clicked portraitIndex={portraitIndex}");
 
         bool unlocked = PlayerImageManager.Instance.IsPortraitUnlocked(portraitIndex);
 
@@ -180,21 +107,17 @@ public class PlayerPortraitTile : MonoBehaviour, IPointerClickHandler
                 SaveManager.Instance.AddCoins(-price);
                 PlayerImageManager.Instance.UnlockPortrait(portraitIndex);
                 FadeFlash();
-                ApplyStateVisuals();
-                Debug.Log($"[PlayerPortraitTile] Bought portrait {portraitIndex}");
+                PlayerImageManager.Instance.SelectPortrait(portraitIndex);
             }
             else
             {
-                Debug.Log($"[PlayerPortraitTile] Not enough coins to buy portrait {portraitIndex}. Have {coins}, price {price}");
+                Debug.Log($"Not enough coins to buy portrait {portraitIndex}");
             }
         }
         else
         {
-            PlayerImageManager.Instance.saveData.selectedPortraitIndex = portraitIndex;
-            PlayerImageManager.Instance.SaveData();
+            PlayerImageManager.Instance.SelectPortrait(portraitIndex);
             FadeFlash();
-            ApplyStateVisuals();
-            Debug.Log($"[PlayerPortraitTile] Selected portrait {portraitIndex}");
         }
     }
 
@@ -237,8 +160,11 @@ public class PlayerPortraitTile : MonoBehaviour, IPointerClickHandler
 
     public void ApplyStateVisuals()
     {
-        bool unlocked = PlayerImageManager.Instance != null && PlayerImageManager.Instance.IsPortraitUnlocked(portraitIndex);
-        bool selected = PlayerImageManager.Instance != null && PlayerImageManager.Instance.saveData.selectedPortraitIndex == portraitIndex;
+        if (PlayerImageManager.Instance == null)
+            return;
+
+        bool unlocked = PlayerImageManager.Instance.IsPortraitUnlocked(portraitIndex);
+        bool selected = PlayerImageManager.Instance.saveData.selectedPortraitIndex == portraitIndex;
 
         if (!unlocked)
         {
@@ -269,22 +195,6 @@ public class PlayerPortraitTile : MonoBehaviour, IPointerClickHandler
             selectedIcon?.SetActive(false);
             if (priceText) priceText.text = "Select";
             if (buttonLabel) buttonLabel.text = "Select";
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (fadeCoroutine != null)
-        {
-            StopCoroutine(fadeCoroutine);
-            fadeCoroutine = null;
-        }
-
-        if (icon != null)
-        {
-            Color c = icon.color;
-            c.a = 1f;
-            icon.color = c;
         }
     }
 }

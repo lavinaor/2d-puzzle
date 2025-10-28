@@ -5,26 +5,26 @@ using TMPro;
 
 public class PlayerFrameTile : MonoBehaviour
 {
-    [Header("UI Refs")]
+    [Header("UI References")]
     [SerializeField] private Button button;
-    public Image icon;
-    public Image background;
-    public GameObject lockIcon;
-    public GameObject selectedIcon;
-    public TMP_Text nameText;
-    public TMP_Text priceText;
+    [SerializeField] private Image icon;
+    [SerializeField] private Image background;
+    [SerializeField] private GameObject lockIcon;
+    [SerializeField] private GameObject selectedIcon;
+    [SerializeField] private TMP_Text nameText;
+    [SerializeField] private TMP_Text priceText;
 
-    [Header("Background (choose sprites OR colors)")]
-    public bool useBgSprites = false;
-    public Sprite bgLocked;
-    public Sprite bgUnlocked;
-    public Sprite bgSelected;
-    public Color colLocked = new Color(0.2f, 0.2f, 0.2f, 1f);
-    public Color colUnlocked = Color.white;
-    public Color colSelected = new Color(0.9f, 0.9f, 1f, 1f);
+    [Header("Background Style")]
+    [SerializeField] private bool useBgSprites = false;
+    [SerializeField] private Sprite bgLocked;
+    [SerializeField] private Sprite bgUnlocked;
+    [SerializeField] private Sprite bgSelected;
+    [SerializeField] private Color colLocked = new Color(0.2f, 0.2f, 0.2f, 1f);
+    [SerializeField] private Color colUnlocked = Color.white;
+    [SerializeField] private Color colSelected = new Color(0.9f, 0.9f, 1f, 1f);
 
     [Header("Animation")]
-    public float fadeDuration = 0.15f;
+    [SerializeField] private float fadeDuration = 0.15f;
 
     private PlayerFrame frame;
     private int frameIndex;
@@ -37,16 +37,22 @@ public class PlayerFrameTile : MonoBehaviour
         frameIndex = index;
         price = frameData.price;
 
-        if (nameText)
+        if (nameText != null)
             nameText.text = frame.frameName;
 
-        if (icon)
+        if (icon != null)
         {
-            icon.canvasRenderer.SetAlpha(1f);
             icon.sprite = frame.frameSprite;
+            icon.canvasRenderer.SetAlpha(1f);
         }
 
         ApplyStateVisuals();
+
+        if (button == null)
+        {
+            Debug.LogError($"[PlayerFrameTile] Missing Button reference on {gameObject.name}");
+            return;
+        }
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnTileClick);
@@ -73,12 +79,15 @@ public class PlayerFrameTile : MonoBehaviour
         }
         else
         {
-            PlayerImageManager.Instance.saveData.selectedFrameIndex = frameIndex;
-            PlayerImageManager.Instance.SaveData();
+   
+            PlayerImageManager.Instance.SelectFrame(frameIndex);
+
             FadeFlash();
             ApplyStateVisuals();
+            FrameShopUI.Instance.RefreshAllTiles();
         }
     }
+
 
     private void FadeFlash()
     {
@@ -92,7 +101,7 @@ public class PlayerFrameTile : MonoBehaviour
         if (icon == null) yield break;
         float elapsed = 0f;
         Color baseColor = icon.color;
-        Color highlight = new Color(baseColor.r + 0.2f, baseColor.g + 0.2f, baseColor.b + 0.2f);
+        Color highlight = baseColor * 1.2f;
 
         while (elapsed < fadeDuration)
         {
@@ -115,36 +124,41 @@ public class PlayerFrameTile : MonoBehaviour
 
     public void ApplyStateVisuals()
     {
+        if (PlayerImageManager.Instance == null) return;
+
         bool unlocked = PlayerImageManager.Instance.IsFrameUnlocked(frameIndex);
         bool selected = PlayerImageManager.Instance.saveData.selectedFrameIndex == frameIndex;
 
         if (!unlocked)
         {
-            if (useBgSprites && bgLocked) background.sprite = bgLocked;
-            else background.color = colLocked;
-
+            SetBackground(bgLocked, colLocked);
             lockIcon?.SetActive(true);
             selectedIcon?.SetActive(false);
-            priceText.text = price.ToString();
+            if (priceText) priceText.text = price.ToString();
         }
         else if (selected)
         {
-            if (useBgSprites && bgSelected) background.sprite = bgSelected;
-            else background.color = colSelected;
-
+            SetBackground(bgSelected, colSelected);
             lockIcon?.SetActive(false);
             selectedIcon?.SetActive(true);
-            priceText.text = "selected";
+            if (priceText) priceText.text = "selected";
         }
         else
         {
-            if (useBgSprites && bgUnlocked) background.sprite = bgUnlocked;
-            else background.color = colUnlocked;
-
+            SetBackground(bgUnlocked, colUnlocked);
             lockIcon?.SetActive(false);
             selectedIcon?.SetActive(false);
-            priceText.text = "select";
+            if (priceText) priceText.text = "select";
         }
+    }
+
+    private void SetBackground(Sprite sprite, Color color)
+    {
+        if (background == null) return;
+        if (useBgSprites && sprite != null)
+            background.sprite = sprite;
+        else
+            background.color = color;
     }
 
     private void OnDisable()
@@ -154,7 +168,6 @@ public class PlayerFrameTile : MonoBehaviour
             StopCoroutine(fadeCoroutine);
             fadeCoroutine = null;
         }
-
         if (icon != null)
         {
             Color c = icon.color;
