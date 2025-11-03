@@ -21,7 +21,7 @@ public class ButtonUnlocker : MonoBehaviour
 
     public void UpdateButtonAndText()
     {
-        int currentStars = SaveManager.Instance.GetStarsInTotal();
+        int currentStars = SaveManager.Instance.GetTotalStars();
 
         // עדכון הכפתור
         targetButton.interactable = currentStars >= requiredStars;

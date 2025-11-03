@@ -12,6 +12,10 @@ public class LevelButton : MonoBehaviour
     [SerializeField]
     private int level; // מספר שלב
 
+    [SerializeField] 
+    private string worldName;
+
+
     // קובץ הסאונד להשמעה
     [SerializeField]
     private AudioClip sceneTransitionSound;
@@ -38,7 +42,7 @@ public class LevelButton : MonoBehaviour
     {
         levelText.text = level.ToString();
         button = GetComponent<Button>();
-        int starsNum = SaveManager.Instance.GetStarsForLevel(level);
+        int starsNum = SaveManager.Instance.GetStarsForLevel(level, worldName);
         //CheckIfUnlocked();
         UpdateStars(starsNum);
     }
@@ -91,33 +95,31 @@ public class LevelButton : MonoBehaviour
 
     public void OnChangeSeneSound()
     {
-        string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
+        string levelName = $"{worldName}-{level}";
 
-        // השמעת הסאונד בעזרת SoundFXManager
         if (SoundFXManager.Instance != null)
-        {
-            // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
             SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
-        }
+
         SceneManager.LoadScene(levelName);
         SaveManager.Instance.ChanglastLevelEnterd(level);
+    
 
-        /*        if (isUnlocked)
+    /*        if (isUnlocked)
+            {
+                string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
+
+                // השמעת הסאונד בעזרת SoundFXManager
+                if (SoundFXManager.Instance != null)
                 {
-                    string levelName = WorldManager.Instance.GetSceneNameForLevel(level);
-
-                    // השמעת הסאונד בעזרת SoundFXManager
-                    if (SoundFXManager.Instance != null)
-                    {
-                        // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
-                        SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
-                    }
-
-                    SceneManager.LoadScene(levelName);
+                    // כאן הוספתי את ה-Transform של אובייקט ה-SceneChanger
+                    SoundFXManager.Instance.PlaySoundFXClip(sceneTransitionSound, transform, 1f, true);
                 }
-                else
-                {
-                    Debug.Log("שלב נעול");
-                }*/
-    }
+
+                SceneManager.LoadScene(levelName);
+            }
+            else
+            {
+                Debug.Log("שלב נעול");
+            }*/
+}
 }

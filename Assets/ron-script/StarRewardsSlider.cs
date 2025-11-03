@@ -25,7 +25,7 @@ public class SimpleStarRewards : MonoBehaviour
     // קריאה כל פעם שהכוכבים משתנים
     public void UpdateProgress()
     {
-        int totalStars = SaveManager.Instance.GetStarsInTotal(); // מספר הכוכבים שלך
+        int totalStars = SaveManager.Instance.GetTotalStars(); // מספר הכוכבים שלך
 
         // עדכון הסליידר
         if (progressSlider != null)
@@ -49,7 +49,7 @@ public class SimpleStarRewards : MonoBehaviour
 
     private void GiveReward()
     {
-        Debug.Log("קיבלת פרס! 🎉");
+        Debug.Log("קיבלת פרס! ");
         // כאן אפשר לשים את הקוד האמיתי למתן פרס
         // לדוגמה Instantiate של פרס, להפעיל כפתור או להוסיף מטבעות
     }

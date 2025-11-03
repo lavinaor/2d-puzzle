@@ -7,6 +7,7 @@ using static SaveManager;
 public class LevelEntry
 {
     public int levelIndex;
+    public string WorldName;
     public int starsEarned;
 }
 
@@ -14,6 +15,7 @@ public class LevelEntry
 public class GameSaveData
 {
     public List<LevelEntry> levels = new List<LevelEntry>();
+    public List<LevelEntry> speciallevels = new List<LevelEntry>();
 
     public int lastLevelEnterd = 0; // השלב האחרון שהשחקן שיחק
     public int totalCoins = 0; // אוצרות
@@ -72,49 +74,80 @@ public class SaveManager : MonoBehaviour
         string json = PlayerPrefs.GetString("SaveData", "{}");
         GameSaveData data = JsonUtility.FromJson<GameSaveData>(json) ?? new GameSaveData();
 
-        LevelEntry level = data.levels.Find(l => l.levelIndex == levelIndex);
+        // קבלת שם העולם הנוכחי
+        string worldName = WorldManager.Instance.getWorld();
+
+        // לבדוק אם העולם שייך לרשימת העולמות המשניים
+        bool isSpecial = WorldManager.Instance.secondaryWorlds.Exists(w => w.worldName == worldName);
+
+        List<LevelEntry> targetList = isSpecial ? data.speciallevels : data.levels;
+        LevelEntry level = targetList.Find(l => l.levelIndex == levelIndex && l.WorldName == worldName);
+
         if (level != null)
         {
             level.starsEarned = Mathf.Max(level.starsEarned, stars);
         }
         else
         {
-            data.levels.Add(new LevelEntry { levelIndex = levelIndex, starsEarned = stars });
+            targetList.Add(new LevelEntry
+            {
+                levelIndex = levelIndex,
+                WorldName = worldName,
+                starsEarned = stars
+            });
         }
 
-        string newJson = JsonUtility.ToJson(data);
-        PlayerPrefs.SetString("SaveData", newJson);
-        PlayerPrefs.Save();
+        SaveData(data);
     }
 
-    public int GetStarsForLevel(int levelIndex)
+
+    public int GetStarsForLevel(int levelIndex, string worldName = null)
     {
-        string json = PlayerPrefs.GetString("SaveData", "{}");
-        if (string.IsNullOrEmpty(json)) return 0;
+        GameSaveData data = LoadData();
+        if (data == null) return 0;
 
-        GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
-        if (data == null || data.levels == null) return 0;
+        // אם לא הועבר שם עולם, נזהה אותו אוטומטית מהסצנה
+        if (string.IsNullOrEmpty(worldName))
+            worldName = WorldManager.Instance.getWorld();
 
-        LevelEntry level = data.levels.Find(l => l.levelIndex == levelIndex);
+        bool isSpecial = WorldManager.Instance.secondaryWorlds.Exists(w => w.worldName == worldName);
+        List<LevelEntry> targetList = isSpecial ? data.speciallevels : data.levels;
+
+        LevelEntry level = targetList.Find(l => l.levelIndex == levelIndex && l.WorldName == worldName);
         return level != null ? level.starsEarned : 0;
     }
 
-    public int GetStarsInTotal()
+
+    public int GetTotalStars(bool includeSpecial = true)
     {
-        string json = PlayerPrefs.GetString("SaveData", "{}");
-        if (string.IsNullOrEmpty(json)) return 0;
+        GameSaveData data = LoadData();
+        if (data == null) return 0;
 
-        GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
-        if (data == null || data.levels == null) return 0;
+        int total = 0;
+        foreach (var l in data.levels)
+            total += l.starsEarned;
 
-        int totalStars = 0;
-        foreach (LevelEntry level in data.levels)
+        if (includeSpecial)
         {
-            totalStars += level.starsEarned;
+            foreach (var l in data.speciallevels)
+                total += l.starsEarned;
         }
 
-        return totalStars;
+        return total;
     }
+
+    public int GetSpecialStars()
+    {
+        GameSaveData data = LoadData();
+        if (data == null) return 0;
+
+        int total = 0;
+        foreach (var l in data.speciallevels)
+            total += l.starsEarned;
+
+        return total;
+    }
+
 
     public void ResetProgress()
     {

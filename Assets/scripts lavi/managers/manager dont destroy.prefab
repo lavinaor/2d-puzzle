@@ -59,22 +59,23 @@ MonoBehaviour:
     startLevel: 1
     endLevel: 9
     displayName: sea
-    mainLevelSecen: 1 sae main
+    mainLevelScene: 1 sae main
   - worldName: desert
     startLevel: 10
     endLevel: 18
     displayName: desert
-    mainLevelSecen: 2 desert main
+    mainLevelScene: 2 desert main
   - worldName: ice
     startLevel: 19
     endLevel: 27
     displayName: ice
-    mainLevelSecen: 3 ice main
+    mainLevelScene: 3 ice main
+  secondaryWorlds:
   - worldName: lava
-    startLevel: 28
-    endLevel: 36
+    startLevel: 1
+    endLevel: 9
     displayName: lava
-    mainLevelSecen: 4 lava
+    mainLevelScene: 4 lava
   _androidAdUnitId: Interstitial_Android
   _iOSAdUnitId: Interstitial_iOS
   adChancePercent: 20

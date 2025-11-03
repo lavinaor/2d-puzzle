@@ -9,6 +9,7 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
     public static WorldManager Instance { get; private set; }
 
     public List<WorldData> worlds;
+    public List<WorldData> secondaryWorlds;  // עולמות משניים
 
     [Header("Ads Settings")]
     [SerializeField] private string _androidAdUnitId = "Interstitial_Android";
@@ -39,32 +40,28 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
 
     public void LoadNextLevel()
     {
-        int currentLevel = getLevel();
-        int nextLevel = currentLevel + 1;
-        string nextScene = GetSceneNameForLevel(nextLevel);
-
+        string nextScene = GetNextSceneName();
         if (string.IsNullOrEmpty(nextScene))
         {
-            Debug.LogWarning("לא נמצא שלב הבא לטעינה");
+            Debug.LogWarning(" לא נמצא שלב הבא לטעינה");
             return;
         }
 
-        SaveManager.Instance.ChanglastLevelEnterd(nextLevel);
         _nextSceneToLoad = nextScene;
 
-        // בדיקה לפי סיכוי להצגת פרסומת
         int roll = Random.Range(0, 100);
         if (roll < adChancePercent)
         {
-            Debug.Log($"🎲 בחר להציג מודעה ({roll}% מתוך {adChancePercent}%)");
+            Debug.Log($" מציג מודעה ({roll}%)");
             Advertisement.Load(_adUnitId, this);
         }
         else
         {
-            Debug.Log($"🎲 מדלג על מודעה הפעם ({roll}% מתוך {adChancePercent}%)");
+            Debug.Log($" מדלג על מודעה הפעם ({roll}%)");
             SceneManager.LoadScene(_nextSceneToLoad);
         }
     }
+
 
     // -------------------------
     // IUnityAdsLoadListener
@@ -134,7 +131,7 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
         foreach (var _world in worlds)
         {
             if (level >= _world.startLevel && level <= _world.endLevel)
-                return _world.mainLevelSecen;
+                return _world.mainLevelScene;
         }
         return null;
     }
@@ -162,6 +159,107 @@ public class WorldManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowL
         Debug.LogWarning("Scene name format is invalid! Expected format: areaName-stageNumber");
         return null;
     }
+
+    public WorldData GetWorldByName(string worldName)
+    {
+        foreach (var world in worlds)
+        {
+            if (world.worldName == worldName)
+                return world;
+        }
+
+        foreach (var world in secondaryWorlds)
+        {
+            if (world.worldName == worldName)
+                return world;
+        }
+
+        return null;
+    }
+
+    public string GetNextSceneName()
+    {
+        string worldName = getWorld();
+        int level = getLevel();
+
+        WorldData world = GetWorldByName(worldName);
+        if (world == null)
+        {
+            Debug.LogWarning($"לא נמצא עולם בשם {worldName}");
+            return null;
+        }
+
+        // אם אין מספר שלב (שלב מיוחד או בוס)
+        if (level == -1)
+        {
+            Debug.Log($" שלב מיוחד (ללא מספר) בעולם {worldName}");
+            return world.mainLevelScene; // או משהו שתגדיר במיוחד
+        }
+
+        // יש מספר שלב — בודקים אם יש שלב הבא
+        if (level < world.endLevel)
+        {
+            return $"{worldName}-{level + 1}";
+        }
+        else
+        {
+            Debug.Log($" השחקן סיים את כל השלבים בעולם {worldName}, עובר לסצנה הראשית של העולם.");
+            return world.mainLevelScene;
+        }
+    }
+
+    public void ReturnToMainWorldBase()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        WorldData found = FindWorldBySceneName(currentScene);
+
+        if (found != null)
+        {
+            if (!string.IsNullOrEmpty(found.mainLevelScene))
+            {
+                SceneManager.LoadScene(found.mainLevelScene);
+                return;
+            }
+            else
+            {
+                Debug.LogWarning($"World {found.worldName} נמצא אך אין לו mainLevelScene מוגדר.");
+                return;
+            }
+        }
+
+        Debug.LogWarning("לא נמצא עולם תואם לסצנה הנוכחית: " + currentScene);
+    }
+
+    public WorldData FindWorldBySceneName(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName)) return null;
+
+        // ראשית: בדיקה ישירה האם זו סצנת main של אחד העולם
+        foreach (var w in worlds)
+            if (!string.IsNullOrEmpty(w.mainLevelScene) && w.mainLevelScene == sceneName)
+                return w;
+
+        foreach (var w in secondaryWorlds)
+            if (!string.IsNullOrEmpty(w.mainLevelScene) && w.mainLevelScene == sceneName)
+                return w;
+
+        // שנית: בדיקת פורמט "WorldName-..."
+        // נשתמש ב-StartsWith כדי לתפוס "Forest-1", "Forest-Secret" וכו'
+        foreach (var w in worlds)
+        {
+            if (!string.IsNullOrEmpty(w.worldName) && sceneName.StartsWith(w.worldName))
+                return w;
+        }
+
+        foreach (var w in secondaryWorlds)
+        {
+            if (!string.IsNullOrEmpty(w.worldName) && sceneName.StartsWith(w.worldName))
+                return w;
+        }
+
+        return null;
+    }
+
 }
 
 [System.Serializable]
@@ -171,5 +269,5 @@ public class WorldData
     public int startLevel;
     public int endLevel;
     public string displayName;
-    public string mainLevelSecen;
+    public string mainLevelScene;
 }

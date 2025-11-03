@@ -12,7 +12,7 @@ public class AllStars : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int starsNum = SaveManager.Instance.GetStarsInTotal();
+        int starsNum = SaveManager.Instance.GetTotalStars();
         _textMeshPro.text = starsNum.ToString();
     }
 }

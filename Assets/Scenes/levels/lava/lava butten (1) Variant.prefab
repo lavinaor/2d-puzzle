@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7105936424709563250
+--- !u!1001 &6467271548746565192
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 1738691137684153751, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 457128823, guid: a9133ae82f4fdd64db9d31c0fd3f195d, type: 3}
+      objectReference: {fileID: 1096879046, guid: a9133ae82f4fdd64db9d31c0fd3f195d, type: 3}
     - target: {fileID: 2303952000572907013, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -106,15 +106,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4970674240672420240, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: m_Name
-      value: ice butten (18) Variant
+      value: lava butten (1) Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6669586955098190480, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: level
-      value: 18
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 6669586955098190480, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: worldName
-      value: ice
+      value: lava
       objectReference: {fileID: 0}
     - target: {fileID: 8325449992120712836, guid: 74ac2fe79aaea3248accf3d6374b6307, type: 3}
       propertyPath: m_IsActive

@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class ButtonReternToMainWorldBase : MonoBehaviour
+public class ButtonReturnToMainWorld : MonoBehaviour
 {
-    public void ReternToMainWorldBase()
+    public void OnClickReturnToMainWorld()
     {
-        string mainSceneName = WorldManager.Instance.GetMainlevelSceneName(WorldManager.Instance.getLevel());
-        SceneManager.LoadScene(mainSceneName);
+        WorldManager.Instance.ReturnToMainWorldBase();
     }
 }

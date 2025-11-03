@@ -27,7 +27,7 @@ public class StarRewardController : MonoBehaviour
 
     public void UpdateRewards()
     {
-        int totalStars = SaveManager.Instance.GetStarsInTotal();
+        int totalStars = SaveManager.Instance.GetTotalStars();
 
         // עדכון הסליידר – רק ויזואלי
         if (progressSlider != null)
